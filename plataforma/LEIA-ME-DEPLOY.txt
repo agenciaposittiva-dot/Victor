@@ -1,0 +1,63 @@
+ARAGONEZ BUILDER — DEPLOY NETLIFY COM SELETOR DE IA
+
+NOVIDADE
+- Agora o Builder permite escolher a IA diretamente na tela de Conteúdo.
+- Provedores: Google Gemini, OpenAI / ChatGPT e Anthropic / Claude.
+- Também é possível escolher o modelo de cada provedor.
+- A escolha vale para Gerar com IA, Radar, Organizar em pautas, legendas, ganchos, revisão e prompts.
+- A seleção fica salva no navegador.
+
+CHAVES NO NETLIFY
+Abra: Site configuration > Environment variables
+
+Cadastre as chaves que você pretende usar:
+GEMINI_API_KEY = chave do Google AI Studio
+OPENAI_API_KEY = chave da OpenAI API
+ANTHROPIC_API_KEY = chave da Anthropic API
+
+Você NÃO precisa configurar as três para o Builder abrir, mas só funcionará a IA cuja chave estiver cadastrada.
+As chaves devem ficar disponíveis para Netlify Functions.
+Nunca coloque as chaves dentro do index.html ou ai-client.js.
+
+MODELOS EXIBIDOS NO SELETOR
+Gemini:
+- gemini-3.7-flash
+- gemini-3.8-flash
+- gemini-3.5-flash-lite
+
+OpenAI:
+- gpt-5.6-terra
+- gpt-5.6-sol
+- gpt-5.6-luna
+
+Claude:
+- claude-sonnet-5
+- claude-sonnet-4-6
+- claude-haiku-4-5-20251001
+
+TESTE DE CONFIGURAÇÃO
+Depois do deploy, abra:
+https://SEU-SITE.netlify.app/.netlify/functions/ai
+
+Você verá algo parecido com:
+{"ok":true,"configured":{"gemini":true,"openai":true,"anthropic":true},...}
+
+Se algum provedor aparecer false, a Environment Variable correspondente não está chegando à Function.
+
+PASSOS PARA PUBLICAR
+1) Suba este ZIP completo no Netlify.
+2) Configure as Environment Variables.
+3) Faça um novo deploy.
+4) Abra o Builder > Conteúdo.
+5) Em "IA para geração", escolha o provedor e o modelo.
+6) Clique em "Gerar com IA".
+
+O template, as imagens, os layouts e o restante do Builder foram preservados.
+
+LOGIN PREMIUM
+- Nova tela de login inspirada em SaaS premium, com fundo roxo, card branco e identidade Aragonez Builder.
+- Mostrar/ocultar senha.
+- "Lembrar de mim" com persistência no navegador.
+- "Esqueceu a senha?" abre o WhatsApp de suporte configurado.
+- "Criar acesso" preservado.
+- Administrador: usuário victor / senha victor123.

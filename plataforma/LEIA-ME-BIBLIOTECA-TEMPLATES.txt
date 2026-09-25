@@ -1,0 +1,34 @@
+ARAGONEZ BUILDER — BIBLIOTECA PREMIUM DE TEMPLATES
+Versão: 03/09/2026
+
+O QUE FOI ADICIONADO
+- Nova tela "Templates" no menu principal.
+- Biblioteca visual em grid com imagens de preview.
+- Busca por nome, nicho, objetivo e estilo.
+- Filtros por nicho, formato, objetivo, estilo e origem.
+- Favoritos persistentes no navegador.
+- Modal de visualização antes de usar o template.
+- Miniaturas dos slides do template dentro da visualização.
+- Botões: Visualizar, Duplicar e Usar template.
+- Vitrine de nichos na Home.
+- Nova seção Organize / Analise / Crie na Home.
+- Novos templates direcionados para: Proteção Veicular, Imobiliário, Saúde, Educação, Automotivo, Varejo, Logística e Negócios.
+- Meus Templates continuam funcionando.
+- Templates podem ser salvos no contexto de um cliente.
+- Seletor de cliente dentro da biblioteca.
+- Botão "Salvar global" e "Salvar no cliente" dentro do editor.
+- Preview com imagem também nos templates rápidos do editor.
+
+ORGANIZAÇÃO
+- Templates globais: modelos padrão do Aragonez Builder.
+- Meus templates: modelos duplicados/salvos pelo usuário.
+- Do cliente: modelos salvos para o cliente selecionado.
+- Favoritos: marcados com estrela e mantidos no localStorage.
+
+DEPLOY
+Este pacote mantém a estrutura do Netlify. Faça o deploy da pasta/ZIP normalmente.
+Não é necessário configurar nenhuma nova API para usar a biblioteca de templates.
+
+OBSERVAÇÃO
+Os previews visuais usam imagens que já fazem parte do pacote atual do Aragonez Builder.
+A integração futura com Freepik/Magnific/Nano Banana pode substituir ou gerar imagens diretamente dentro do editor sem alterar esta estrutura.

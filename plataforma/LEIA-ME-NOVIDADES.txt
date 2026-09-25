@@ -1,0 +1,62 @@
+ARAGONEZ BUILDER — O QUE MUDOU NESTA VERSÃO
+
+NAVEGAÇÃO
+Início · Criar · Radar · Tendências · Templates · Projetos
+"Criar" agora abre o hub de formatos. Cada formato tem a sua própria página:
+Carrossel (4:5), Post único (1:1), Stories (9:16) e Anúncio (1:1).
+Cada página traz o tema, os botões de geração, a estrutura do formato e só os
+templates daquele formato, com a arte real renderizada na capa.
+
+RADAR DE MARCA (botão "Abrir Radar" na home)
+Página própria de direcionamento. O usuário informa:
+Instagram, nome da marca, nicho, público, site, objetivo, tom, logo e cor de destaque.
+Ao clicar em "Analisar marca com IA", a plataforma devolve:
+- diagnóstico e posicionamento sugerido
+- 4 pilares de conteúdo
+- 8 ganchos prontos (copiar ou virar carrossel em um clique)
+- 6 ideias de post com o formato indicado
+- assuntos em alta no nicho (cruzados com notícias reais, quando a chave está configurada)
+- palavras que a marca usa e palavras que evita
+- 12 hashtags e uma legenda de exemplo
+O perfil pode ser salvo em "Salvar perfil da marca" e é reaproveitado pela IA no editor.
+A logo enviada entra nos slides gerados.
+
+TENDÊNCIAS (nav "Tendências")
+Página própria com 16 nichos e campo livre. Abas:
+Temas em alta · Copys prontas · Textos · Notícias · Semana · Hashtags
+"Textos" traz roteiros completos que já entram no editor slide a slide.
+"Semana" devolve um plano de 7 dias com formato e tema por dia.
+Todo item tem ação: copiar, criar carrossel, criar post ou virar carrossel.
+
+BIBLIOTECA DE TEMPLATES
+36 templates. Os 15 novos cobrem proteção veicular, imobiliário, saúde,
+odontologia, advocacia, contabilidade, estética, varejo, pet, eventos,
+educação e serviços, nos quatro formatos.
+As capas dos cards mostram a arte real do template (não é mais imagem fixa):
+o slide é renderizado ao vivo com a identidade da marca ativa.
+
+NOTÍCIAS EM TEMPO REAL — CHAVES NO NETLIFY
+Site configuration > Environment variables:
+GNEWS_API_KEY  = chave do gnews.io (recomendado: tem português/Brasil)
+NEWS_API_KEY   = chave do newsapi.org (alternativa)
+Teste depois do deploy: https://SEU-SITE.netlify.app/.netlify/functions/news
+Resposta esperada: {"ok":true,"configured":{"gnews":true,"newsapi":false},...}
+Sem chave a plataforma continua funcionando: os assuntos passam a ser ângulos
+recorrentes do nicho gerados pela IA, e a interface avisa isso na tela.
+
+CHAVES DE IA (continuam iguais)
+GEMINI_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY
+Teste: https://SEU-SITE.netlify.app/.netlify/functions/ai
+
+ARQUIVOS
+index.html                     → entrada do site (igual ao Aragonez Builder.dc.html)
+Aragonez Builder.dc.html       → mesmo app, para edição
+SlideIcarus.dc.html            → componente que desenha cada slide
+support.js / ai-client.js      → runtime e ponte de IA
+netlify/functions/ai.js        → IA (Gemini, OpenAI, Anthropic)
+netlify/functions/news.js      → notícias por nicho
+uploads-assets/                → imagens de referência dos templates
+logo-icarus.png / waves.png    → identidade
+
+LOGIN
+Administrador: victor / victor123

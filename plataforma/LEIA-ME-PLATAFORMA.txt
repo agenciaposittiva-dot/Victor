@@ -1,0 +1,119 @@
+ARAGONEZ BUILDER — SISTEMA OPERACIONAL DE CONTEÚDO
+Guia da reformulação (fases A a H) e do deploy no Netlify.
+
+--------------------------------------------------
+COMO A PLATAFORMA ESTÁ ORGANIZADA
+--------------------------------------------------
+Sidebar recolhível (vira gaveta no mobile) com:
+
+  Dashboard        central operacional
+  Clientes         workspaces independentes por marca
+
+  CRIAR
+  Novo conteúdo    fluxo guiado em 5 passos
+  Pautas           em breve
+  Carrossel        4:5
+  Post único       1:1
+  Stories          9:16
+  Anúncios         briefing + variações A/B
+  Editor           editor de slides
+
+  INTELIGÊNCIA
+  Radar de marca   diagnóstico, pilares, ganchos, ideias
+  Tendências       temas, copys, textos, notícias, semana, hashtags
+  Raio-X Instagram análise de perfil
+
+  PRODUÇÃO
+  Projetos         status de rascunho a publicado
+  Templates        vitrine com arte real
+  Biblioteca       fotos, logos, texturas, finalizados
+  Calendário       calendário editorial com arrastar e soltar
+
+Header: cliente atual, notificações, avatar, sair.
+Trocar o cliente troca o contexto de tudo: identidade, tom, público,
+palavras proibidas, CTA e logo entram no editor e nos prompts da IA.
+
+--------------------------------------------------
+DADOS E MIGRAÇÃO
+--------------------------------------------------
+store.js concentra toda a persistência, com IDs e versão de schema:
+clients, projects, contents, assets, topics, instagram, intelligence.
+Hoje grava em localStorage (chave "aragonez-db"); para migrar para banco,
+basta trocar as funções load/save do store.
+
+Os perfis antigos de "aragonez-builder-brands" são convertidos em clientes
+automaticamente no primeiro acesso.
+
+Projetos salvos no editor gravam o clientId e o status.
+Imagens da biblioteca são limitadas a 900 KB por arquivo, porque o
+armazenamento local do navegador é pequeno.
+
+--------------------------------------------------
+VARIÁVEIS DE AMBIENTE NO NETLIFY
+--------------------------------------------------
+Site configuration > Environment variables
+
+IA (pelo menos uma):
+  GEMINI_API_KEY
+  OPENAI_API_KEY
+  ANTHROPIC_API_KEY
+  teste: /.netlify/functions/ai
+
+Notícias do nicho (opcional):
+  GNEWS_API_KEY     recomendado, tem português/Brasil
+  NEWS_API_KEY      alternativa
+  teste: /.netlify/functions/news
+  Sem chave, os assuntos passam a ser ângulos do nicho gerados pela IA,
+  e a interface avisa que não são manchetes ao vivo.
+
+Geração de imagem (opcional):
+  FREEPIK_API_KEY     Freepik AI
+  STABILITY_API_KEY   Stability AI (Stable Image Core)
+  OPENAI_API_KEY      OpenAI Images (mesma chave do ai.js)
+  teste: /.netlify/functions/image
+  Sem chave, a tela de IA de imagem mostra "Configure a API para gerar
+  imagens" e aponta o caminho do upload manual.
+
+Raio-X do Instagram (opcional):
+  IG_ACCESS_TOKEN + IG_BUSINESS_ID    Instagram Graph API
+  APIFY_TOKEN (+ APIFY_ACTOR)         perfis públicos via Apify
+  teste: /.netlify/functions/instagram
+  Sem credencial, a tela diz "Conecte uma fonte de dados para executar a
+  análise completa". Se você pedir a análise assim mesmo, o resultado é
+  marcado como leitura declarada e a IA não estima métrica nenhuma.
+
+Nunca coloque chaves no index.html, no store.js ou no ai-client.js.
+
+--------------------------------------------------
+ÁREAS AINDA NÃO FUNCIONAIS (marcadas "em breve")
+--------------------------------------------------
+Publicação e Analytics, que dependem de conectar o Instagram.
+Elas aparecem na estrutura, avisam por toast e não simulam integração.
+
+Já funcionam: Pautas (quadro com arrastar e soltar), Configurações
+(provedor de IA e backup) e IA de imagem (com a chave cadastrada).
+
+--------------------------------------------------
+ARQUIVOS
+--------------------------------------------------
+index.html                    entrada do site (cópia do .dc.html)
+Aragonez Builder.dc.html      aplicação
+SlideIcarus.dc.html           componente que desenha cada slide
+store.js                      camada de dados com IDs
+ai-client.js                  ponte com as funções de IA
+support.js                    runtime
+netlify/functions/ai.js       IA (Gemini, OpenAI, Anthropic)
+netlify/functions/news.js     notícias por nicho
+netlify/functions/instagram.js  perfil do Instagram
+netlify/functions/image.js    geração de imagem por IA
+uploads-assets/               imagens de referência dos templates
+logo-icarus.png, waves.png    identidade
+
+--------------------------------------------------
+DEPLOY
+--------------------------------------------------
+1. Suba a pasta inteira no Netlify (publish ".", functions "netlify/functions").
+2. Cadastre as Environment Variables.
+3. Refaça o deploy.
+4. Teste /.netlify/functions/ai, /news e /instagram.
+5. Login do administrador: victor / victor123.
