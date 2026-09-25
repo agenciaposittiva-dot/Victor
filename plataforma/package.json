@@ -1,0 +1,7 @@
+{
+  "name": "aragonez-builder",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  }
+}

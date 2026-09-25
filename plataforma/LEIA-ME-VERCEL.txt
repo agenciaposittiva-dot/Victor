@@ -1,0 +1,107 @@
+ARAGONEZ BUILDER — DEPLOY NO VERCEL
+
+Esta pasta é o projeto. Suba ela inteira no Vercel.
+
+COMO PUBLICAR
+Opção A — pelo site (mais rápido)
+  1) vercel.com > Add New > Project > Deploy sem Git (ou arraste a pasta).
+  2) Framework Preset: Other. Não preencha comando de build.
+  3) Deploy.
+
+Opção B — pela linha de comando
+  npm i -g vercel
+  cd nesta-pasta
+  vercel        (preview)
+  vercel --prod (produção)
+
+VARIÁVEIS DE AMBIENTE
+No painel: Project > Settings > Environment Variables.
+Marque Production e Preview, e depois refaça o deploy (Redeploy) —
+variáveis novas só valem em deploys novos.
+
+  IA de texto — escolha uma (gratuitas primeiro):
+    GROQ_API_KEY        console.groq.com          GRÁTIS
+    MISTRAL_API_KEY     console.mistral.ai        GRÁTIS
+    OPENROUTER_API_KEY  openrouter.ai             GRÁTIS (modelos :free)
+    TOGETHER_API_KEY    api.together.xyz          GRÁTIS (Turbo-Free)
+    COHERE_API_KEY      dashboard.cohere.com      GRÁTIS (chave de teste)
+    GEMINI_API_KEY      aistudio.google.com       camada gratuita ampla
+    OPENAI_API_KEY / ANTHROPIC_API_KEY            pagas por uso
+
+  Geração de imagem:
+    GEMINI_API_KEY     Gemini Nano Banana         GRÁTIS, melhor qualidade
+                       (a mesma chave do texto; aceita foto de base)
+    GEMINI_API_KEY     aistudio.google.com        GRÁTIS, aceita foto
+    HF_API_KEY         huggingface.co             GRÁTIS
+    STABILITY_API_KEY  aceita foto de base        paga
+    FREEPIK_API_KEY    só texto                   paga
+    OPENAI_API_KEY     aceita foto de base        paga
+
+  Notícias do nicho (Radar e Tendências):
+    GNEWS_API_KEY      recomendado, cobre português/Brasil
+    NEWS_API_KEY       alternativa
+
+  Raio-X do Instagram:
+    IG_ACCESS_TOKEN + IG_BUSINESS_ID    Instagram Graph API
+    APIFY_TOKEN (+ APIFY_ACTOR)         perfis públicos via Apify
+
+TESTE DEPOIS DO DEPLOY
+Abra no navegador, trocando SEU-SITE:
+  https://SEU-SITE.vercel.app/api/ai
+  https://SEU-SITE.vercel.app/api/news
+  https://SEU-SITE.vercel.app/api/instagram
+  https://SEU-SITE.vercel.app/api/image
+Cada uma responde quais credenciais encontrou.
+
+Se der "modelo não disponível" na IA de texto, abra:
+  https://SEU-SITE.vercel.app/api/ai?modelos=1
+Ele lista os modelos que a SUA chave enxerga. Escolha um deles no
+seletor de modelo do editor. Lista vazia significa que a chave não é do
+Google AI Studio ou a Generative Language API está desativada no projeto.
+
+Em Configurações, dentro da plataforma, o botão "Verificar o que está
+configurado" faz essa consulta por você.
+
+COMO ESTÁ ORGANIZADO
+  index.html                 aplicação
+  SlideIcarus.dc.html        componente que desenha cada slide
+  support.js                 runtime
+  store.js                   dados (clientes, pautas, assets, calendário)
+  ai-client.js               ponte com as funções
+  logo-icarus.png/waves.png  identidade
+  uploads-assets/            imagens de referência dos templates
+  vercel.json                rotas e limites das funções
+  package.json               fixa o Node 20
+  api/ai.js                  IA de texto
+  api/news.js                notícias por nicho
+  api/instagram.js           perfil do Instagram (Raio-X)
+  api/image.js               geração de imagem
+  api/_handlers/             a lógica de cada função
+
+Os arquivos em api/ são adaptadores finos; a lógica em api/_handlers/ é a
+mesma usada no Netlify. Assim o projeto roda nos dois lugares sem
+divergir. O vercel.json também reescreve /.netlify/functions/* para
+/api/*, então qualquer chamada antiga continua funcionando.
+
+O QUE FUNCIONA SEM NENHUMA CHAVE
+Login, clientes, Brand Kit, templates, editor, exportação PNG/ZIP/JSON,
+projetos com status, biblioteca, calendário, pautas e backup.
+    GEMINI_API_KEY     aistudio.google.com        GRÁTIS, aceita foto
+A IA de texto precisa de pelo menos uma chave — a mais rápida de obter é
+a do Groq ou a do Google AI Studio, ambas gratuitas.
+
+RECOMENDADO: cadastre GEMINI_API_KEY e GROQ_API_KEY. Com essas duas a
+plataforma inteira funciona sem custo, incluindo a geração de imagem
+com o Gemini Nano Banana, que é a de melhor qualidade entre as
+gratuitas e aceita foto anexada como base.
+
+O QUE DEPENDE DE INTEGRAÇÃO FUTURA
+Publicação e Analytics, que exigem conectar o Instagram. Aparecem
+marcadas "em breve" e não simulam integração.
+
+SEGURANÇA
+Nenhuma chave fica no navegador: tudo passa pelas funções em api/.
+Os dados do workspace ficam no localStorage de cada navegador — use
+Configurações > Exportar backup antes de trocar de máquina.
+Troque a senha do administrador (hoje victor / victor123) antes de
+divulgar o endereço do site.
