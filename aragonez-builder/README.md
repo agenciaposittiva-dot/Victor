@@ -14,6 +14,7 @@ Sistema operacional de conteúdo para Instagram: clientes, criação de carross�
 | `cloud-client.js` | Ponte com a nuvem (login e sincronização) |
 | `icons.js` | Galeria de ícones |
 | `support.js` | Runtime |
+| `estudio/index.html` | Estúdio: análise do feed, post com foto, templates Premium, carrossel com editor livre e agenda (abre dentro da plataforma, seção "Estúdio") |
 | `netlify/functions/` | Backend: `ai`, `image`, `news`, `instagram`, `cloud` |
 
 ## Deploy no Netlify

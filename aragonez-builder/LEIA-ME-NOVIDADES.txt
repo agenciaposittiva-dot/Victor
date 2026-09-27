@@ -1,5 +1,29 @@
 ARAGONEZ BUILDER — O QUE MUDOU NESTA VERSÃO
 
+ESTÚDIO (nova seção "Estúdio" no menu lateral)
+As funções do protótipo do Posittiva Builder agora fazem parte da plataforma,
+com o visual preto e dourado e a marca do cliente ativo:
+- Análise do feed: informe o @ e a IA monta o raio-x (frequência, identidade, bio,
+  horário), os 3 pilares de conteúdo, o que parar de fazer, 3 posts prontos com o
+  motivo de cada um e o calendário do mês: 3 posts liberados e o resto bloqueado
+  até a assinatura. Com Apify ou Graph API configurados, o feed real aparece post a
+  post, com os selos Top e Baixo. Sem fonte de dados, a análise é feita pelo perfil
+  da marca e a tela avisa, sem inventar métricas.
+- Post com foto: objetivo, formato (post, carrossel ou story), tema e foto enviada.
+  A IA escreve título, apoio, legenda e hashtags. Dá para gerar outra versão,
+  copiar a legenda e agendar.
+- Templates Premium: 70 templates com busca, categorias, formatos, "ver com as
+  cores da minha marca" e "testar com sua foto".
+- Estúdio de carrossel: a IA escreve o roteiro de 6 a 9 cards a partir do tema.
+  Cada card tem o próprio template (o texto é mantido ao trocar), objetos livres
+  para arrastar e redimensionar com guias, edição de texto no card, camadas,
+  desfazer/refazer, paletas e envio de imagem e logo (a logo do cliente entra sozinha).
+- Agenda do mês: os posts agendados no Estúdio, mês a mês.
+Sem chave de IA, o Estúdio continua funcionando com textos-modelo e avisa no topo.
+Trocar o cliente no cabeçalho recarrega o Estúdio com a nova marca.
+Arquivos: estudio/index.html (módulo) + seção nova em index.html / Aragonez Builder.dc.html.
+
+
 LAYOUTS PREMIUM (marcados com ✦ na lista de layouts)
 Nove layouts novos, disponíveis em qualquer card de carrossel, post, stories ou anúncio:
 - Cinema: foto inteira, etiquetas no topo (campo "terceiro texto", uma por linha),

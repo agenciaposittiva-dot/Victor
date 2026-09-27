@@ -1680,6 +1680,21 @@
   </div>
 </sc-if>
 
+<sc-if value="{{ atEstudio }}" hint-placeholder-val="{{ false }}">
+  <div class="ab-shell">
+    <header class="ab-app-header">
+      <button class="ab-icon-btn ab-sb-burger" onClick="{{ openSbMobile }}" aria-label="Abrir menu">≡</button>
+      <div class="ab-app-brand">
+        <img src="./logo-icarus.png" alt="Aragonez Builder" />
+        <div class="ab-app-brand-copy"><div class="ab-app-brand-name">Aragonez Builder</div><div class="ab-app-brand-sub">Creative AI Studio</div></div>
+      </div>
+      <div class="ab-client-switch"><span class="ab-client-dot">{{ clientInitial }}</span><div style="min-width:0;"><label>Cliente atual</label><select value="{{ clientSel }}" onChange="{{ setClientSel }}"><option value="">Sem cliente ativo</option><sc-for list="{{ clientOptions }}" as="co" hint-placeholder-count="3"><option value="{{ co.value }}">{{ co.label }}</option></sc-for></select></div></div>
+      <div class="ab-header-actions"><button class="ab-live-pill ab-cloud-pill {{ cloudHeaderCls }}" onClick="{{ goConfig }}" title="{{ cloudHeaderTip }}"><span class="ab-live-dot"></span>{{ cloudHeaderLabel }}</button><button class="ab-icon-btn ab-tip ab-bell" data-tip="Avisos" onClick="{{ notifyOpen }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><sc-if value="{{ avisosNovos }}" hint-placeholder-val="{{ false }}"><b class="ab-bell-badge">{{ avisosNovosN }}</b></sc-if></button><div class="ab-avatar ab-tip" data-tip="{{ who }}">{{ whoInitial }}</div><button class="ab-header-logout" onClick="{{ doLogout }}">Sair</button></div>
+    </header>
+    <iframe class="ab-estudio-frame" src="{{ estSrc }}" title="{{ estTitulo }}" style="width:100%;height:calc(100vh - 72px);border:0;display:block;background:#0a0908;" allow="clipboard-write"></iframe>
+  </div>
+</sc-if>
+
 <sc-if value="{{ atCarrossel }}" hint-placeholder-val="{{ false }}">
   <div class="ab-shell">
     <header class="ab-app-header">
@@ -6390,6 +6405,15 @@ const FORMAT_PAGES = {
   }
 };
 
+/* Páginas do Estúdio (estudio/index.html#id) */
+const ESTUDIO_PAGINAS = [
+  { id: 'inicio', label: 'Análise do feed', mark: 'AF', titulo: 'Análise do feed' },
+  { id: 'criar', label: 'Post com foto', mark: 'PF', titulo: 'Post com foto' },
+  { id: 'templates', label: 'Templates Premium', mark: 'PR', titulo: 'Templates Premium' },
+  { id: 'editor', label: 'Estúdio de carrossel', mark: 'EC', titulo: 'Estúdio de carrossel' },
+  { id: 'calendario', label: 'Agenda do mês', mark: 'AG', titulo: 'Agenda do mês' }
+];
+
 class Component extends DCLogic {
   state = {
     i: 0,
@@ -6486,6 +6510,10 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.componentDidMount_atalhos();
+    window.addEventListener('message', (e) => {
+      if (e.origin !== location.origin || !e.data || e.data.abEstudio !== 'pagina') return;
+      if (ESTUDIO_PAGINAS.some(p => p.id === e.data.id) && this.state.estPage !== e.data.id) this.setState({ estPage: e.data.id });
+    });
     this.checarNuvem();
     CoverDB.all().then(all => this.setState({ templateCovers: all || {} })).catch(() => { /* sem IndexedDB */ });
     try { if (localStorage.getItem('aragonez-primeiros-passos') === 'ok') this.setState({ ppFechado: true }); } catch (e) { /* noop */ }
@@ -10554,6 +10582,9 @@ class Component extends DCLogic {
             mk('Design Builder', 'DB', scr === 'design', () => { this.setState({ screen: 'design' }); this.dbCarregarConfig(); }, false),
             mk('Editor', 'ED', false, go({ screen: 'builder' }), false)
           ] },
+          { hasTitle: true, title: 'Estúdio', items: ESTUDIO_PAGINAS.map(p =>
+            mk(p.label, p.mark, scr === 'estudio' && (st.estPage || 'inicio') === p.id, go({ screen: 'estudio', estPage: p.id }), false)
+          ) },
           { hasTitle: true, title: 'Inteligência', items: [
             mk('Nuvem de ideias', 'NI', scr === 'ideias', go({ screen: 'ideias' }), false),
             mk('IA de imagem', 'IM', scr === 'imagens', go({ screen: 'imagens' }), false),
@@ -11106,6 +11137,11 @@ class Component extends DCLogic {
 
       /* ——— Nuvem de ideias ——— */
       atIdeias: !!st.authed && st.screen === 'ideias',
+      /* ——— Estúdio (módulo estudio/) ——— */
+      atEstudio: !!st.authed && st.screen === 'estudio',
+      /* O cliente vai no endereço: trocar o cliente no cabeçalho recarrega o estúdio com a nova marca. */
+      estSrc: './estudio/index.html?embed=1&cliente=' + encodeURIComponent(st.activeClientId || '') + '#' + (st.estPage || 'inicio'),
+      estTitulo: (ESTUDIO_PAGINAS.find(p => p.id === (st.estPage || 'inicio')) || ESTUDIO_PAGINAS[0]).titulo,
       goIdeias: () => this.setState({ screen: 'ideias' }),
       ideiaTema: st.ideiaTema || '',
       setIdeiaTema: (e) => this.setState({ ideiaTema: e.target.value }),
