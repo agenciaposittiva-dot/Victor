@@ -380,6 +380,71 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 .up-btn { position: relative; overflow: hidden; }
 .up-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
+/* Estúdio de carrossel */
+.muted { color: var(--muted); }
+.btn.sm { padding: 7px 11px; font-size: 13px; border-radius: 8px; }
+.btn.danger { color: #c0392b; }
+.ed-top { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-bottom: 18px; }
+.pals { display: flex; flex-wrap: wrap; gap: 8px; }
+.palbtn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px 6px 6px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; font-size: 13px; font-weight: 500; }
+.palbtn span { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+.palbtn span + span { margin-left: -8px; margin-right: 4px; }
+.palbtn.on { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.ed { display: grid; grid-template-columns: 112px minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+.ed-strip { display: grid; gap: 10px; max-height: calc(100vh - 120px); overflow-y: auto; padding: 2px; position: sticky; top: 16px; }
+.thumb { all: unset; cursor: pointer; position: relative; display: block; border-radius: 6px; box-shadow: 0 0 0 1px var(--line); }
+.thumb.on { box-shadow: 0 0 0 2px var(--accent); }
+.thumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.thumb .tn { position: absolute; top: 4px; left: 4px; z-index: 3; background: rgba(0,0,0,.6); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; }
+.thumb.add { aspect-ratio: 4 / 5; display: grid; place-items: center; border: 1.5px dashed var(--line); box-shadow: none; color: var(--muted); font-size: 13px; font-weight: 600; }
+.ed-stage { display: grid; gap: 12px; justify-items: center; min-width: 0; }
+.ed-cardbar, .ed-objbar, .ed-addbar { width: 100%; max-width: 540px; gap: 6px; }
+.ed-canvas { width: 100%; max-width: 540px; touch-action: none; user-select: none; border-radius: 6px; box-shadow: 0 20px 50px rgba(22,26,43,.18); }
+.sl { container-type: inline-size; width: 100%; }
+.sl-in { position: relative; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 6px; font-family: 'Hanken Grotesk', var(--body); }
+.sl .el { position: absolute; box-sizing: border-box; overflow-wrap: break-word; }
+.ed-canvas .el { cursor: move; }
+.ed-canvas .el:hover { outline: 1px dashed rgba(47,77,255,.7); }
+.ed-canvas .el.sel { outline: 2px solid #2f4dff; outline-offset: 1px; z-index: 5; }
+.el .hl { color: var(--acc); font-weight: inherit; }
+.el .pillt { display: inline-block; padding: .7em 1.5em; border-radius: 999px; white-space: nowrap; }
+.el-logo { display: grid; place-items: center; }
+.el-logo img { width: 100%; height: 100%; object-fit: contain; }
+.el-logo .lg { width: 70%; aspect-ratio: 1; border: .6cqi solid; border-radius: 22%; transform: rotate(45deg); display: grid; place-items: center; font-weight: 800; font-size: 3.2cqi; }
+.el-logo .lg > span { transform: rotate(-45deg); }
+.ph-l { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 2.8cqi; letter-spacing: .14em; text-transform: uppercase; opacity: .45; white-space: nowrap; pointer-events: none; color: #fff; }
+.rz { position: absolute; right: -7px; bottom: -7px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid #2f4dff; cursor: nwse-resize; }
+.gv, .gh { position: absolute; background: #ff3db8; z-index: 9; pointer-events: none; }
+.gv { left: 50%; top: 0; bottom: 0; width: 1px; }
+.gh { top: 50%; left: 0; right: 0; height: 1px; }
+[contenteditable="true"] { outline: none; cursor: text; }
+.ed-side { display: grid; gap: 16px; }
+.ed-props { gap: 12px; }
+.ed-props .label { margin-bottom: 4px; }
+.ed-props input[type=range] { width: 100%; accent-color: var(--accent); }
+.ed-props .hint { font-size: 12px; color: var(--muted); margin-top: -6px; }
+.swrow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; padding: 0; }
+.sw.on { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.swrow input[type=color] { width: 30px; height: 28px; border: 0; padding: 0; background: none; cursor: pointer; }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+.seg button { flex: 1; border: 0; background: var(--bg); padding: 8px 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button.on { background: var(--ink); color: var(--bg); }
+.tpicks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; max-height: 520px; overflow-y: auto; padding: 3px; }
+.tpick { all: unset; cursor: pointer; display: grid; gap: 5px; border-radius: 6px; }
+.tpick .sl-in { box-shadow: 0 0 0 1px var(--line); }
+.tpick.on .sl-in { box-shadow: 0 0 0 2px var(--accent); }
+.tpick > span { font-size: 11px; font-weight: 600; line-height: 1.2; }
+.tpick small { display: block; color: var(--muted); font-weight: 500; }
+.tpick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 1180px) { .ed { grid-template-columns: 96px minmax(0, 1fr); } .ed-side { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); } }
+@media (max-width: 760px) {
+  .ed { grid-template-columns: minmax(0, 1fr); }
+  .ed-strip { grid-auto-flow: column; grid-auto-columns: 72px; overflow-x: auto; max-height: none; position: static; }
+  .ed-side { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* Calendário */
 .cal-bar { display: flex; align-items: center; gap: 10px; }
 .cal-bar h2 { min-width: 11ch; text-transform: capitalize; }
@@ -448,7 +513,8 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
     border-right: 0; border-top: 1px solid var(--line);
   }
   .brand, .side-foot { display: none; }
-  .nav { grid-template-columns: repeat(6, 1fr); width: 100%; }
+  .nav { grid-template-columns: repeat(7, 1fr); width: 100%; }
+  .nav a { font-size: 10px; }
   .nav a { flex-direction: column; gap: 3px; font-size: 11px; padding: 8px 4px; text-align: center; }
   .main { padding-block: 16px 110px; }
   .two { grid-template-columns: 1fr; }
@@ -480,6 +546,9 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       <a href="#templates" data-view="templates">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>
         Templates</a>
+      <a href="#editor" data-view="editor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="6" width="6" height="12" rx="1.5"/><rect x="9" y="4" width="6" height="16" rx="1.5"/><rect x="16" y="6" width="6" height="12" rx="1.5"/></svg>
+        Carrossel</a>
       <a href="#calendario" data-view="calendario">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
         Calendário</a>
@@ -653,6 +722,61 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       <div class="chips tpl-cats" id="tpl-cats"></div>
       <p class="tpl-count" id="tpl-count"></p>
       <div class="tpl-grid" id="tpl-grid"></div>
+    </section>
+
+    <!-- ESTÚDIO DE CARROSSEL -->
+    <section id="view-editor" data-page="editor" hidden>
+      <div class="head">
+        <div>
+          <h1>Estúdio de carrossel</h1>
+          <p>A IA escreve o roteiro de cada card. Você escolhe o template de cada um e move qualquer objeto: texto, foto, logo ou forma.</p>
+        </div>
+        <div class="row">
+          <button class="btn btn-line" id="ed-undo" type="button" title="Desfazer (Ctrl+Z)">↶ Desfazer</button>
+          <button class="btn btn-line" id="ed-redo" type="button" title="Refazer (Ctrl+Shift+Z)">↷ Refazer</button>
+          <button class="btn" id="ed-schedule" type="button">Agendar carrossel</button>
+        </div>
+      </div>
+      <div class="panel ed-top">
+        <div class="field" style="flex:1 1 260px"><label class="label" for="ed-topic">Tema do carrossel</label><input type="text" id="ed-topic" placeholder="Ex.: 5 sinais de que o seu pão é artesanal"></div>
+        <button class="btn" id="ed-gen" type="button">Gerar carrossel com IA</button>
+        <div class="field" style="flex:1 1 100%"><span class="label">Paleta de todos os cards</span><div class="pals" id="ed-pals"></div></div>
+      </div>
+      <div class="ed">
+        <div class="ed-strip" id="ed-strip" aria-label="Cards do carrossel"></div>
+        <div class="ed-stage">
+          <div class="row ed-cardbar" id="ed-cardbar">
+            <span class="muted" id="ed-pos"></span>
+            <span class="row" style="gap:6px;margin-left:auto">
+              <button class="btn btn-quiet sm" type="button" data-card="left" title="Mover card para a esquerda">←</button>
+              <button class="btn btn-quiet sm" type="button" data-card="right" title="Mover card para a direita">→</button>
+              <button class="btn btn-quiet sm" type="button" data-card="dup">Duplicar card</button>
+              <button class="btn btn-quiet sm" type="button" data-card="del">Excluir card</button>
+            </span>
+          </div>
+          <div class="ed-canvas" id="ed-canvas"></div>
+          <div class="row ed-objbar" id="ed-objbar" hidden>
+            <button class="btn btn-quiet sm" type="button" data-act="front">Trazer para frente</button>
+            <button class="btn btn-quiet sm" type="button" data-act="back">Enviar para trás</button>
+            <button class="btn btn-quiet sm" type="button" data-act="dup">Duplicar</button>
+            <button class="btn btn-quiet sm danger" type="button" data-act="del">Excluir</button>
+          </div>
+          <div class="row ed-addbar" id="ed-addbar">
+            <span class="label" style="margin:0">Adicionar</span>
+            <button class="btn btn-line sm" type="button" data-add="title">Título</button>
+            <button class="btn btn-line sm" type="button" data-add="text">Texto</button>
+            <label class="btn btn-line sm up-btn" for="ed-add-img">Imagem<input type="file" id="ed-add-img" accept="image/*"></label>
+            <button class="btn btn-line sm" type="button" data-add="logo">Logo</button>
+            <button class="btn btn-line sm" type="button" data-add="shape">Forma</button>
+            <button class="btn btn-line sm" type="button" data-add="pill">Botão</button>
+          </div>
+          <p class="muted" style="font-size:12px">Atalhos: setas movem o objeto (Shift move mais), Delete exclui, Ctrl+D duplica, Ctrl+Z desfaz, Esc tira a seleção.</p>
+        </div>
+        <aside class="ed-side">
+          <div class="panel"><h3 style="margin-bottom:12px">Objeto selecionado</h3><div class="fields ed-props" id="ed-props"></div></div>
+          <div class="panel"><h3 style="margin-bottom:4px">Template deste card</h3><p class="muted" style="font-size:13px;margin-bottom:12px">O texto do card é mantido ao trocar.</p><div class="tpicks" id="ed-tpls"></div></div>
+        </aside>
+      </div>
     </section>
 
     <!-- CALENDÁRIO -->
@@ -1372,7 +1496,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
         if (photoUrl) URL.revokeObjectURL(photoUrl);
         photoUrl = URL.createObjectURL(b);
         document.querySelectorAll('.up-txt').forEach((t) => { t.textContent = 'Trocar foto'; });
-        renderGallery(); if (current) $('#pv-art').innerHTML = renderArt();
+        renderGallery(); if (current) $('#pv-art').innerHTML = renderArt(); if (window.PB && PB.onPhoto) PB.onPhoto();
         toast('Foto aplicada em todos os templates com foto');
       }, 'image/jpeg', 0.86);
     };
@@ -1383,7 +1507,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   $('#post-photo').addEventListener('change', onPhoto);
 
   // ---- Navegação ----
-  const VIEWS = ['inicio', 'criar', 'templates', 'calendario', 'marca', 'planos'];
+  const VIEWS = ['inicio', 'criar', 'templates', 'editor', 'calendario', 'marca', 'planos'];
   function route() {
     const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio';
     document.querySelectorAll('[data-page]').forEach((s) => { s.hidden = s.dataset.page !== v; });
@@ -1393,6 +1517,394 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   }
   window.addEventListener('hashchange', route);
 
+  window.PB = {
+    get brand() { return brand; }, get photo() { return photoUrl; }, textOn, initials, esc, toast,
+    schedule(title, days) {
+      const d = iso(addDays(days || 1));
+      posts.push({ date: d, time: '18:30', title, done: false });
+      posts.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time)); store.set('posts', posts); renderCal();
+      toast('Agendado para ' + d.split('-').reverse().join('/') + ' às 18:30');
+    }
+  };
   fillBrandForm(); renderBrandBits(); generate(); renderCal(); renderSteps(0, -1); renderGallery(); route();
+})();
+</script>
+<script>
+// ============ Estúdio de carrossel: cards com template próprio e objetos livres ============
+(function () {
+  const PB = window.PB; if (!PB) return;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const esc = PB.esc;
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('pb:' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('pb:' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  // ---- Paletas do carrossel ----
+  const PALS = {
+    'Marca': null,
+    'Noir': { bg: '#161412', fg: '#f5f2ec', acc: '#c9a36a' },
+    'Meia-noite': { bg: '#0b1a2a', fg: '#eef3f8', acc: '#5fd3f3' },
+    'Esmeralda': { bg: '#07130e', fg: '#f1f7f4', acc: '#2fd17a' },
+    'Carmim': { bg: '#0a0304', fg: '#fff5f5', acc: '#ff2d3d' },
+    'Areia': { bg: '#efe6d6', fg: '#2b2620', acc: '#b8582f' }
+  };
+  function pal() {
+    const p = PALS[deck.pal];
+    if (p) return p;
+    const b = PB.brand, dark = (h) => PB.textOn(h) === '#ffffff';
+    const bg = dark(b.c1) ? b.c1 : dark(b.c2) ? b.c2 : '#141414';
+    return { bg, fg: '#f6f3ee', acc: bg === b.c1 ? b.c2 : b.c1 };
+  }
+  // "@acc", "@fg80" etc. viram a cor da paleta atual
+  function col(v, P) {
+    if (!v) return 'transparent';
+    const m = /^@(bg|fg|acc)([0-9a-f]{2})?$/i.exec(v);
+    return m ? P[m[1]] + (m[2] || '') : v;
+  }
+  const tok = (s, P) => String(s).replace(/@(bg|fg|acc)/g, (m, k) => P[k]);
+  const FONTS = {
+    'Hanken': "'Hanken Grotesk', system-ui, sans-serif",
+    'Bricolage': "'Bricolage Grotesque', system-ui, sans-serif",
+    'Serifada': "'DM Serif Display', Georgia, serif",
+    'Elegante': "'Instrument Serif', Georgia, serif",
+    'Condensada': "'Anton', Impact, sans-serif",
+    'Sans': "'Instrument Sans', system-ui, sans-serif"
+  };
+
+  // ---- Elementos ----
+  let uid = 1; const nid = () => 'e' + (uid++) + Math.random().toString(36).slice(2, 5);
+  const T = (role, text, x, y, w, o) => Object.assign({ id: nid(), type: 'text', role, text, x, y, w, size: 5, weight: 400, color: '@fg', font: 'Hanken', align: 'left', lh: 1.1, ls: 0, italic: false, upper: false, pill: '', glow: false, opacity: 1 }, o || {});
+  const S = (x, y, w, h, o) => Object.assign({ id: nid(), type: 'shape', x, y, w, h, fill: '@fg14', border: '', radius: 3, opacity: 1 }, o || {});
+  const I = (x, y, w, h, o) => Object.assign({ id: nid(), type: 'image', x, y, w, h, src: 'photo', radius: 0, opacity: 1 }, o || {});
+  const L = (x, y, w, o) => Object.assign({ id: nid(), type: 'logo', x, y, w, h: w * 0.8, color: '@fg', opacity: 1 }, o || {});
+  const handle = (y, o) => T('handle', '@{handle}', 8, y, 50, Object.assign({ size: 2.7, weight: 600, opacity: 0.8 }, o || {}));
+  const count = (o) => T('count', '{n}/{total}', 78, 4.5, 14, Object.assign({ size: 2.6, weight: 600, align: 'right', opacity: 0.7 }, o || {}));
+
+  // ---- Templates de card (cada um monta objetos a partir do conteúdo do card) ----
+  const CARD_TPLS = [
+    { id: 'cinema', name: 'Capa cinema', kind: 'Capa', build: (d) => ({ bg: { photo: true, overlay: 'linear-gradient(180deg,#000000b8 0%,transparent 28%,transparent 45%,#000000f2 86%)' }, els: [
+      T('chips', d.chips || 'Estratégia · Autoridade · Criatividade', 14, 5, 72, { size: 2.9, align: 'center', pill: '#ffffff1f' }),
+      T('kicker', d.kicker, 6, 58, 88, { size: 5.2, weight: 300, align: 'center', opacity: 0.9 }),
+      T('title', d.title, 4, 64.5, 92, { size: 13, font: 'Serifada', align: 'center', lh: 0.95 }),
+      T('title2', d.title2, 6, 78, 88, { size: 6, font: 'Elegante', italic: true, align: 'center', color: '@acc' }),
+      T('swipe', 'Arraste  →', 32, 88, 36, { size: 2.6, weight: 600, align: 'center', ls: 0.35, upper: true, pill: '#ffffff26' }),
+      handle(94.5, { x: 25, w: 50, align: 'center', size: 2.4 })] }) },
+    { id: 'suico', name: 'Capa suíça', kind: 'Capa', build: (d) => ({ bg: { color: '@bg' }, els: [
+      T('r1', 'Marca', 7, 5, 26, { size: 3.2, weight: 300 }), T('r2', 'Confiança', 37, 5, 26, { size: 3.2, weight: 300, align: 'center' }), T('r3', '{marca}', 67, 5, 26, { size: 3.2, weight: 300, align: 'right' }),
+      T('handlechip', '@{handle}', 11, 30, 40, { size: 2.6, pill: '@fg14' }),
+      T('title', d.title, 11, 36, 80, { size: 10, weight: 200, lh: 0.98, ls: -0.04 }),
+      T('title2', d.title2, 11, 47, 80, { size: 10, weight: 700, lh: 0.98, ls: -0.04 }),
+      S(11, 62, 66, 9.5, { fill: '@fg0d', border: '@fg40', radius: 2.6 }),
+      T('body', d.body, 14.5, 64.2, 60, { size: 3.8, weight: 300, lh: 1.3 }),
+      T('read', '*Leia* a legenda ↘', 11, 75, 60, { size: 3.4, weight: 300, ls: 0.3 }),
+      T('r4', 'Marca', 7, 93, 26, { size: 3.2, weight: 300 }), T('r5', 'Confiança', 37, 93, 26, { size: 3.2, weight: 300, align: 'center' }), T('r6', '{marca}', 67, 93, 26, { size: 3.2, weight: 300, align: 'right' })] }) },
+    { id: 'manchete', name: 'Capa manchete', kind: 'Capa', build: (d) => ({ bg: { photo: true, overlay: 'linear-gradient(180deg,transparent 38%,@bgf2 82%)' }, els: [
+      T('title', d.title, 5, 60, 90, { size: 10.4, align: 'center', color: '@acc', lh: 1 }),
+      T('title2', d.title2, 5, 71, 90, { size: 10.4, align: 'center', lh: 1 }),
+      T('body', d.body, 12, 83, 76, { size: 3.8, align: 'center', opacity: 0.9 }),
+      T('swipe', 'Arraste ←', 36, 89.5, 28, { size: 2.8, weight: 700, align: 'center', upper: true, ls: 0.08, pill: '@acc', color: '@bg', glow: true })] }) },
+    { id: 'numero', name: 'Número', kind: 'Conteúdo', build: (d) => ({ bg: { color: '@bg', overlay: 'radial-gradient(ellipse 60% 40% at 100% 0%,@acc22,transparent 70%)' }, els: [
+      count(), T('number', d.number || '01', 7, 8, 50, { size: 24, font: 'Serifada', color: '@acc', lh: 1 }),
+      S(8, 38, 12, 0.6, { fill: '@acc', radius: 0 }),
+      T('title', d.title, 8, 42, 84, { size: 7.2, weight: 700, lh: 1.04, ls: -0.03 }),
+      T('body', d.body, 8, 64, 78, { size: 4.2, weight: 300, lh: 1.4, opacity: 0.9 }),
+      handle(93)] }) },
+    { id: 'lista', name: 'Lista', kind: 'Conteúdo', build: (d) => ({ bg: { color: '@bg' }, els: [
+      count(), T('kicker', d.kicker || 'Checklist', 8, 10, 60, { size: 3.2, weight: 700, upper: true, ls: 0.16, color: '@acc' }),
+      T('title', d.title, 8, 16, 84, { size: 7.6, weight: 700, lh: 1.04, ls: -0.03 }),
+      S(8, 43, 84, 9, { fill: '@fg0f', radius: 2.4 }), T('item1', '✓  ' + (d.item1 || ''), 12, 45.6, 76, { size: 4.4, weight: 600 }),
+      S(8, 54, 84, 9, { fill: '@fg0f', radius: 2.4 }), T('item2', '✓  ' + (d.item2 || ''), 12, 56.6, 76, { size: 4.4, weight: 600 }),
+      S(8, 65, 84, 9, { fill: '@fg0f', radius: 2.4 }), T('item3', '✓  ' + (d.item3 || ''), 12, 67.6, 76, { size: 4.4, weight: 600 }),
+      handle(93)] }) },
+    { id: 'citacao', name: 'Citação', kind: 'Prova', build: (d) => ({ bg: { color: '@bg' }, els: [
+      count(), T('qmark', '“', 5, 1, 30, { size: 42, font: 'Serifada', color: '@acc', lh: 1 }),
+      T('body', d.body, 8, 30, 84, { size: 7, font: 'Elegante', lh: 1.08 }),
+      T('author', d.author, 8, 70, 84, { size: 3.3, weight: 700, upper: true, ls: 0.14, color: '@acc' }),
+      T('stars', '★★★★★', 8, 75, 40, { size: 4.2, color: '@acc', ls: 0.1 }),
+      handle(93)] }) },
+    { id: 'foto', name: 'Foto + texto', kind: 'Conteúdo', build: (d) => ({ bg: { color: '@bg' }, els: [
+      I(0, 0, 100, 56), count({ color: '#ffffff' }),
+      T('kicker', d.kicker || 'Bastidores', 8, 61, 60, { size: 3.2, weight: 700, upper: true, ls: 0.16, color: '@acc' }),
+      T('title', d.title, 8, 66.5, 84, { size: 6.6, weight: 700, lh: 1.05, ls: -0.03 }),
+      T('body', d.body, 8, 82, 84, { size: 3.8, weight: 300, lh: 1.35 })] }) },
+    { id: 'dado', name: 'Dado', kind: 'Prova', build: (d) => ({ bg: { color: '@bg', overlay: 'radial-gradient(ellipse 70% 45% at 50% 100%,@acc55,transparent 70%)' }, els: [
+      count(), T('number', d.number || '87%', 6, 16, 90, { size: 30, weight: 800, color: '@acc', lh: 0.9, ls: -0.05 }),
+      T('title', d.title, 8, 50, 84, { size: 6.4, weight: 700, lh: 1.05 }),
+      T('body', d.body, 8, 67, 76, { size: 4, weight: 300, lh: 1.4, opacity: 0.9 }),
+      handle(93)] }) },
+    { id: 'vidro', name: 'Vidro', kind: 'Conteúdo', build: (d) => ({ bg: { color: '@bg', overlay: 'radial-gradient(ellipse 55% 35% at 50% 92%,@acc66,transparent 70%),linear-gradient(@fg12 1px,transparent 1px) 0 0/11cqi 11cqi,linear-gradient(90deg,@fg12 1px,transparent 1px) 0 0/11cqi 11cqi' }, els: [
+      L(45, 6, 10), S(11, 24, 78, 54, { fill: '@fg12', border: '@fg30', radius: 4 }),
+      T('kicker', d.kicker || 'Estratégia', 15, 29, 70, { size: 4.4, weight: 300, align: 'center' }),
+      T('title', d.title, 15, 35, 70, { size: 7, weight: 700, align: 'center', lh: 1.02 }),
+      T('body', d.body, 16, 56, 68, { size: 3.4, align: 'center', color: '@acc', lh: 1.35 }),
+      count({ x: 43, y: 84, w: 14, align: 'center' })] }) },
+    { id: 'cta', name: 'Chamada final', kind: 'Final', build: (d) => ({ bg: { color: '@bg', overlay: 'radial-gradient(ellipse 60% 40% at 50% 55%,@acc30,transparent 70%)' }, els: [
+      T('kicker', d.kicker || 'Gostou?', 10, 14, 80, { size: 3.4, weight: 700, upper: true, ls: 0.2, align: 'center', color: '@acc' }),
+      T('title', d.title, 8, 21, 84, { size: 9, font: 'Serifada', align: 'center', lh: 1.02 }),
+      T('body', d.body || '♡ Curta    ✈ Envie    ⌑ Salve', 10, 52, 80, { size: 4, weight: 600, align: 'center', ls: 0.04 }),
+      L(42, 66, 16), T('follow', 'Siga @{handle}', 20, 84, 60, { size: 3.6, weight: 600, align: 'center', pill: '@fg14' })] }) }
+  ];
+  const tplOf = (id) => CARD_TPLS.find((t) => t.id === id) || CARD_TPLS[0];
+
+  // ---- Roteiro de exemplo (na versão real a IA escreve a partir do tema e do feed) ----
+  function sampleDeck(topic) {
+    const b = PB.brand;
+    return [
+      { tpl: 'cinema', data: { chips: 'Qualidade · Tradição · Cuidado', kicker: topic ? 'Tudo o que você precisa saber sobre' : '5 sinais de que o seu pão', title: topic || 'é artesanal', title2: topic ? 'em 7 cards' : 'de verdade.', body: 'Salve para conferir na próxima compra.' } },
+      { tpl: 'numero', data: { number: '01', title: 'A casca estala quando você aperta', body: 'Fermentação longa e forno bem quente criam uma casca fina e crocante. Pão mole por fora costuma levar aditivos.' } },
+      { tpl: 'numero', data: { number: '02', title: 'O miolo tem furos de tamanhos diferentes', body: 'Alvéolos irregulares mostram fermentação natural. Miolo uniforme, tipo esponja, indica fermento químico.' } },
+      { tpl: 'lista', data: { kicker: 'Sinal 03', title: 'A lista de ingredientes é curta', item1: 'Farinha de trigo', item2: 'Água e sal', item3: 'Fermento natural' } },
+      { tpl: 'foto', data: { kicker: 'Sinal 04', title: 'Ele é feito na hora, perto de você', body: 'Pão artesanal não passa semanas na prateleira. Na ' + b.name + ', a primeira fornada sai às 7h.' } },
+      { tpl: 'dado', data: { number: '36h', title: 'Sinal 05: tempo de fermentação', body: 'É quanto a massa descansa antes de ir ao forno na ' + b.name + '. Pressa não combina com sabor.' } },
+      { tpl: 'citacao', data: { body: 'Depois que provei o pão de fermentação natural, não consegui voltar para o de saquinho.', author: 'Dona Célia · cliente há 8 anos' } },
+      { tpl: 'cta', data: { kicker: 'Gostou?', title: 'Salve este post e mande para quem ama pão.', body: '♡ Curta    ✈ Envie    ⌑ Salve' } }
+    ].map((c) => Object.assign(tplOf(c.tpl).build(c.data), c));
+  }
+
+  // ---- Estado ----
+  let deck = store.get('deck', null);
+  if (!deck || !Array.isArray(deck.slides) || !deck.slides.length) deck = { pal: 'Noir', slides: sampleDeck('') };
+  deck.slides.forEach((s) => s.els.forEach((e) => { if (e.type === 'image' && e.src !== 'photo') e.src = 'photo'; }));
+  let cur = 0, sel = null, hist = [], fut = [], logoUrl = '';
+  const save = () => store.set('deck', deck);
+  const snap = () => { hist.push(JSON.stringify(deck)); if (hist.length > 60) hist.shift(); fut = []; };
+  const slide = () => deck.slides[cur];
+  const findEl = (id) => slide().els.find((e) => e.id === id);
+
+  // ---- Renderização ----
+  function fmtText(e, i) {
+    const b = PB.brand;
+    let t = String(e.text || '').replace(/\{handle\}/g, b.handle).replace(/\{marca\}/g, b.name).replace(/\{n\}/g, i + 1).replace(/\{total\}/g, deck.slides.length);
+    t = esc(t).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>').replace(/\n/g, '<br>');
+    return t;
+  }
+  function phBg(P) {
+    const u = PB.photo;
+    return u ? 'url(' + u + ') center/cover no-repeat'
+      : 'radial-gradient(ellipse 22% 16% at 50% 34%,' + P.fg + '30,transparent 70%),radial-gradient(ellipse 42% 30% at 50% 78%,' + P.fg + '22,transparent 70%),radial-gradient(ellipse 70% 60% at 50% 45%,' + P.acc + '38,transparent 75%),' + P.bg;
+  }
+  function elHTML(e, i, P, editable) {
+    let st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;opacity:' + e.opacity + ';';
+    let inner = '';
+    if (e.type === 'text') {
+      st += 'font-family:' + FONTS[e.font] + ';font-size:' + e.size + 'cqi;font-weight:' + e.weight + ';color:' + col(e.color, P) + ';text-align:' + e.align + ';line-height:' + e.lh + ';letter-spacing:' + e.ls + 'em;' + (e.italic ? 'font-style:italic;' : '') + (e.upper ? 'text-transform:uppercase;' : '') + '--acc:' + P.acc + ';';
+      inner = e.pill ? '<span class="pillt" style="background:' + col(e.pill, P) + (e.glow ? ';box-shadow:0 0 5cqi ' + col(e.pill, P) + '99' : '') + '">' + fmtText(e, i) + '</span>' : fmtText(e, i);
+    } else if (e.type === 'shape') {
+      st += 'height:' + e.h + '%;background:' + col(e.fill, P) + ';border-radius:' + e.radius + 'cqi;' + (e.border ? 'border:1px solid ' + col(e.border, P) + ';' : '');
+    } else if (e.type === 'image') {
+      const src = e.src === 'photo' ? phBg(P) : 'url(' + e.src + ') center/cover no-repeat';
+      st += 'height:' + e.h + '%;background:' + src + ';border-radius:' + e.radius + 'cqi;';
+      if (e.src === 'photo' && !PB.photo) inner = '<span class="ph-l">Sua foto aqui</span>';
+    } else if (e.type === 'logo') {
+      st += 'height:' + e.h + '%;';
+      inner = logoUrl ? '<img src="' + logoUrl + '" alt="Logo">' : '<span class="lg" style="border-color:' + col(e.color, P) + ';color:' + col(e.color, P) + '"><span>' + esc(PB.initials(PB.brand.name)) + '</span></span>';
+    }
+    return '<div class="el el-' + e.type + (editable && sel === e.id ? ' sel' : '') + '" data-id="' + e.id + '" style="' + st + '">' + inner + (editable && sel === e.id ? '<i class="rz" data-rz="1"></i>' : '') + '</div>';
+  }
+  function slideHTML(s, i, editable) {
+    const P = pal();
+    const base = s.bg.photo ? phBg(P) : col(s.bg.color || '@bg', P);
+    const bg = (s.bg.overlay ? tok(s.bg.overlay, P) + ',' : '') + base;
+    return '<div class="sl"><div class="sl-in" style="background:' + bg + ';color:' + P.fg + '">' + (s.bg.photo && !PB.photo ? '<span class="ph-l" style="top:40%">Sua foto aqui</span>' : '') +
+      s.els.map((e) => elHTML(e, i, P, editable)).join('') + (editable ? '<i class="gv" hidden></i><i class="gh" hidden></i>' : '') + '</div></div>';
+  }
+
+  function renderStrip() {
+    $('#ed-strip').innerHTML = deck.slides.map((s, i) => '<button type="button" class="thumb' + (i === cur ? ' on' : '') + '" data-go="' + i + '" aria-label="Card ' + (i + 1) + '"><span class="tn">' + (i + 1) + '</span>' + slideHTML(s, i, false) + '</button>').join('') +
+      '<button type="button" class="thumb add" id="ed-add-card"><span>+ Card</span></button>';
+  }
+  function renderCanvas() { $('#ed-canvas').innerHTML = slideHTML(slide(), cur, true); $('#ed-pos').textContent = 'Card ' + (cur + 1) + ' de ' + deck.slides.length + ' · ' + tplOf(slide().tpl).name; }
+  function renderTplPicker() {
+    const s = slide();
+    $('#ed-tpls').innerHTML = CARD_TPLS.map((t) => {
+      const prev = Object.assign(t.build(s.data || {}), { tpl: t.id });
+      return '<button type="button" class="tpick' + (s.tpl === t.id ? ' on' : '') + '" data-tpl="' + t.id + '">' + slideHTML(prev, cur, false) + '<span>' + t.name + '<small>' + t.kind + '</small></span></button>';
+    }).join('');
+  }
+  function renderProps() {
+    const e = sel && findEl(sel), box = $('#ed-props');
+    $('#ed-objbar').hidden = !e;
+    if (!e) { box.innerHTML = '<p class="muted">Clique em qualquer objeto do card para mover, redimensionar e editar. Clique duas vezes num texto para escrever direto nele.</p>'; return; }
+    const colorOpt = (k, v) => '<div class="swrow" data-k="' + k + '">' + ['@fg', '@acc', '@bg', '#ffffff', '#111111'].map((c) => '<button type="button" class="sw' + (v === c ? ' on' : '') + '" data-c="' + c + '" style="background:' + col(c, pal()) + '" aria-label="Cor ' + c + '"></button>').join('') +
+      '<input type="color" value="' + (/^#[0-9a-f]{6}$/i.test(v) ? v : '#ffffff') + '" data-cc="' + k + '" aria-label="Outra cor"></div>';
+    let h = '';
+    if (e.type === 'text') {
+      h += '<label class="label" for="p-text">Texto</label><textarea id="p-text" rows="3">' + esc(e.text) + '</textarea><p class="hint">Use *asteriscos* para destacar uma palavra na cor de destaque.</p>' +
+        '<div class="two"><div><label class="label" for="p-font">Fonte</label><select id="p-font">' + Object.keys(FONTS).map((f) => '<option' + (f === e.font ? ' selected' : '') + '>' + f + '</option>').join('') + '</select></div>' +
+        '<div><label class="label" for="p-weight">Peso</label><select id="p-weight">' + [[200, 'Fino'], [300, 'Leve'], [400, 'Normal'], [600, 'Médio'], [700, 'Negrito'], [800, 'Extra']].map((w) => '<option value="' + w[0] + '"' + (+e.weight === w[0] ? ' selected' : '') + '>' + w[1] + '</option>').join('') + '</select></div></div>' +
+        '<label class="label" for="p-size">Tamanho <b id="p-size-v">' + e.size + '</b></label><input type="range" id="p-size" min="1.5" max="45" step="0.1" value="' + e.size + '">' +
+        '<label class="label">Cor</label>' + colorOpt('color', e.color) +
+        '<div class="seg" role="group" aria-label="Alinhamento">' + [['left', 'Esq.'], ['center', 'Centro'], ['right', 'Dir.']].map((a) => '<button type="button" data-align="' + a[0] + '" class="' + (e.align === a[0] ? 'on' : '') + '">' + a[1] + '</button>').join('') + '</div>' +
+        '<div class="seg"><button type="button" data-tog="italic" class="' + (e.italic ? 'on' : '') + '"><i>Itálico</i></button><button type="button" data-tog="upper" class="' + (e.upper ? 'on' : '') + '">CAIXA ALTA</button><button type="button" data-tog="pillon" class="' + (e.pill ? 'on' : '') + '">Fundo</button></div>' +
+        '<label class="label" for="p-ls">Espaço entre letras</label><input type="range" id="p-ls" min="-0.08" max="0.5" step="0.01" value="' + e.ls + '">';
+    } else if (e.type === 'shape') {
+      h += '<label class="label">Preenchimento</label>' + colorOpt('fill', e.fill) + '<label class="label" for="p-radius">Cantos</label><input type="range" id="p-radius" min="0" max="50" step="0.5" value="' + e.radius + '">';
+    } else if (e.type === 'image') {
+      h += '<label class="btn btn-line up-btn" for="p-img">Trocar imagem<input type="file" id="p-img" accept="image/*"></label><label class="label" for="p-radius">Cantos</label><input type="range" id="p-radius" min="0" max="50" step="0.5" value="' + e.radius + '">';
+    } else if (e.type === 'logo') {
+      h += '<label class="btn btn-line up-btn" for="p-logo">Enviar sua logo<input type="file" id="p-logo" accept="image/*"></label><p class="hint">A logo enviada entra em todos os cards.</p><label class="label">Cor</label>' + colorOpt('color', e.color);
+    }
+    h += '<label class="label" for="p-op">Transparência</label><input type="range" id="p-op" min="0.1" max="1" step="0.05" value="' + e.opacity + '">';
+    box.innerHTML = h;
+  }
+  function renderAll() { renderStrip(); renderCanvas(); renderTplPicker(); renderProps(); $('#ed-undo').disabled = !hist.length; $('#ed-redo').disabled = !fut.length; save(); }
+
+  // ---- Arrastar, redimensionar, guias ----
+  let drag = null;
+  $('#ed-canvas').addEventListener('pointerdown', (ev) => {
+    const elNode = ev.target.closest('.el'); const inner = $('#ed-canvas .sl-in');
+    if (!elNode) { if (sel) { sel = null; renderCanvas(); renderProps(); } return; }
+    if (elNode.isContentEditable || ev.target.closest('[contenteditable="true"]')) return;
+    const id = elNode.dataset.id, e = findEl(id); if (!e) return;
+    if (sel !== id) { sel = id; renderCanvas(); renderProps(); }
+    const r = inner.getBoundingClientRect();
+    drag = { id, mode: ev.target.dataset.rz ? 'rz' : 'mv', sx: ev.clientX, sy: ev.clientY, r, o: JSON.parse(JSON.stringify(e)), moved: false };
+    $('#ed-canvas').setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  });
+  $('#ed-canvas').addEventListener('pointermove', (ev) => {
+    if (!drag) return;
+    const e = findEl(drag.id), dx = (ev.clientX - drag.sx) / drag.r.width * 100, dy = (ev.clientY - drag.sy) / drag.r.height * 100;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 0.4) return;
+    if (!drag.moved) { snap(); drag.moved = true; }
+    const node = $('#ed-canvas [data-id="' + drag.id + '"]');
+    if (drag.mode === 'mv') {
+      let nx = drag.o.x + dx, ny = drag.o.y + dy;
+      const h = node.offsetHeight / drag.r.height * 100;
+      const cx = nx + e.w / 2, cy = ny + h / 2, gv = $('#ed-canvas .gv'), gh = $('#ed-canvas .gh');
+      gv.hidden = Math.abs(cx - 50) > 1.2; gh.hidden = Math.abs(cy - 50) > 1.2;
+      if (!gv.hidden) nx = 50 - e.w / 2; if (!gh.hidden) ny = 50 - h / 2;
+      e.x = +nx.toFixed(2); e.y = +ny.toFixed(2);
+      node.style.left = e.x + '%'; node.style.top = e.y + '%';
+    } else {
+      const nw = Math.max(4, drag.o.w + dx);
+      e.w = +nw.toFixed(2); node.style.width = e.w + '%';
+      if (e.type === 'text') { e.size = +(drag.o.size * nw / drag.o.w).toFixed(2); node.style.fontSize = e.size + 'cqi'; }
+      else { e.h = +Math.max(2, (e.type === 'logo' ? drag.o.h * nw / drag.o.w : drag.o.h + dy)).toFixed(2); node.style.height = e.h + '%'; }
+    }
+  });
+  const endDrag = () => { if (!drag) return; const m = drag.moved; drag = null; $('#ed-canvas .gv') && ($('#ed-canvas .gv').hidden = true, $('#ed-canvas .gh').hidden = true); if (m) { renderStrip(); renderProps(); save(); $('#ed-undo').disabled = false; } };
+  $('#ed-canvas').addEventListener('pointerup', endDrag);
+  $('#ed-canvas').addEventListener('pointercancel', endDrag);
+
+  // Clique duplo: escrever direto no texto
+  $('#ed-canvas').addEventListener('dblclick', (ev) => {
+    const node = ev.target.closest('.el-text'); if (!node) return;
+    const e = findEl(node.dataset.id); snap();
+    const target = node.querySelector('.pillt') || node;
+    target.textContent = e.text; target.contentEditable = 'true'; target.focus();
+    const rg = document.createRange(); rg.selectNodeContents(target); const s = getSelection(); s.removeAllRanges(); s.addRange(rg);
+    target.addEventListener('blur', () => { e.text = target.innerText.replace(/\n$/, ''); syncData(e); renderAll(); }, { once: true });
+  });
+  function syncData(e) { const s = slide(); if (e.role && s.data && e.type === 'text') { let t = e.text; if (/^item\d$/.test(e.role)) t = t.replace(/^✓\s*/, ''); s.data[e.role] = t; } }
+
+  // ---- Painel de propriedades ----
+  const setProp = (k, v, live) => { const e = findEl(sel); if (!e) return; if (!live) snap(); e[k] = v; if (k === 'text') syncData(e); renderCanvas(); renderStrip(); save(); };
+  $('#ed-props').addEventListener('input', (ev) => {
+    const t = ev.target, e = findEl(sel); if (!e) return;
+    if (t.id === 'p-text') setProp('text', t.value, true);
+    if (t.id === 'p-size') { setProp('size', +t.value, true); $('#p-size-v').textContent = t.value; }
+    if (t.id === 'p-ls') setProp('ls', +t.value, true);
+    if (t.id === 'p-radius') setProp('radius', +t.value, true);
+    if (t.id === 'p-op') setProp('opacity', +t.value, true);
+    if (t.dataset.cc) { setProp(t.dataset.cc, t.value, true); }
+  });
+  $('#ed-props').addEventListener('focusin', (ev) => { if (ev.target.matches('textarea,input[type=range],input[type=color]')) snap(); });
+  $('#ed-props').addEventListener('change', (ev) => {
+    const t = ev.target;
+    if (t.id === 'p-font') setProp('font', t.value);
+    if (t.id === 'p-weight') setProp('weight', +t.value);
+    if (t.id === 'p-img' || t.id === 'p-logo') readImg(t.files[0], (url) => { if (t.id === 'p-img') setProp('src', url); else { logoUrl = url; renderAll(); PB.toast('Logo aplicada em todos os cards'); } });
+  });
+  $('#ed-props').addEventListener('click', (ev) => {
+    const b = ev.target.closest('button'); if (!b) return; const e = findEl(sel); if (!e) return;
+    if (b.dataset.c) { setProp(b.parentNode.dataset.k, b.dataset.c); renderProps(); }
+    if (b.dataset.align) { setProp('align', b.dataset.align); renderProps(); }
+    if (b.dataset.tog === 'pillon') { setProp('pill', e.pill ? '' : '@fg1f'); renderProps(); }
+    else if (b.dataset.tog) { setProp(b.dataset.tog, !e[b.dataset.tog]); renderProps(); }
+  });
+  function readImg(f, cb) {
+    if (!f) return; const img = new Image(), src = URL.createObjectURL(f);
+    img.onload = () => { const k = Math.min(1, 1080 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(src); c.toBlob((b) => cb(URL.createObjectURL(b)), 'image/png'); };
+    img.onerror = () => PB.toast('Não consegui abrir essa imagem. Tente JPG ou PNG.');
+    img.src = src;
+  }
+
+  // ---- Barra do objeto ----
+  $('#ed-objbar').addEventListener('click', (ev) => {
+    const a = ev.target.closest('[data-act]'); if (!a) return; const s = slide(), i = s.els.findIndex((e) => e.id === sel); if (i < 0) return;
+    snap(); const e = s.els[i];
+    if (a.dataset.act === 'front') { s.els.splice(i, 1); s.els.push(e); }
+    if (a.dataset.act === 'back') { s.els.splice(i, 1); s.els.unshift(e); }
+    if (a.dataset.act === 'dup') { const c = JSON.parse(JSON.stringify(e)); c.id = nid(); c.x += 3; c.y += 3; s.els.push(c); sel = c.id; }
+    if (a.dataset.act === 'del') { s.els.splice(i, 1); sel = null; }
+    renderAll();
+  });
+
+  // ---- Adicionar objetos ----
+  $('#ed-addbar').addEventListener('click', (ev) => {
+    const a = ev.target.closest('[data-add]'); if (!a) return; snap(); let e;
+    if (a.dataset.add === 'title') e = T('', 'Novo título', 10, 40, 80, { size: 8, weight: 700, align: 'center' });
+    if (a.dataset.add === 'text') e = T('', 'Escreva aqui', 15, 50, 70, { size: 4.2, align: 'center' });
+    if (a.dataset.add === 'shape') e = S(20, 40, 60, 20, { fill: '@acc', radius: 3 });
+    if (a.dataset.add === 'logo') e = L(42, 42, 16);
+    if (a.dataset.add === 'pill') e = T('', 'Arraste →', 36, 86, 28, { size: 2.8, weight: 700, align: 'center', upper: true, ls: 0.2, pill: '@acc', color: '@bg' });
+    if (e) { slide().els.push(e); sel = e.id; renderAll(); }
+  });
+  $('#ed-add-img').addEventListener('change', (ev) => readImg(ev.target.files[0], (url) => { snap(); const e = I(15, 20, 70, 45, { src: url, radius: 2 }); slide().els.push(e); sel = e.id; renderAll(); ev.target.value = ''; }));
+
+  // ---- Cards: trocar, adicionar, duplicar, excluir, mover ----
+  $('#ed-strip').addEventListener('click', (ev) => {
+    const g = ev.target.closest('[data-go]');
+    if (g) { cur = +g.dataset.go; sel = null; renderAll(); return; }
+    if (ev.target.closest('#ed-add-card')) { snap(); const t = tplOf('numero'); deck.slides.splice(cur + 1, 0, Object.assign(t.build({ number: String(cur + 1).padStart(2, '0'), title: 'Novo card', body: 'Escreva o conteúdo deste card.' }), { tpl: 'numero', data: { title: 'Novo card', body: 'Escreva o conteúdo deste card.' } })); cur++; sel = null; renderAll(); }
+  });
+  $('#ed-cardbar').addEventListener('click', (ev) => {
+    const a = ev.target.closest('[data-card]'); if (!a) return; const k = a.dataset.card, n = deck.slides.length;
+    if (k === 'dup') { snap(); const c = JSON.parse(JSON.stringify(slide())); c.els.forEach((e) => { e.id = nid(); }); deck.slides.splice(cur + 1, 0, c); cur++; }
+    if (k === 'del') { if (n < 2) { PB.toast('O carrossel precisa de pelo menos 1 card'); return; } snap(); deck.slides.splice(cur, 1); cur = Math.min(cur, deck.slides.length - 1); }
+    if (k === 'left' && cur > 0) { snap(); const s = deck.slides.splice(cur, 1)[0]; deck.slides.splice(--cur, 0, s); }
+    if (k === 'right' && cur < n - 1) { snap(); const s = deck.slides.splice(cur, 1)[0]; deck.slides.splice(++cur, 0, s); }
+    sel = null; renderAll();
+  });
+
+  // ---- Template por card (mantém o texto do card) ----
+  $('#ed-tpls').addEventListener('click', (ev) => {
+    const b = ev.target.closest('[data-tpl]'); if (!b) return; snap();
+    const s = slide(), t = tplOf(b.dataset.tpl), built = t.build(s.data || {});
+    s.tpl = t.id; s.bg = built.bg; s.els = built.els; sel = null; renderAll();
+    PB.toast('Template "' + t.name + '" aplicado ao card ' + (cur + 1));
+  });
+
+  // ---- Paleta, gerar, desfazer ----
+  const palChips = () => { $('#ed-pals').innerHTML = Object.keys(PALS).map((k) => { const p = PALS[k] || (() => { const o = deck.pal; deck.pal = 'Marca'; const r = pal(); deck.pal = o; return r; })(); return '<button type="button" class="palbtn' + (deck.pal === k ? ' on' : '') + '" data-pal="' + k + '"><span style="background:' + p.bg + '"></span><span style="background:' + p.acc + '"></span>' + k + '</button>'; }).join(''); };
+  $('#ed-pals').addEventListener('click', (ev) => { const b = ev.target.closest('[data-pal]'); if (!b) return; snap(); deck.pal = b.dataset.pal; palChips(); renderAll(); });
+  $('#ed-gen').addEventListener('click', () => {
+    const btn = $('#ed-gen'); btn.disabled = true; btn.textContent = 'Escrevendo os cards…';
+    setTimeout(() => { snap(); deck.slides = sampleDeck($('#ed-topic').value.trim()); cur = 0; sel = null; renderAll(); btn.disabled = false; btn.textContent = 'Gerar carrossel com IA'; PB.toast('Carrossel de ' + deck.slides.length + ' cards gerado'); }, 1200);
+  });
+  function undo() { if (!hist.length) return; fut.push(JSON.stringify(deck)); deck = JSON.parse(hist.pop()); cur = Math.min(cur, deck.slides.length - 1); sel = null; palChips(); renderAll(); }
+  function redo() { if (!fut.length) return; hist.push(JSON.stringify(deck)); deck = JSON.parse(fut.pop()); cur = Math.min(cur, deck.slides.length - 1); sel = null; palChips(); renderAll(); }
+  $('#ed-undo').addEventListener('click', undo); $('#ed-redo').addEventListener('click', redo);
+  $('#ed-schedule').addEventListener('click', () => { PB.schedule(deck.slides[0].data.title ? 'Carrossel: ' + [deck.slides[0].data.kicker, deck.slides[0].data.title].filter(Boolean).join(' ') : 'Carrossel', 2); });
+
+  // ---- Teclado ----
+  document.addEventListener('keydown', (ev) => {
+    if ($('#view-editor').hidden) return;
+    const typing = ev.target.closest('input,textarea,select,[contenteditable="true"]');
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'z' && !typing) { ev.preventDefault(); ev.shiftKey ? redo() : undo(); return; }
+    if (typing || !sel) return;
+    const e = findEl(sel); if (!e) return;
+    const st = ev.shiftKey ? 2 : 0.5, mv = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, -st], ArrowDown: [0, st] }[ev.key];
+    if (mv) { ev.preventDefault(); snap(); e.x = +(e.x + mv[0]).toFixed(2); e.y = +(e.y + mv[1]).toFixed(2); renderCanvas(); renderStrip(); save(); }
+    if (ev.key === 'Delete' || ev.key === 'Backspace') { ev.preventDefault(); snap(); slide().els = slide().els.filter((x) => x.id !== sel); sel = null; renderAll(); }
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'd') { ev.preventDefault(); $('[data-act="dup"]').click(); }
+    if (ev.key === 'Escape') { sel = null; renderCanvas(); renderProps(); }
+  });
+
+  PB.onPhoto = () => { if (!$('#view-editor').hidden) renderAll(); };
+  const show = () => { if (!$('#view-editor').hidden) { palChips(); renderAll(); } };
+  window.addEventListener('hashchange', show); show();
 })();
 </script>
