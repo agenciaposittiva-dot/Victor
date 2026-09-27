@@ -1,0 +1,802 @@
+<title>Posittiva Builder</title>
+<meta name="description" content="Protótipo do Posittiva Builder: posts para Instagram criados com IA a partir da identidade da sua marca.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f3f4f9;
+  --surface: #ffffff;
+  --surface-2: #eceef6;
+  --ink: #161a2b;
+  --muted: #5e6478;
+  --line: #dde0ec;
+  --accent: #2f4dff;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4e8ff;
+  --sun: #ffc53d;
+  --ok: #178a4c;
+  --ok-soft: #dff3e7;
+  --warn: #9a6400;
+  --warn-soft: #fff1cf;
+  --radius: 14px;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1220; --surface: #181c2e; --surface-2: #20253a; --ink: #eef0f7; --muted: #9aa0b8;
+    --line: #2b3150; --accent: #6f86ff; --accent-ink: #0f1220; --accent-soft: #232b55;
+    --ok: #5fd08f; --ok-soft: #173325; --warn: #f3c15a; --warn-soft: #3a2f14;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1220; --surface: #181c2e; --surface-2: #20253a; --ink: #eef0f7; --muted: #9aa0b8;
+  --line: #2b3150; --accent: #6f86ff; --accent-ink: #0f1220; --accent-soft: #232b55;
+  --ok: #5fd08f; --ok-soft: #173325; --warn: #f3c15a; --warn-soft: #3a2f14;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; }
+h2 { font-size: 1.25rem; font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Shell */
+.app { display: grid; grid-template-columns: 232px 1fr; min-height: 100%; }
+.side {
+  position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh;
+  display: flex; flex-direction: column; gap: 28px;
+  padding: 24px 16px; border-right: 1px solid var(--line); background: var(--surface);
+}
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; font-family: var(--display); font-weight: 800; font-size: 1.15rem; line-height: 1; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 1.2rem; }
+.brand small { display: block; font-family: var(--body); font-weight: 500; font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 3px; }
+.nav { display: grid; gap: 4px; }
+.nav a {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
+  color: var(--muted); text-decoration: none; font-weight: 500;
+}
+.nav a svg { width: 18px; height: 18px; flex: none; }
+.nav a:hover { background: var(--surface-2); color: var(--ink); }
+.nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.side-foot { margin-top: auto; display: grid; gap: 10px; }
+.ig-status { display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: 12px; background: var(--surface-2); font-size: 13px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex: none; }
+
+.main { padding-inline: clamp(16px, 4vw, 44px); padding-block: 28px 96px; min-width: 0; }
+.proto {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  background: var(--warn-soft); color: var(--warn); border-radius: 10px;
+  padding: 10px 14px; font-size: 13px; font-weight: 500; margin-bottom: 24px;
+}
+.proto strong { font-weight: 700; }
+.head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.head p { color: var(--muted); margin-top: 6px; max-width: 60ch; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+.label { display: block; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.field { display: grid; gap: 0; }
+.fields { display: grid; gap: 18px; }
+input[type="text"], input[type="date"], input[type="time"], select, textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px;
+}
+textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.chip-opt span {
+  display: inline-block; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--bg); cursor: pointer; font-weight: 500; font-size: 14px;
+}
+.chip-opt input:checked + span { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip-opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 18px; border-radius: 10px; border: 1px solid transparent;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.btn:hover { filter: brightness(1.07); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.btn-quiet { background: var(--surface-2); color: var(--ink); }
+.btn-line { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-big { padding: 14px 22px; font-size: 1rem; width: 100%; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* Início */
+.start { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.start-title { font-size: clamp(2rem, 4.6vw, 3.4rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; }
+.start-title em { font-style: normal; background: linear-gradient(transparent 62%, var(--sun) 62%); color: inherit; padding: 0 .08em; }
+.start-lead { color: var(--muted); font-size: 1.08rem; margin-top: 16px; max-width: 52ch; }
+.at-form { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.at-field { flex: 1 1 240px; display: flex; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0 14px; }
+.at-field:focus-within { border-color: var(--accent); }
+.at-field span { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
+.at-field input { border: 0; background: transparent; padding: 14px 0; font-size: 1.05rem; font-weight: 600; width: 100%; outline: none; }
+.at-form .btn { padding: 14px 22px; font-size: 1rem; }
+.perks { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: 14px; }
+.perks li::before { content: "✓"; color: var(--ok); font-weight: 700; margin-right: 6px; }
+.steps { display: grid; gap: 14px; }
+.steps ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.steps li { display: flex; gap: 12px; align-items: center; color: var(--muted); }
+.steps li .ic { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); flex: none; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.steps li.doing { color: var(--ink); }
+.steps li.doing .ic { border-color: var(--line); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+.steps li.done { color: var(--ink); }
+.steps li.done .ic { background: var(--ok); border-color: var(--ok); color: #fff; }
+.xray-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.x-card { display: grid; gap: 10px; align-content: start; }
+.x-card .x-val { font-family: var(--display); font-size: 1.6rem; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.x-card p { color: var(--muted); font-size: 13px; }
+.x-card .pill { justify-self: start; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.trio .ig-cap { max-height: 120px; font-size: 13px; }
+.trio-actions { display: flex; gap: 8px; padding: 0 14px 14px; flex-wrap: wrap; }
+.trio-actions .btn { padding: 8px 12px; font-size: 13px; }
+.ig.approved { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok); }
+
+/* Criar */
+.create { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.result { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
+.result .ig { max-width: 440px; }
+@media (min-width: 1440px) { .result { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); } }
+.ig { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.ig-top { display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-weight: 600; font-size: 14px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 13px; flex: none; }
+.ig-top small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+.canvas-wrap { position: relative; }
+.art {
+  position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 100%; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; padding: 8%;
+  container-type: inline-size;
+}
+.art.story { aspect-ratio: 9 / 16; }
+.art-tag { align-self: flex-start; font: 700 clamp(10px, 2.4vw, 13px)/1 var(--body); letter-spacing: .14em; text-transform: uppercase; padding: 7px 11px; border-radius: 999px; }
+.art-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.15rem, 10cqi, 2.6rem); line-height: 1.02; overflow-wrap: anywhere; letter-spacing: -0.02em; text-wrap: balance; position: relative; z-index: 1; }
+.art-sub { font-size: clamp(11px, 4cqi, 15px); margin-top: 10px; opacity: .85; position: relative; z-index: 1; max-width: 32ch; }
+.art-foot { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: clamp(11px, 2.4vw, 13px); position: relative; z-index: 1; }
+.art-shape { position: absolute; border-radius: 50%; z-index: 0; }
+.dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; z-index: 2; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5); }
+.dots i:first-child { background: #fff; }
+.ig-cap { padding: 12px 14px 16px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 170px; overflow: auto; }
+.ig-cap b { margin-right: 6px; }
+
+.gen-state { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
+.spinner { width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hashtags { color: var(--accent); font-size: 14px; }
+.meta-row { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); font-size: 12px; font-weight: 600; color: var(--muted); }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.divider { height: 1px; background: var(--line); }
+
+/* Calendário */
+.cal-bar { display: flex; align-items: center; gap: 10px; }
+.cal-bar h2 { min-width: 11ch; text-transform: capitalize; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.cal .dow { padding: 10px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.cal .day { min-height: 104px; padding: 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.cal .day.out { background: var(--bg); color: var(--muted); }
+.cal .num { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cal .today .num { background: var(--accent); color: var(--accent-ink); border-radius: 999px; width: 24px; height: 24px; display: grid; place-items: center; }
+.ev { font-size: 12px; padding: 4px 7px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev.done { background: var(--ok-soft); color: var(--ok); }
+.list { display: grid; gap: 0; }
+.list-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.list-item:last-child { border-bottom: 0; }
+.date-box { text-align: center; font-variant-numeric: tabular-nums; }
+.date-box strong { display: block; font-family: var(--display); font-size: 1.5rem; line-height: 1; }
+.date-box span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.list-item p { color: var(--muted); font-size: 13px; }
+.cal-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+
+/* Marca */
+.brand-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.color-field { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; }
+.color-field input[type="color"] { width: 36px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+.color-field code { font-size: 13px; color: var(--muted); }
+.kit { display: grid; gap: 16px; }
+.swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.swatches div { aspect-ratio: 1.4; border-radius: 10px; display: flex; align-items: end; padding: 8px; font-size: 11px; font-weight: 600; }
+.voice { font-family: var(--display); font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+
+/* Planos */
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.plan { display: flex; flex-direction: column; gap: 16px; }
+.plan.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.price { font-family: var(--display); font-size: 2.2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.price small { font-family: var(--body); font-size: 14px; font-weight: 500; color: var(--muted); }
+.plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; color: var(--muted); font-size: 14px; }
+.plan li { display: flex; gap: 8px; }
+.plan li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+.plan .btn { margin-top: auto; }
+.guar { font-size: 12px; color: var(--muted); text-align: center; margin-top: -6px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px);
+  background: var(--ink); color: var(--bg); padding: 12px 18px; border-radius: 10px; font-weight: 500; font-size: 14px;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 50; max-width: calc(100% - 32px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Responsivo */
+@media (max-width: 1080px) {
+  .start { grid-template-columns: minmax(0, 1fr); }
+  .xray-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trio { grid-template-columns: minmax(0, 1fr); max-width: 440px; }
+  .create, .result, .cal-layout, .brand-layout { grid-template-columns: minmax(0, 1fr); }
+  .result .ig { max-width: 440px; }
+  .plans { grid-template-columns: minmax(0, 1fr); max-width: 480px; }
+}
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side {
+    position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: auto; z-index: 40;
+    flex-direction: row; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-right: 0; border-top: 1px solid var(--line);
+  }
+  .brand, .side-foot { display: none; }
+  .nav { grid-template-columns: repeat(5, 1fr); width: 100%; }
+  .nav a { flex-direction: column; gap: 3px; font-size: 11px; padding: 8px 4px; text-align: center; }
+  .main { padding-block: 16px 110px; }
+  .two { grid-template-columns: 1fr; }
+  .xray-grid { grid-template-columns: minmax(0, 1fr); }
+  .cal .day { min-height: 64px; padding: 5px; }
+  .cal .dow { padding: 8px 4px; font-size: 10px; text-align: center; }
+  .ev { font-size: 0; padding: 0; height: 6px; border-radius: 3px; background: var(--accent); }
+  .ev.done { background: var(--ok); }
+}
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } .toast { transition: none; } }
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="brand-mark">+</span><span>Posittiva<small>Builder</small></span></div>
+    <nav class="nav" aria-label="Menu">
+      <a href="#inicio" data-view="inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/></svg>
+        Início</a>
+      <a href="#criar" data-view="criar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg>
+        Criar post</a>
+      <a href="#calendario" data-view="calendario">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Calendário</a>
+      <a href="#marca" data-view="marca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><circle cx="12" cy="15.5" r="1.5" fill="currentColor"/></svg>
+        Minha marca</a>
+      <a href="#planos" data-view="planos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16v12H4zM4 11h16M8 15h3"/></svg>
+        Planos</a>
+    </nav>
+    <div class="side-foot">
+      <div class="ig-status"><span class="dot"></span><span>Instagram não conectado. Disponível na versão completa.</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="proto"><strong>Protótipo.</strong> A IA é simulada, os dados são de exemplo e nada é publicado no Instagram.</div>
+
+    <!-- INÍCIO -->
+    <section id="view-inicio" data-page="inicio">
+      <div class="start">
+        <div class="start-intro">
+          <p class="eyebrow">Comece em 1 minuto</p>
+          <h1 class="start-title">Seu Instagram postando <em>todo dia</em>, com a cara da sua marca.</h1>
+          <p class="start-lead">Digite o @ do seu negócio. A IA analisa o perfil, entende suas cores e seu jeito de falar e entrega 3 posts prontos para você aprovar.</p>
+          <form class="at-form" id="at-form">
+            <label class="at-field" for="at"><span>@</span><input type="text" id="at" value="padariatrigobom" autocomplete="off" aria-label="@ do Instagram"></label>
+            <button class="btn" id="at-btn" type="submit">Analisar meu perfil</button>
+          </form>
+          <ul class="perks"><li>3 posts grátis</li><li>Raio-x do perfil</li><li>Sem cartão</li></ul>
+        </div>
+        <div class="panel steps" id="steps" aria-live="polite">
+          <span class="label" style="margin:0">O que a IA faz</span>
+          <ol id="step-list"></ol>
+        </div>
+      </div>
+
+      <div id="xray" hidden>
+        <div class="head" style="margin-top:36px">
+          <div>
+            <h2 style="font-size:1.5rem">Raio-x de <span id="x-handle"></span></h2>
+            <p>O que está afastando clientes hoje e o que muda com o Posittiva Builder. <span class="pill warn">Dados simulados</span></p>
+          </div>
+        </div>
+        <div class="xray-grid" id="xray-grid"></div>
+
+        <div class="head" style="margin-top:36px">
+          <div>
+            <h2 style="font-size:1.5rem">Seus 3 posts prontos</h2>
+            <p>Com as cores e o tom da marca. Aprove como estão ou abra no editor para ajustar.</p>
+          </div>
+          <button class="btn" id="approve-all" type="button">Aprovar e agendar os 3</button>
+        </div>
+        <div class="trio" id="trio"></div>
+      </div>
+    </section>
+
+    <!-- CRIAR -->
+    <section id="view-criar" data-page="criar" hidden>
+      <div class="head">
+        <div>
+          <h1>Criar post</h1>
+          <p>Diga o que quer comunicar. O Posittiva Builder escreve a legenda e monta a arte com as cores e o tom da sua marca.</p>
+        </div>
+      </div>
+      <div class="create">
+        <form class="panel fields" id="gen-form">
+          <div class="field">
+            <span class="label">Objetivo do post</span>
+            <div class="chips" id="goal-chips"></div>
+          </div>
+          <div class="field">
+            <label class="label" for="topic">Sobre o que é?</label>
+            <input type="text" id="topic" value="Pão de fermentação natural saindo às 7h">
+          </div>
+          <div class="field">
+            <span class="label">Formato</span>
+            <div class="chips" id="format-chips"></div>
+          </div>
+          <button class="btn btn-big" id="gen-btn" type="submit">Gerar post</button>
+          <p class="gen-state" id="gen-state" hidden><span class="spinner"></span><span>Criando legenda e arte…</span></p>
+        </form>
+
+        <div class="result">
+          <article class="ig" aria-label="Prévia no Instagram">
+            <div class="ig-top"><span class="avatar" id="pv-avatar"></span><span><span id="pv-handle"></span><small id="pv-format"></small></span></div>
+            <div class="canvas-wrap" id="pv-art"></div>
+            <div class="ig-cap" id="pv-cap"></div>
+          </article>
+
+          <div class="panel fields">
+            <div class="row" style="justify-content: space-between;">
+              <h2>Legenda</h2>
+              <div class="meta-row"><span class="pill" id="char-count"></span></div>
+            </div>
+            <textarea id="caption" aria-label="Legenda do post"></textarea>
+            <div>
+              <span class="label">Hashtags</span>
+              <p class="hashtags" id="tags"></p>
+            </div>
+            <div class="row">
+              <button class="btn btn-quiet" id="again" type="button">Gerar outra versão</button>
+              <button class="btn btn-line" id="copy" type="button">Copiar legenda</button>
+            </div>
+            <div class="divider"></div>
+            <h3>Agendar publicação</h3>
+            <div class="two">
+              <div class="field"><label class="label" for="sch-date">Dia</label><input type="date" id="sch-date"></div>
+              <div class="field"><label class="label" for="sch-time">Horário</label><input type="time" id="sch-time" value="09:00"></div>
+            </div>
+            <button class="btn" id="schedule" type="button">Agendar no calendário</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALENDÁRIO -->
+    <section id="view-calendario" data-page="calendario" hidden>
+      <div class="head">
+        <div>
+          <h1>Calendário</h1>
+          <p>Seus posts agendados e publicados. Na versão completa, eles saem sozinhos no horário marcado.</p>
+        </div>
+        <div class="cal-bar">
+          <button class="btn btn-line" id="prev-m" type="button" aria-label="Mês anterior">‹</button>
+          <h2 id="month-name"></h2>
+          <button class="btn btn-line" id="next-m" type="button" aria-label="Próximo mês">›</button>
+        </div>
+      </div>
+      <div class="cal-layout">
+        <div style="overflow-x:auto"><div class="cal" id="cal"></div></div>
+        <div class="panel">
+          <h2 style="margin-bottom:6px">Próximos posts</h2>
+          <div class="list" id="upcoming"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARCA -->
+    <section id="view-marca" data-page="marca" hidden>
+      <div class="head">
+        <div>
+          <h1>Minha marca</h1>
+          <p>Tudo o que a IA usa para escrever e desenhar como a sua marca. Preencha uma vez e todos os posts seguem esse padrão.</p>
+        </div>
+      </div>
+      <div class="brand-layout">
+        <form class="panel fields" id="brand-form">
+          <div class="two">
+            <div class="field"><label class="label" for="b-name">Nome da marca</label><input type="text" id="b-name"></div>
+            <div class="field"><label class="label" for="b-handle">@ do Instagram</label><input type="text" id="b-handle"></div>
+          </div>
+          <div class="field"><label class="label" for="b-niche">O que você vende</label><input type="text" id="b-niche"></div>
+          <div class="field"><label class="label" for="b-audience">Para quem</label><input type="text" id="b-audience"></div>
+          <div class="field"><label class="label" for="b-diff">Seu diferencial</label><input type="text" id="b-diff"></div>
+          <div class="field">
+            <span class="label">Tom de voz</span>
+            <div class="chips" id="tone-chips"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label class="label" for="b-c1">Cor principal</label><div class="color-field"><input type="color" id="b-c1"><code id="b-c1-v"></code></div></div>
+            <div class="field"><label class="label" for="b-c2">Cor de destaque</label><div class="color-field"><input type="color" id="b-c2"><code id="b-c2-v"></code></div></div>
+          </div>
+          <div class="row">
+            <button class="btn" type="submit">Salvar marca</button>
+            <button class="btn btn-line" type="button" id="reset">Restaurar exemplo</button>
+          </div>
+        </form>
+        <aside class="panel kit">
+          <span class="label" style="margin:0">Resumo da marca</span>
+          <div class="row"><span class="avatar" id="kit-avatar" style="width:48px;height:48px;font-size:18px"></span><div><h3 id="kit-name"></h3><p style="color:var(--muted);font-size:13px" id="kit-handle"></p></div></div>
+          <div class="swatches" id="kit-sw"></div>
+          <div><span class="label">Como a marca fala</span><p class="voice" id="kit-voice"></p></div>
+          <span class="pill ok" style="justify-self:start">Pronta para gerar posts</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="view-planos" data-page="planos" hidden>
+      <div class="head">
+        <div>
+          <h1>Planos</h1>
+          <p>Valores de exemplo para validar a oferta. Sem fidelidade: o cliente cancela quando quiser.</p>
+        </div>
+      </div>
+      <div class="plans">
+        <div class="panel plan">
+          <div><span class="label">Essencial</span><h2>Para manter o perfil vivo</h2></div>
+          <p class="price">R$ 97<small>/mês</small></p>
+          <p style="font-size:14px"><strong>3 posts por semana</strong> <span style="color:var(--muted)">· até 12 no mês</span></p>
+          <ul><li>IA aprende suas cores e seu tom de voz</li><li>Artes sempre no padrão da marca</li><li>Editor de texto, foto e cores</li><li>Publicação automática no Instagram</li></ul>
+          <button class="btn btn-line" type="button" data-plan="Essencial">Escolher Essencial</button>
+          <p class="guar">7 dias de garantia · cancele quando quiser</p>
+        </div>
+        <div class="panel plan featured">
+          <div class="row" style="justify-content:space-between"><span class="label" style="margin:0">Pro</span><span class="pill" style="background:var(--sun);color:#3a2a00">Mais escolhido</span></div>
+          <h2>Instagram ativo todo dia</h2>
+          <p class="price">R$ 197<small>/mês</small></p>
+          <p style="font-size:14px"><strong>1 post por dia</strong> <span style="color:var(--muted)">· até 30 no mês</span></p>
+          <ul><li>Tudo do Essencial</li><li>Carrossel, stories e roteiros de Reels</li><li>Sua logo aplicada nos posts</li><li>Piloto automático: a IA cria e agenda, você só aprova</li><li>Publica no horário em que seu público está online</li></ul>
+          <button class="btn" type="button" data-plan="Pro">Escolher Pro</button>
+          <p class="guar">7 dias de garantia · cancele quando quiser</p>
+        </div>
+        <div class="panel plan">
+          <div><span class="label">Agência</span><h2>Para vários negócios</h2></div>
+          <p class="price">R$ 497<small>/mês</small></p>
+          <p style="font-size:14px"><strong>Até 5 perfis</strong> <span style="color:var(--muted)">· 90 posts para distribuir</span></p>
+          <ul><li>Tudo do Pro</li><li>Conecte até 5 perfis do Instagram</li><li>Aprovação do cliente por link</li></ul>
+          <button class="btn btn-line" type="button" data-plan="Agência">Escolher Agência</button>
+          <p class="guar">7 dias de garantia · cancele quando quiser</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('pb:' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('pb:' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  const GOALS = ['Vender', 'Dica', 'Bastidores', 'Depoimento', 'Novidade'];
+  const FORMATS = ['Post quadrado', 'Carrossel', 'Story'];
+  const TONES = ['Acolhedor', 'Profissional', 'Descontraído', 'Inspirador'];
+
+  const EXAMPLE_BRAND = {
+    name: 'Trigo Bom', handle: 'padariatrigobom', niche: 'Pães artesanais e cafés da manhã',
+    audience: 'Famílias do bairro que valorizam comida de verdade', diff: 'Fermentação natural de 36 horas, sem conservantes',
+    tone: 'Acolhedor', c1: '#7a3b1d', c2: '#f2c14e'
+  };
+  let brand = Object.assign({}, EXAMPLE_BRAND, store.get('brand', {}));
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const addDays = (n) => { const d = new Date(today); d.setDate(d.getDate() + n); return d; };
+  const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const EXAMPLE_POSTS = [
+    { date: iso(addDays(-6)), time: '08:00', title: 'Bastidores da fornada das 5h', done: true },
+    { date: iso(addDays(-3)), time: '12:00', title: 'Dica: como conservar o pão', done: true },
+    { date: iso(addDays(1)), time: '09:00', title: 'Café da manhã completo', done: false },
+    { date: iso(addDays(4)), time: '18:30', title: 'Depoimento da Dona Célia', done: false },
+    { date: iso(addDays(8)), time: '09:00', title: 'Novidade: focaccia de alecrim', done: false }
+  ];
+  let posts = store.get('posts', EXAMPLE_POSTS);
+
+  let goal = 'Vender', format = 'Post quadrado', variant = 0, current = null;
+
+  function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2400); }
+
+  function chips(el, name, opts, value, onChange) {
+    el.innerHTML = '';
+    opts.forEach((o, i) => {
+      const id = name + '-' + i;
+      const l = document.createElement('label'); l.className = 'chip-opt';
+      l.innerHTML = '<input type="radio" name="' + name + '" id="' + id + '"' + (o === value ? ' checked' : '') + '><span></span>';
+      l.querySelector('span').textContent = o;
+      l.querySelector('input').addEventListener('change', () => onChange(o));
+      el.appendChild(l);
+    });
+  }
+
+  // Contraste: escolhe texto claro ou escuro para uma cor de fundo
+  function textOn(hex) {
+    const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#1b1206' : '#ffffff';
+  }
+  const initials = (s) => s.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || 'PB';
+
+  // ---- "IA" simulada: modelos de texto combinados com os dados da marca ----
+  const HEAD = {
+    Vender: ['{t}', 'Hoje tem {t_l}', 'Já garantiu o seu?'],
+    Dica: ['Você sabia?', 'Dica rápida de quem entende', 'Anota essa dica'],
+    Bastidores: ['Por trás do balcão', 'Como tudo começa', 'O que você não vê'],
+    Depoimento: ['Quem prova, volta', 'Palavra de cliente', 'É por isso que a gente faz'],
+    Novidade: ['Chegou novidade', 'Estreia da semana', 'Tem coisa nova por aqui']
+  };
+  const TAG = { Vender: 'Hoje', Dica: 'Dica', Bastidores: 'Bastidores', Depoimento: 'Cliente', Novidade: 'Novo' };
+  const BODY = {
+    Vender: [
+      '{t}. {d}. Feito para {a_l}, do jeito que tem que ser.\n\nPasse aqui ou chame no direct para reservar o seu.',
+      'Sabe aquele cheiro que chega antes de você? É {t_l}. {d}.\n\nCorre que acaba rápido. Reserve pelo direct.'
+    ],
+    Dica: [
+      'Uma dica sobre {t_l}: guarde longe da geladeira e embrulhado em pano. Assim ele dura mais e continua bom.\n\n{d}, por isso vale cuidar bem.',
+      'Muita gente pergunta sobre {t_l}. A resposta curta: tempo e paciência. {d}.\n\nSalve este post para lembrar depois.'
+    ],
+    Bastidores: [
+      'Enquanto a cidade dorme, a gente já está trabalhando em {t_l}. {d}.\n\nÉ esse cuidado que chega até a sua mesa.',
+      'Pouca gente vê essa parte: {t_l}. {d}.\n\nQuer ver mais bastidores? Comenta aqui.'
+    ],
+    Depoimento: [
+      '"Virou parte da nossa rotina." Receber mensagens assim sobre {t_l} é o que move a {n}.\n\nObrigado por confiar na gente.',
+      'Quando um cliente volta e conta que {t_l} fez diferença no dia dele, a gente sabe que está no caminho certo.\n\n{d}.'
+    ],
+    Novidade: [
+      'Novidade na {n}: {t_l}. {d}, como tudo o que sai daqui.\n\nVem provar e conta o que achou.',
+      'A gente testou, ajustou e agora está pronto: {t_l}.\n\nDisponível a partir desta semana. Marque quem precisa conhecer.'
+    ]
+  };
+  const TONE_EMOJI = { 'Acolhedor': ' 🤎', 'Descontraído': ' 😋', 'Inspirador': ' ✨', 'Profissional': '' };
+  const lower = (s) => s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+
+  function fill(tpl, topic) {
+    return tpl.replace(/\{t\}/g, topic).replace(/\{t_l\}/g, lower(topic)).replace(/\{d\}/g, brand.diff)
+      .replace(/\{a_l\}/g, lower(brand.audience)).replace(/\{n\}/g, brand.name);
+  }
+  function hashtags() {
+    const base = brand.niche.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').split(/[^a-z]+/).filter((w) => w.length > 3).slice(0, 3);
+    const h = [brand.handle.replace(/[^a-z0-9]/gi, '').toLowerCase()].concat(base, [goal === 'Dica' ? 'dicas' : 'feitoamao', 'negociolocal']);
+    return [...new Set(h)].filter(Boolean).map((w) => '#' + w).join(' ');
+  }
+  function compose(g, topic, v) {
+    const heads = HEAD[g], bodies = BODY[g];
+    let title = fill(heads[v % heads.length], topic);
+    if (title.length > 60) title = title.slice(0, 57).trim() + '…';
+    let cap = fill(bodies[v % bodies.length], topic);
+    if (brand.tone === 'Profissional') cap = cap.replace(/ a gente /g, ' nós ').replace(/^A gente/, 'Nós');
+    cap = cap.replace(/\n\n([^\n]+)$/, (m, last) => '\n\n' + last + (TONE_EMOJI[brand.tone] || ''));
+    return { title, cap, sub: brand.diff, layout: v % 3, goal: g };
+  }
+  function generate() {
+    const topic = $('#topic').value.trim() || brand.niche;
+    current = Object.assign(compose(goal, topic, variant), { tags: hashtags() });
+    renderPreview();
+  }
+
+  function renderArt(post, fmt) {
+    post = post || current; fmt = fmt || format;
+    const c1 = brand.c1, c2 = brand.c2, t1 = textOn(c1), t2 = textOn(c2);
+    const story = fmt === 'Story';
+    const L = post.layout;
+    const bg = L === 1 ? c2 : c1, fg = L === 1 ? t2 : t1, acc = L === 1 ? c1 : c2, accFg = L === 1 ? t1 : t2;
+    const shapes = L === 0
+      ? '<span class="art-shape" style="width:70%;aspect-ratio:1;right:-22%;top:-18%;background:' + acc + ';opacity:.9"></span>'
+      : L === 1
+        ? '<span class="art-shape" style="width:120%;aspect-ratio:1;left:-10%;bottom:-85%;background:' + acc + ';opacity:.12"></span>'
+        : '<span class="art-shape" style="width:44%;aspect-ratio:1;left:-12%;bottom:-12%;border:14px solid ' + acc + ';background:transparent"></span>';
+    const head = TAG[post.goal || goal];
+    return '<div class="art' + (story ? ' story' : '') + '" style="background:' + bg + ';color:' + fg + '">' + shapes +
+      '<span class="art-tag" style="background:' + acc + ';color:' + accFg + ';position:relative;z-index:1">' + esc(head) + '</span>' +
+      '<div><p class="art-title">' + esc(post.title) + '</p><p class="art-sub">' + esc(post.sub) + '</p></div>' +
+      '<div class="art-foot"><span>@' + esc(brand.handle) + '</span><span>' + esc(brand.name) + '</span></div>' +
+      (fmt === 'Carrossel' ? '<div class="dots"><i></i><i></i><i></i><i></i></div>' : '') + '</div>';
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+  function renderPreview() {
+    $('#pv-art').innerHTML = renderArt();
+    $('#caption').value = current.cap;
+    $('#tags').textContent = current.tags;
+    syncCaption();
+  }
+  function syncCaption() {
+    const cap = $('#caption').value;
+    $('#pv-cap').innerHTML = '<b>' + esc(brand.handle) + '</b>' + esc(cap) + '\n\n<span class="hashtags">' + esc(current.tags) + '</span>';
+    const n = (cap + '\n\n' + current.tags).length;
+    const el = $('#char-count'); el.textContent = n + ' / 2.200 caracteres'; el.className = 'pill ' + (n > 2200 ? 'warn' : 'ok');
+  }
+  function renderBrandBits() {
+    const av = [$('#pv-avatar'), $('#kit-avatar')];
+    av.forEach((a) => { a.textContent = initials(brand.name); a.style.background = brand.c1; a.style.color = textOn(brand.c1); });
+    $('#pv-handle').textContent = brand.handle;
+    $('#pv-format').textContent = format + ' · prévia';
+    $('#kit-name').textContent = brand.name;
+    $('#kit-handle').textContent = '@' + brand.handle + ' · ' + brand.niche;
+    $('#kit-sw').innerHTML = [[brand.c1, 'Principal'], [brand.c2, 'Destaque'], ['#faf6ef', 'Fundo']]
+      .map(([c, l]) => '<div style="background:' + c + ';color:' + textOn(c) + ';border:1px solid var(--line)">' + l + '<br>' + c.toUpperCase() + '</div>').join('');
+    const voice = { 'Acolhedor': 'Próxima, calorosa e com cara de vizinho.', 'Profissional': 'Clara, objetiva e confiável.', 'Descontraído': 'Leve, bem-humorada e direta.', 'Inspirador': 'Positiva, com propósito e energia.' };
+    $('#kit-voice').textContent = voice[brand.tone];
+  }
+
+  // ---- Criar ----
+  chips($('#goal-chips'), 'goal', GOALS, goal, (v) => { goal = v; });
+  chips($('#format-chips'), 'format', FORMATS, format, (v) => { format = v; $('#pv-format').textContent = format + ' · prévia'; if (current) $('#pv-art').innerHTML = renderArt(); });
+  $('#gen-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = $('#gen-btn'); btn.disabled = true; $('#gen-state').hidden = false;
+    setTimeout(() => { variant++; generate(); btn.disabled = false; $('#gen-state').hidden = true; toast('Post gerado'); }, 1100);
+  });
+  $('#again').addEventListener('click', () => { variant++; generate(); toast('Nova versão gerada'); });
+  $('#caption').addEventListener('input', () => { current.cap = $('#caption').value; syncCaption(); });
+  $('#copy').addEventListener('click', () => {
+    const text = $('#caption').value + '\n\n' + current.tags;
+    const fallback = () => { $('#caption').select(); toast('Selecionei a legenda. Use Ctrl+C para copiar.'); };
+    try { navigator.clipboard.writeText(text).then(() => toast('Legenda copiada'), fallback); } catch (e) { fallback(); }
+  });
+  $('#sch-date').value = iso(addDays(2));
+  $('#schedule').addEventListener('click', () => {
+    const d = $('#sch-date').value, t = $('#sch-time').value || '09:00';
+    if (!d) { toast('Escolha o dia da publicação'); return; }
+    posts.push({ date: d, time: t, title: current.title, done: false });
+    posts.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    store.set('posts', posts);
+    const [y, m] = d.split('-').map(Number); calMonth = new Date(y, m - 1, 1);
+    renderCal();
+    toast('Agendado para ' + d.split('-').reverse().join('/') + ' às ' + t);
+  });
+
+  // ---- Calendário ----
+  let calMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const DOW = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  function renderCal() {
+    $('#month-name').textContent = calMonth.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    const start = new Date(calMonth); start.setDate(1 - start.getDay());
+    let html = DOW.map((d) => '<div class="dow">' + d + '</div>').join('');
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      if (i === 35 && d.getMonth() !== calMonth.getMonth()) break;
+      const key = iso(d);
+      const evs = posts.filter((p) => p.date === key).map((p) => '<div class="ev' + (p.done ? ' done' : '') + '" title="' + esc(p.time + ' · ' + p.title) + '">' + esc(p.time + ' ' + p.title) + '</div>').join('');
+      html += '<div class="day' + (d.getMonth() !== calMonth.getMonth() ? ' out' : '') + (key === iso(today) ? ' today' : '') + '"><span class="num">' + d.getDate() + '</span>' + evs + '</div>';
+    }
+    $('#cal').innerHTML = html;
+    const up = posts.filter((p) => p.date >= iso(today)).slice(0, 5);
+    $('#upcoming').innerHTML = up.length ? up.map((p) => {
+      const dt = new Date(p.date + 'T00:00');
+      return '<div class="list-item"><div class="date-box"><strong>' + dt.getDate() + '</strong><span>' + dt.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '') + '</span></div>' +
+        '<div><h3 style="font-size:.95rem">' + esc(p.title) + '</h3><p>' + p.time + '</p></div><span class="pill">Agendado</span></div>';
+    }).join('') : '<p style="color:var(--muted);padding:14px 0">Nenhum post agendado. Crie um em "Criar post".</p>';
+  }
+  $('#prev-m').addEventListener('click', () => { calMonth.setMonth(calMonth.getMonth() - 1); renderCal(); });
+  $('#next-m').addEventListener('click', () => { calMonth.setMonth(calMonth.getMonth() + 1); renderCal(); });
+
+  // ---- Marca ----
+  function fillBrandForm() {
+    $('#b-name').value = brand.name; $('#b-handle').value = brand.handle; $('#b-niche').value = brand.niche;
+    $('#b-audience').value = brand.audience; $('#b-diff').value = brand.diff;
+    $('#b-c1').value = brand.c1; $('#b-c2').value = brand.c2; $('#b-c1-v').textContent = brand.c1.toUpperCase(); $('#b-c2-v').textContent = brand.c2.toUpperCase();
+    chips($('#tone-chips'), 'tone', TONES, brand.tone, (v) => { brand.tone = v; renderBrandBits(); });
+  }
+  ['b-c1', 'b-c2'].forEach((id) => $('#' + id).addEventListener('input', (e) => {
+    $('#' + id + '-v').textContent = e.target.value.toUpperCase();
+    brand[id === 'b-c1' ? 'c1' : 'c2'] = e.target.value; renderBrandBits();
+  }));
+  $('#brand-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    brand.name = $('#b-name').value.trim() || EXAMPLE_BRAND.name;
+    brand.handle = ($('#b-handle').value.trim() || EXAMPLE_BRAND.handle).replace(/^@/, '');
+    brand.niche = $('#b-niche').value.trim() || EXAMPLE_BRAND.niche;
+    brand.audience = $('#b-audience').value.trim() || EXAMPLE_BRAND.audience;
+    brand.diff = $('#b-diff').value.trim() || EXAMPLE_BRAND.diff;
+    store.set('brand', brand);
+    renderBrandBits(); generate();
+    toast('Marca salva. Os próximos posts já seguem esse padrão.');
+  });
+  $('#reset').addEventListener('click', () => {
+    brand = Object.assign({}, EXAMPLE_BRAND); posts = EXAMPLE_POSTS.slice();
+    store.set('brand', brand); store.set('posts', posts);
+    fillBrandForm(); renderBrandBits(); generate(); renderCal(); toast('Exemplo restaurado');
+  });
+
+  // ---- Planos ----
+  document.querySelectorAll('[data-plan]').forEach((b) => b.addEventListener('click', () => toast('Plano ' + b.dataset.plan + ': o pagamento entra na versão completa')));
+
+  // ---- Início: @ -> raio-x -> 3 posts ----
+  const STEPS = ['Lendo seus últimos posts', 'Identificando cores e estilo visual', 'Entendendo seu tom de voz', 'Escolhendo temas que funcionam no seu nicho', 'Criando seus 3 posts'];
+  function renderSteps(doneUpTo, doing) {
+    $('#step-list').innerHTML = STEPS.map((s, i) => {
+      const cls = i < doneUpTo ? 'done' : (i === doing ? 'doing' : '');
+      return '<li class="' + cls + '"><span class="ic">' + (i < doneUpTo ? '✓' : '') + '</span>' + s + '</li>';
+    }).join('');
+  }
+  let trio = [];
+  const TRIO_PLAN = [['Vender', 'Pão de fermentação natural saindo às 7h'], ['Dica', 'Como conservar o pão por mais tempo'], ['Bastidores', 'A fornada das 5h da manhã']];
+  function renderXray(handle) {
+    $('#x-handle').textContent = '@' + handle;
+    const X = [
+      ['Frequência', '1 post a cada 16 dias', 'Quem visita acha que o perfil está parado.', 'warn', 'Precisa melhorar'],
+      ['Identidade visual', '4 estilos diferentes', 'Cores e fontes mudam de um post para outro.', 'warn', 'Inconsistente'],
+      ['Bio', 'Sem chamada para ação', 'Falta dizer como pedir ou onde fica a loja.', 'warn', 'Ajustar'],
+      ['Melhor horário', '18h às 20h', 'Quando seu público mais abre o Instagram.', 'ok', 'Vamos usar']
+    ];
+    $('#xray-grid').innerHTML = X.map((x) => '<div class="panel x-card"><span class="label" style="margin:0">' + x[0] + '</span><p class="x-val">' + x[1] + '</p><p>' + x[2] + '</p><span class="pill ' + x[3] + '">' + x[4] + '</span></div>').join('');
+  }
+  function renderTrio() {
+    $('#trio').innerHTML = trio.map((p, i) => '<article class="ig' + (p.approved ? ' approved' : '') + '"><div class="ig-top"><span class="avatar" style="background:' + brand.c1 + ';color:' + textOn(brand.c1) + '">' + esc(initials(brand.name)) + '</span><span>' + esc(brand.handle) + '<small>' + esc(p.goal) + '</small></span></div>' +
+      renderArt(p, 'Post quadrado') + '<div class="ig-cap"><b>' + esc(brand.handle) + '</b>' + esc(p.cap) + '</div>' +
+      '<div class="trio-actions"><button class="btn ' + (p.approved ? 'btn-quiet' : '') + '" type="button" data-approve="' + i + '">' + (p.approved ? '✓ Aprovado' : 'Aprovar') + '</button><button class="btn btn-line" type="button" data-edit="' + i + '">Editar</button></div></article>').join('');
+  }
+  $('#trio').addEventListener('click', (e) => {
+    const a = e.target.closest('[data-approve]'), ed = e.target.closest('[data-edit]');
+    if (a) { const p = trio[+a.dataset.approve]; p.approved = !p.approved; renderTrio(); }
+    if (ed) {
+      const p = trio[+ed.dataset.edit];
+      goal = p.goal; $('#topic').value = TRIO_PLAN[+ed.dataset.edit][1];
+      chips($('#goal-chips'), 'goal', GOALS, goal, (v) => { goal = v; });
+      current = Object.assign({ tags: hashtags() }, p); renderPreview();
+      location.hash = 'criar';
+    }
+  });
+  $('#approve-all').addEventListener('click', () => {
+    trio.forEach((p, i) => { p.approved = true; posts.push({ date: iso(addDays(i + 1)), time: '18:30', title: p.title, done: false }); });
+    posts.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    store.set('posts', posts); calMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    renderTrio(); renderCal(); toast('3 posts agendados para os próximos dias às 18h30');
+  });
+  $('#at-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const handle = ($('#at').value.trim().replace(/^@/, '') || brand.handle).toLowerCase();
+    brand.handle = handle; renderBrandBits(); $('#b-handle').value = handle;
+    const btn = $('#at-btn'); btn.disabled = true; $('#xray').hidden = true;
+    let i = 0; renderSteps(0, 0);
+    const tick = () => {
+      i++; renderSteps(i, i);
+      if (i < STEPS.length) { setTimeout(tick, 650); return; }
+      trio = TRIO_PLAN.map(([g, t], k) => compose(g, t, k));
+      renderXray(handle); renderTrio();
+      $('#xray').hidden = false; btn.disabled = false;
+      $('#xray').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    };
+    setTimeout(tick, 650);
+  });
+
+  // ---- Navegação ----
+  const VIEWS = ['inicio', 'criar', 'calendario', 'marca', 'planos'];
+  function route() {
+    const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio';
+    document.querySelectorAll('[data-page]').forEach((s) => { s.hidden = s.dataset.page !== v; });
+    document.querySelectorAll('.nav a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+
+  fillBrandForm(); renderBrandBits(); generate(); renderCal(); renderSteps(0, -1); route();
+})();
+</script>
