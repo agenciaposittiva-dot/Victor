@@ -2,7 +2,7 @@
 <meta name="description" content="Protótipo do Posittiva Builder: posts para Instagram criados com IA a partir da identidade da sua marca.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Serif+Display:ital@0;1&family=Hanken+Grotesk:wght@200;300;400;600;700;800&family=Anton&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f3f4f9;
@@ -39,6 +39,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { height: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
@@ -159,6 +160,29 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 .slot.total { border: 1px solid var(--line); background: var(--surface); align-items: center; justify-content: center; text-align: center; }
 .slot.total strong { font-family: var(--display); font-size: 1.6rem; color: var(--ink); line-height: 1; }
 
+.feed-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
+.feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.fp { position: relative; aspect-ratio: 1; max-width: 100%; overflow: hidden; border-radius: 4px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; color: #fff; font-size: 11px; font-weight: 600; }
+.fp::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0,0,0,.6)); }
+.fp > * { position: relative; z-index: 1; }
+.fp .fp-t { line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.fp .fp-n { display: flex; gap: 8px; margin-top: 3px; opacity: .95; font-variant-numeric: tabular-nums; }
+.fp .pill { position: absolute; top: 6px; left: 6px; font-size: 10px; padding: 2px 7px; }
+.fp.top { box-shadow: inset 0 0 0 3px var(--ok); }
+.feed-legend { margin-top: 12px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.strat { display: grid; gap: 14px; }
+.pillars { display: grid; gap: 14px; }
+.pillar { display: grid; gap: 6px; }
+.pillar-top { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; }
+.pillar-top span:last-child { font-variant-numeric: tabular-nums; color: var(--accent); }
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.pillar p { color: var(--muted); font-size: 13px; }
+.avoid { background: var(--warn-soft); border-radius: 10px; padding: 12px 14px; }
+.avoid p { color: var(--warn); font-size: 13px; font-weight: 500; }
+.why { margin: 0 14px 12px; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 500; line-height: 1.45; }
+.why b { font-weight: 700; }
+
 /* Criar */
 .create { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px; align-items: start; }
 .result { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
@@ -195,6 +219,166 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 .pill.ok { background: var(--ok-soft); color: var(--ok); }
 .pill.warn { background: var(--warn-soft); color: var(--warn); }
 .divider { height: 1px; background: var(--line); }
+
+/* Templates */
+.tpl-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.search { flex: 1 1 280px; max-width: 460px; display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; color: var(--muted); }
+.search:focus-within { border-color: var(--accent); }
+.search input { border: 0; background: transparent; padding: 11px 0; width: 100%; outline: none; color: var(--ink); }
+.tpl-cats { margin-bottom: 18px; }
+.tpl-count { color: var(--muted); font-size: 13px; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+.tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px 18px; align-items: start; }
+.tpl-card { all: unset; cursor: pointer; display: grid; gap: 10px; border-radius: 12px; }
+.tpl-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.tpl-thumb { border-radius: 10px; overflow: hidden; box-shadow: 0 1px 2px rgba(22,26,43,.08), 0 0 0 1px var(--line); transition: transform .18s, box-shadow .18s; position: relative; }
+.tpl-card:hover .tpl-thumb { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(22,26,43,.16), 0 0 0 1px var(--line); }
+.tpl-thumb::after { content: "Ver template"; position: absolute; left: 50%; bottom: 12px; transform: translate(-50%, 6px); background: var(--ink); color: var(--bg); font: 600 12px/1 var(--body); padding: 8px 12px; border-radius: 999px; opacity: 0; transition: opacity .18s, transform .18s; white-space: nowrap; }
+.tpl-card:hover .tpl-thumb::after, .tpl-card:focus-visible .tpl-thumb::after { opacity: 1; transform: translate(-50%, 0); }
+.tpl-meta { display: grid; gap: 2px; }
+.tpl-name { font-weight: 600; font-size: 14px; display: flex; gap: 6px; align-items: center; }
+.tpl-sub { color: var(--muted); font-size: 12px; }
+.switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; font-size: 14px; user-select: none; }
+.switch input { position: absolute; opacity: 0; }
+.switch .track { width: 40px; height: 22px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; flex: none; }
+.switch .track span { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.switch input:checked + .track { background: var(--accent); }
+.switch input:checked + .track span { transform: translateX(18px); }
+.switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pv-tpl { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px 0; font-size: 12px; color: var(--muted); }
+.link-sm { color: var(--accent); font-weight: 600; text-decoration: none; }
+.modal { position: fixed; inset: 0; z-index: 60; background: rgba(10,12,22,.62); display: grid; place-items: center; padding: 16px; }
+.modal-box { background: var(--surface); border-radius: 18px; width: min(880px, 100%); max-height: calc(100% - 16px); overflow: auto; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.modal-art { background: var(--surface-2); padding: 28px; display: grid; place-items: center; }
+.modal-art .tp-wrap { max-width: 380px; }
+.modal-art .tp { box-shadow: 0 18px 40px rgba(0,0,0,.2); border-radius: 8px; }
+.modal-art .tp-wrap.story { max-width: 260px; }
+.modal-side { padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+.m-pal { display: flex; gap: 8px; }
+.m-pal span { width: 34px; height: 34px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.m-feats { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; color: var(--muted); font-size: 14px; }
+.m-feats li::before { content: "✓"; color: var(--ok); font-weight: 700; margin-right: 8px; }
+
+/* Arte dos templates (unidades relativas à largura da arte) */
+.tp-wrap { container-type: inline-size; width: 100%; max-width: 100%; }
+.tp { position: relative; width: 100%; max-width: 100%; aspect-ratio: 1 / 1; overflow: hidden; display: flex; flex-direction: column; padding: 8cqi; gap: 3cqi; font-family: var(--body); }
+.tp.story { aspect-ratio: 9 / 16; padding-block: 12cqi; }
+.tp > * { position: relative; z-index: 1; }
+.tp-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqi; min-height: 0; }
+.tp-center { align-items: center; text-align: center; }
+.tp-h { font-family: var(--display); font-weight: 800; font-size: 10cqi; line-height: 1.02; letter-spacing: -0.02em; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
+.tp-serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -0.01em; font-size: 11.5cqi; line-height: 1.02; }
+.tp-s { font-size: 4.2cqi; line-height: 1.35; opacity: .88; margin: 0; }
+.tp-k { font-size: 3.4cqi; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.tp-pill { align-self: flex-start; font-size: 3.3cqi; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 1.8cqi 3.2cqi; border-radius: 999px; }
+.tp-foot { display: flex; justify-content: space-between; font-size: 3.6cqi; font-weight: 600; opacity: .9; }
+.tp-blob { position: absolute !important; z-index: 0 !important; width: 72%; aspect-ratio: 1; border-radius: 50%; right: -24%; top: -20%; }
+.tp-split { margin: -8cqi -8cqi 0; padding: 8cqi; flex: 0 0 56%; display: flex; flex-direction: column; justify-content: flex-end; gap: 2.4cqi; }
+.story .tp-split { margin-top: -12cqi; }
+.tp-frame { position: absolute !important; inset: 4.5cqi; border: .9cqi solid; z-index: 0 !important; }
+.tp-q { font-family: 'Instrument Serif', Georgia, serif; font-size: 34cqi; line-height: .6; height: 14cqi; }
+.tp-stars { font-size: 5cqi; letter-spacing: .12em; margin: 0; }
+.tp-list, .tp-check { list-style: none; padding: 0; margin: 2cqi 0 0; display: grid; gap: 3cqi; font-size: 4.6cqi; font-weight: 600; }
+.tp-list li, .tp-check li { display: flex; align-items: center; gap: 3cqi; }
+.tp-list b { width: 8cqi; height: 8cqi; border-radius: 50%; display: grid; place-items: center; font-size: 4cqi; flex: none; }
+.tp-check b { width: 7.5cqi; height: 7.5cqi; border-radius: 2cqi; border: .7cqi solid; display: grid; place-items: center; font-size: 4cqi; flex: none; }
+.tp-row { display: flex; align-items: center; gap: 4cqi; }
+.tp-badge { width: 30cqi; height: 30cqi; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 8.5cqi; flex: none; transform: rotate(-8deg); text-align: center; line-height: 1; }
+.tp-stripe { position: absolute !important; z-index: 0 !important; inset: 0; opacity: .18; }
+.tp-band { margin: 0 -8cqi; padding: 3cqi 8cqi; font-family: var(--display); font-weight: 800; font-size: 7cqi; text-transform: uppercase; letter-spacing: .04em; transform: rotate(-3deg); }
+.tp-photo { position: absolute !important; inset: 0; z-index: 0 !important; display: grid; place-items: center; }
+.tp-photo span { font-size: 3.4cqi; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .55; margin-bottom: 26cqi; }
+.tp-cap { margin: auto -8cqi -8cqi; padding: 6cqi 8cqi 8cqi; display: grid; gap: 1.6cqi; }
+.story .tp-cap { margin-bottom: -12cqi; padding-bottom: 12cqi; }
+.tp-poll { display: grid; gap: 3cqi; margin-top: 2cqi; }
+.tp-poll div { position: relative; border: .6cqi solid; border-radius: 3cqi; padding: 3cqi 4cqi; display: flex; justify-content: space-between; font-size: 4.4cqi; font-weight: 700; overflow: hidden; }
+.tp-poll i { position: absolute; inset: 0 auto 0 0; opacity: .28; }
+.tp-poll span, .tp-poll b { position: relative; }
+.tp-day { font-family: var(--display); font-weight: 800; font-size: 34cqi; line-height: .85; margin: 0; letter-spacing: -0.04em; }
+.tp-ba { position: absolute !important; inset: 0 0 34% 0; z-index: 0 !important; display: grid; grid-template-columns: 1fr 1fr; gap: 1cqi; }
+.tp-ba div { display: flex; align-items: flex-start; padding: 5cqi; }
+.tp-ba span { background: rgba(0,0,0,.55); color: #fff; font-size: 3.4cqi; font-weight: 700; padding: 1.4cqi 3cqi; border-radius: 999px; letter-spacing: .08em; text-transform: uppercase; }
+.tp-line { width: 14cqi; height: .8cqi; }
+.tp-big { font-family: var(--display); font-weight: 800; font-size: 26cqi; line-height: .9; color: transparent; margin: 0; letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.tp-ticket { border-radius: 4cqi; padding: 7cqi; display: grid; gap: 2.4cqi; position: relative; }
+.tp-tk-row { display: flex; flex-wrap: wrap; gap: 2cqi 5cqi; border-top: .5cqi dashed; padding-top: 3.4cqi; margin-top: 2cqi; font-size: 4cqi; font-weight: 700; }
+.tp-num { font-family: var(--display); font-weight: 800; font-size: 28cqi; line-height: .9; margin: 0; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.tp-count { position: absolute !important; top: 4cqi; right: 4cqi; background: rgba(0,0,0,.55); color: #fff; font-size: 3.2cqi; font-weight: 600; padding: 1.2cqi 2.6cqi; border-radius: 999px; }
+
+.pill.prem { background: #16130e; color: #e2c07e; padding: 1px 7px; font-size: 10px; }
+.tp.r45 { aspect-ratio: 4 / 5; }
+.pm { font-family: 'Hanken Grotesk', var(--body); }
+.pm-bg { position: absolute !important; inset: 0; z-index: 0 !important; }
+.pm-ph { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); font-size: 3cqi; letter-spacing: .14em; text-transform: uppercase; opacity: .35; white-space: nowrap; }
+.pm-chips { display: flex; gap: 2cqi; justify-content: center; }
+.pm-chips span { font-size: 3.3cqi; padding: 1.6cqi 3.4cqi; border-radius: 999px; background: #ffffff1c; border: 1px solid #ffffff26; }
+.pm-blur { font-family: 'DM Serif Display', Georgia, serif; font-size: 13cqi; line-height: 1; text-align: center; margin: 8cqi 0 0; filter: blur(.5cqi); opacity: .85; text-transform: uppercase; }
+.pm-lead { display: flex; align-items: center; justify-content: center; gap: 2cqi; flex-wrap: wrap; font-size: 5.4cqi; font-weight: 600; letter-spacing: -0.02em; }
+.pm-lead i { font-style: normal; font-weight: 200; opacity: .8; }
+.pm-lead em { font-style: normal; font-size: 2.4cqi; letter-spacing: .4em; padding: 1.2cqi 2.6cqi; border-radius: 999px; background: #ffffff22; font-weight: 600; text-transform: uppercase; }
+.pm-word { font-family: 'DM Serif Display', Georgia, serif; font-size: 20cqi; line-height: .95; text-align: center; margin: 0; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.pm-copy { font-size: 2.6cqi; text-align: center; opacity: .6; margin: 0; }
+.pm-sans { font-size: 8.4cqi; font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+.pm-it { font-family: 'DM Serif Display', Georgia, serif; font-style: italic; font-size: 9.4cqi; line-height: 1; margin: -1cqi 0 0; }
+.pm-sig { display: flex; justify-content: space-between; align-items: center; gap: 3cqi; }
+.pm-badge { display: inline-flex; align-items: center; gap: 2.4cqi; padding: 1.6cqi 3.6cqi 1.6cqi 2.2cqi; border-radius: 999px; background: #ffffff14; border: 1px solid #ffffff26; font-size: 2.8cqi; line-height: 1.2; }
+.pm-badge small { display: block; opacity: .7; }
+.pm-sign { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 6cqi; opacity: .9; transform: rotate(-6deg); }
+.pm-mark { width: 6.4cqi; height: 6.4cqi; border: .5cqi solid; border-radius: 1.4cqi; transform: rotate(45deg); display: inline-grid; place-items: center; font-size: 2.4cqi; font-weight: 800; flex: none; }
+.pm-mark > span { transform: rotate(-45deg); }
+.pm-row3 { display: flex; justify-content: space-between; font-size: 3.6cqi; font-weight: 300; }
+.pm-handle { align-self: flex-start; display: inline-flex; align-items: center; gap: 2.4cqi; font-size: 2.8cqi; padding: 1cqi 2.8cqi 1cqi 1.6cqi; border-radius: 999px; border: 1px solid currentColor; opacity: .85; }
+.pm-handle .pm-mark { width: 4cqi; height: 4cqi; font-size: 1.6cqi; border-width: .35cqi; }
+.pm-mix { font-size: 10.2cqi; line-height: .98; letter-spacing: -0.04em; margin: 0; }
+.pm-mix span { font-weight: 200; }
+.pm-mix b { font-weight: 700; }
+.pm-box { align-self: flex-start; border: 1px solid; border-radius: 3cqi; padding: 3cqi 4cqi; font-size: 4.4cqi; font-weight: 300; margin: 0; background: #ffffff0d; }
+.pm-read { font-size: 4cqi; letter-spacing: .3em; font-weight: 300; margin: 0; }
+.pm-glass { width: 76%; padding: 9cqi 6cqi 6cqi; border-radius: 4cqi; background: linear-gradient(160deg, #ffffff14, #ffffff05); border: 1px solid #ffffff24; display: grid; gap: .6cqi; justify-items: center; }
+.pm-l1 { font-size: 4.6cqi; font-weight: 300; margin: 0; letter-spacing: -0.02em; }
+.pm-l2 { font-size: 5.6cqi; font-weight: 600; margin: 0; letter-spacing: -0.02em; }
+.pm-l3 { font-size: 9cqi; font-weight: 700; margin: 0; letter-spacing: -0.03em; line-height: 1; }
+.pm-accent { font-size: 3.8cqi; margin: 6cqi 0 0; line-height: 1.3; }
+.pm-dash { display: flex; gap: 1.4cqi; margin-top: 7cqi; }
+.pm-dash i { width: 5.6cqi; height: .6cqi; border-radius: 1cqi; background: #ffffff40; }
+.pm-dash i.on { background: #fff; }
+.pm-bar { display: flex; align-items: center; gap: 3cqi; font-size: 2.8cqi; letter-spacing: .1em; font-weight: 600; }
+.pm-bar i { flex: 1; height: 1px; }
+.pm-cta { display: flex; gap: 1.6cqi; align-items: center; }
+.pm-cta span { font-size: 3.2cqi; padding: 1.8cqi 4cqi; border-radius: 999px; border: 1px solid; }
+.pm-cta b { width: 7cqi; height: 7cqi; border-radius: 1.8cqi; display: grid; place-items: center; font-size: 3.4cqi; color: #fff; }
+.pm-orb { position: absolute !important; left: 50%; bottom: 14%; transform: translateX(-50%); width: 24cqi; height: 24cqi; border-radius: 6cqi; display: grid; place-items: center; font-weight: 800; font-size: 8cqi; color: #fff; }
+.story .pm-orb { bottom: 22%; }
+.pm-bg .pm-ph { z-index: 1; }
+.hl-1, .hl-2 { font-size: 10.4cqi; font-weight: 400; line-height: 1.02; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+.hl-2 { background: linear-gradient(180deg, #fff, #c9c9c9); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hl-s { font-size: 4.4cqi; margin: 3cqi 0 4cqi; }
+.hl-pill { display: inline-flex; align-items: center; gap: 1.6cqi; font-size: 3.2cqi; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 1.4cqi 1.4cqi 1.4cqi 3.4cqi; border-radius: 999px; }
+.hl-pill b { width: 5cqi; height: 5cqi; border-radius: 50%; display: grid; place-items: center; font-size: 2.8cqi; }
+.cl-top { display: flex; justify-content: space-between; font-size: 3.2cqi; padding-bottom: 2.4cqi; border-bottom: 1px solid #ffffff40; }
+.cl-icon { width: 11cqi; height: 11cqi; border-radius: 2.6cqi; border: 1px solid; background: #ffffff14; display: grid; place-items: center; font-weight: 800; font-size: 3.6cqi; }
+.cl-h { font-size: 8.6cqi; font-weight: 400; line-height: 1.02; letter-spacing: -0.045em; margin: 0; max-width: 88%; }
+.cl-s { font-size: 4cqi; line-height: 1.3; max-width: 62%; margin: 0; }
+.vt-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2cqi; font-size: 3cqi; font-weight: 700; line-height: 1.1; }
+.vt-row span:nth-child(2) { text-align: center; }
+.vt-h { font-size: 10.4cqi; font-weight: 700; line-height: .98; letter-spacing: -0.04em; margin: 0; max-width: 86%; text-wrap: balance; }
+.vt-s { font-size: 4.6cqi; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin: 0; max-width: 72%; }
+.vt-xs { font-size: 3cqi; margin: 0; opacity: .85; max-width: 60%; }
+.vt-foot { display: flex; justify-content: space-between; align-items: flex-end; font-size: 3cqi; font-weight: 700; }
+.vt-qr { display: grid; gap: 1cqi; justify-items: end; text-align: right; }
+.vt-qr small { font-size: 2.4cqi; text-transform: uppercase; }
+.vt-qr i { width: 15cqi; height: 15cqi; border-radius: 2cqi; border: 1cqi solid #fff; background: conic-gradient(#111 25%, #fff 0 50%, #111 0 75%, #fff 0) 0 0/3cqi 3cqi; }
+.ps-top { display: flex; justify-content: space-between; font-size: 3.2cqi; font-weight: 600; }
+.ps-h { font-family: 'Anton', 'Impact', sans-serif; font-size: 12cqi; line-height: .95; text-transform: uppercase; text-align: center; margin: 3cqi 0 0; letter-spacing: -0.01em; }
+.ps-ph { flex: 1; margin: 2cqi -8cqi 0; position: relative; min-height: 0; }
+.ps-foot { display: flex; align-items: center; gap: 2.4cqi; font-size: 3.2cqi; }
+.ps-foot i { flex: 1; height: 1.5px; }
+.lx-top { display: flex; justify-content: space-between; font-size: 2.8cqi; letter-spacing: .3em; text-transform: uppercase; opacity: .85; }
+.lx-w { font-family: 'DM Serif Display', Georgia, serif; font-style: italic; line-height: 1; margin: 0; letter-spacing: -0.03em; }
+.lx-s { font-size: 5cqi; line-height: 1.12; letter-spacing: -0.03em; margin: 0; }
+.lx-s u { font-weight: 700; text-underline-offset: .8cqi; text-decoration-thickness: .5cqi; }
+.pm-word, .lx-w { overflow-wrap: normal; white-space: nowrap; }
+.up-btn { position: relative; overflow: hidden; }
+.up-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
 /* Calendário */
 .cal-bar { display: flex; align-items: center; gap: 10px; }
@@ -251,6 +435,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   .start { grid-template-columns: minmax(0, 1fr); }
   .xray-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .trio { grid-template-columns: minmax(0, 1fr); max-width: 440px; }
+  .feed-layout { grid-template-columns: minmax(0, 1fr); }
   .create, .result, .cal-layout, .brand-layout { grid-template-columns: minmax(0, 1fr); }
   .result .ig { max-width: 440px; }
   .plans { grid-template-columns: minmax(0, 1fr); max-width: 480px; }
@@ -263,11 +448,17 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
     border-right: 0; border-top: 1px solid var(--line);
   }
   .brand, .side-foot { display: none; }
-  .nav { grid-template-columns: repeat(5, 1fr); width: 100%; }
+  .nav { grid-template-columns: repeat(6, 1fr); width: 100%; }
   .nav a { flex-direction: column; gap: 3px; font-size: 11px; padding: 8px 4px; text-align: center; }
   .main { padding-block: 16px 110px; }
   .two { grid-template-columns: 1fr; }
   .xray-grid { grid-template-columns: minmax(0, 1fr); }
+  .tpl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  .modal-box { grid-template-columns: minmax(0, 1fr); }
+  .modal-art { padding: 20px; }
+  .modal-art .tp-wrap { max-width: 300px; }
+  .modal-art .tp-wrap.story { max-width: 200px; }
+  .modal-side { padding: 20px; }
   .cal .day { min-height: 64px; padding: 5px; }
   .cal .dow { padding: 8px 4px; font-size: 10px; text-align: center; }
   .ev { font-size: 0; padding: 0; height: 6px; border-radius: 3px; background: var(--accent); }
@@ -286,6 +477,9 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       <a href="#criar" data-view="criar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg>
         Criar post</a>
+      <a href="#templates" data-view="templates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>
+        Templates</a>
       <a href="#calendario" data-view="calendario">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
         Calendário</a>
@@ -327,15 +521,30 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
         <div class="head" style="margin-top:36px">
           <div>
             <h2 style="font-size:1.5rem">Raio-x de <span id="x-handle"></span></h2>
-            <p>O que está afastando clientes hoje e o que muda com o Posittiva Builder. <span class="pill warn">Dados simulados</span></p>
+            <p>A IA leu seu feed, mediu o que engaja e o que não engaja, e montou sua estratégia a partir disso. <span class="pill warn">Dados simulados</span></p>
           </div>
         </div>
         <div class="xray-grid" id="xray-grid"></div>
 
+        <div class="feed-layout">
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;margin-bottom:14px"><h3>Seu feed, post a post</h3><span class="pill">Últimos 9 de 30</span></div>
+            <div class="feed" id="feed"></div>
+            <p class="feed-legend"><span class="pill ok">Top</span> acima da média <span class="pill warn">Baixo</span> abaixo da média · média do perfil: <strong id="feed-avg"></strong> curtidas</p>
+          </div>
+          <div class="panel strat">
+            <h3>Estratégia para os próximos 30 dias</h3>
+            <p style="color:var(--muted);font-size:14px">Montada a partir do que já funciona no seu feed.</p>
+            <div class="pillars" id="pillars"></div>
+            <div class="avoid"><span class="label" style="margin:0 0 6px">Parar de fazer</span><p id="avoid"></p></div>
+            <div class="row" style="gap:8px"><span class="pill">Formatos: carrossel e reels</span><span class="pill">5 posts por semana</span><span class="pill">18h às 20h</span></div>
+          </div>
+        </div>
+
         <div class="head" style="margin-top:36px">
           <div>
             <h2 style="font-size:1.5rem">Seus 3 posts prontos</h2>
-            <p>Com as cores e o tom da marca. Aprove como estão ou abra no editor para ajustar.</p>
+            <p>Escritos a partir dos posts que mais funcionaram no seu feed, com as cores e o tom da marca.</p>
           </div>
           <button class="btn" id="approve-all" type="button">Aprovar e agendar os 3</button>
         </div>
@@ -383,6 +592,10 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
             <span class="label">Formato</span>
             <div class="chips" id="format-chips"></div>
           </div>
+          <div class="field">
+            <span class="label">Foto do post (opcional)</span>
+            <label class="btn btn-line up-btn" for="post-photo" style="justify-content:flex-start"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/></svg><span class="up-txt">Enviar foto</span><input type="file" id="post-photo" accept="image/*"></label>
+          </div>
           <button class="btn btn-big" id="gen-btn" type="submit">Gerar post</button>
           <p class="gen-state" id="gen-state" hidden><span class="spinner"></span><span>Criando legenda e arte…</span></p>
         </form>
@@ -391,6 +604,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
           <article class="ig" aria-label="Prévia no Instagram">
             <div class="ig-top"><span class="avatar" id="pv-avatar"></span><span><span id="pv-handle"></span><small id="pv-format"></small></span></div>
             <div class="canvas-wrap" id="pv-art"></div>
+            <div class="pv-tpl"><span id="pv-tpl-name">Layout automático</span><a href="#templates" class="link-sm">Trocar template</a></div>
             <div class="ig-cap" id="pv-cap"></div>
           </article>
 
@@ -418,6 +632,27 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- TEMPLATES -->
+    <section id="view-templates" data-page="templates" hidden>
+      <div class="head">
+        <div>
+          <h1>Templates</h1>
+          <p>Modelos feitos por designers para cada tipo de post. Escolha um e ele se adapta às cores e ao texto da sua marca.</p>
+        </div>
+        <label class="switch" for="tpl-brand"><input type="checkbox" id="tpl-brand"><span class="track"><span></span></span>Ver com as cores da minha marca</label>
+      </div>
+      <div class="tpl-bar">
+        <label class="search" for="tpl-q"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="text" id="tpl-q" placeholder="Buscar: promoção, dia das mães, enquete…" autocomplete="off"></label>
+        <div class="row">
+          <label class="btn btn-line up-btn" for="tpl-photo"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg><span class="up-txt">Testar com sua foto</span><input type="file" id="tpl-photo" accept="image/*"></label>
+          <div class="chips" id="tpl-fmts"></div>
+        </div>
+      </div>
+      <div class="chips tpl-cats" id="tpl-cats"></div>
+      <p class="tpl-count" id="tpl-count"></p>
+      <div class="tpl-grid" id="tpl-grid"></div>
     </section>
 
     <!-- CALENDÁRIO -->
@@ -519,6 +754,17 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       </div>
     </section>
   </main>
+</div>
+<div class="modal" id="modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal-art" id="m-art"></div>
+    <div class="modal-side">
+      <div><span class="label">Template</span><h2 id="m-title" style="font-size:1.6rem"></h2><p id="m-sub" style="color:var(--muted);margin-top:6px"></p></div>
+      <div><span class="label">Paleta</span><div class="m-pal" id="m-pal"></div></div>
+      <ul class="m-feats"><li>Texto e cores 100% editáveis</li><li>Adapta para post, story e carrossel</li><li>Aplica sua logo e seu @ automaticamente</li></ul>
+      <div class="row" style="margin-top:auto"><button class="btn" id="m-use" type="button">Usar este template</button><button class="btn btn-line" id="m-close" type="button">Fechar</button></div>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -630,12 +876,16 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   }
   function generate() {
     const topic = $('#topic').value.trim() || brand.niche;
-    current = Object.assign(compose(goal, topic, variant), { tags: hashtags() });
+    const tpl = current && current.tpl;
+    current = Object.assign(compose(goal, topic, variant), { tags: hashtags(), tpl });
     renderPreview();
   }
 
   function renderArt(post, fmt) {
     post = post || current; fmt = fmt || format;
+    if (post.tpl && typeof tplById === 'function' && tplById(post.tpl)) {
+      return tplArt(tplById(post.tpl), fmt === 'Post quadrado' ? 'Post' : fmt, true, { tag: TAG[post.goal || goal], title: post.title, sub: post.sub });
+    }
     const c1 = brand.c1, c2 = brand.c2, t1 = textOn(c1), t2 = textOn(c2);
     const story = fmt === 'Story';
     const L = post.layout;
@@ -656,6 +906,8 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 
   function renderPreview() {
     $('#pv-art').innerHTML = renderArt();
+    const tn = current.tpl && typeof tplById === 'function' && tplById(current.tpl);
+    $('#pv-tpl-name').textContent = tn ? 'Template: ' + L_NAMES[tn.layout] + ' · ' + tn.cat : 'Layout automático';
     $('#caption').value = current.cap;
     $('#tags').textContent = current.tags;
     syncCaption();
@@ -763,20 +1015,54 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   document.querySelectorAll('[data-plan]').forEach((b) => b.addEventListener('click', () => toast('Plano ' + b.dataset.plan + ': o pagamento entra na versão completa')));
 
   // ---- Início: @ -> raio-x -> 3 posts ----
-  const STEPS = ['Lendo seus últimos posts', 'Identificando cores e estilo visual', 'Entendendo seu tom de voz', 'Escolhendo temas que funcionam no seu nicho', 'Criando seus 3 posts'];
+  const STEPS = ['Abrindo o feed de @' , 'Lendo os últimos 30 posts e legendas', 'Medindo curtidas e comentários de cada post', 'Identificando cores, estilo e tom de voz', 'Montando a estratégia do mês', 'Escrevendo seus 3 primeiros posts'];
   function renderSteps(doneUpTo, doing) {
     $('#step-list').innerHTML = STEPS.map((s, i) => {
       const cls = i < doneUpTo ? 'done' : (i === doing ? 'doing' : '');
-      return '<li class="' + cls + '"><span class="ic">' + (i < doneUpTo ? '✓' : '') + '</span>' + s + '</li>';
+      const txt = i === 0 ? s + ($('#at').value.trim().replace(/^@/, '') || brand.handle) : s;
+      return '<li class="' + cls + '"><span class="ic">' + (i < doneUpTo ? '✓' : '') + '</span>' + esc(txt) + '</li>';
     }).join('');
   }
   let trio = [];
   const TRIO_PLAN = [['Vender', 'Pão de fermentação natural saindo às 7h'], ['Dica', 'Como conservar o pão por mais tempo'], ['Bastidores', 'A fornada das 5h da manhã']];
+  const TRIO_WHY = [
+    'Repete o formato do seu 2º melhor post ("Pão de fermentação natural saindo", 380 curtidas), agora com chamada para reservar.',
+    'Seu post sobre o fermento teve 52 comentários, a maioria perguntas. Dicas respondem o que o público já quer saber.',
+    'Bastidores é o seu pilar mais forte: a fornada das 5h foi o post com mais curtidas do feed (412).'
+  ];
+  // Feed simulado: na versão real vem da API oficial do Instagram (legenda, imagem, curtidas, comentários)
+  const FEED = [
+    { t: 'Fornada das 5h, direto do forno', k: 'Bastidores', l: 412, c: 38, g: 'linear-gradient(135deg,#8a4a22,#e0a24e)' },
+    { t: 'Promoção: 10% no pix', k: 'Promoção', l: 38, c: 1, g: 'linear-gradient(135deg,#d42f2f,#ff8a00)' },
+    { t: 'Pão de fermentação natural saindo', k: 'Produto', l: 380, c: 29, g: 'linear-gradient(135deg,#6b3a1d,#c98a4b)' },
+    { t: 'Bom dia! Sorria 😊', k: 'Frase', l: 22, c: 0, g: 'linear-gradient(135deg,#5a8dee,#a0e0ff)' },
+    { t: 'Dona Célia, cliente há 8 anos', k: 'Clientes', l: 295, c: 41, g: 'linear-gradient(135deg,#7a5a3a,#d8b48a)' },
+    { t: 'Foto da vitrine à noite', k: 'Produto', l: 45, c: 2, g: 'linear-gradient(135deg,#1d1d1d,#4a4038)' },
+    { t: 'Como fazemos o fermento natural', k: 'Bastidores', l: 356, c: 52, g: 'linear-gradient(135deg,#9a6a3a,#f2d49a)' },
+    { t: 'Aviso: fechado no feriado', k: 'Aviso', l: 31, c: 3, g: 'linear-gradient(135deg,#444,#888)' },
+    { t: 'Croissant de manteiga, só sábado', k: 'Produto', l: 268, c: 33, g: 'linear-gradient(135deg,#b8732e,#f3c77a)' }
+  ];
+  function renderFeed() {
+    const avg = Math.round(FEED.reduce((a, f) => a + f.l, 0) / FEED.length);
+    $('#feed-avg').textContent = avg;
+    $('#feed').innerHTML = FEED.map((f) => {
+      const top = f.l > avg * 1.3, low = f.l < avg * 0.5;
+      return '<div class="fp' + (top ? ' top' : '') + '" style="background:' + f.g + '">' + (top ? '<span class="pill ok">Top</span>' : low ? '<span class="pill warn">Baixo</span>' : '') +
+        '<span class="fp-t">' + esc(f.t) + '</span><span class="fp-n"><span>♥ ' + f.l + '</span><span>💬 ' + f.c + '</span></span></div>';
+    }).join('');
+    const P = [
+      ['Bastidores e processo', 40, 'Seus 2 posts de bastidores tiveram, em média, 2,5x mais curtidas que o resto do feed.'],
+      ['Produto em destaque', 35, 'Fotos de perto do pão e do croissant engajam. A vitrine escura, não.'],
+      ['Clientes e comunidade', 25, 'O post da Dona Célia foi o que mais gerou comentários por curtida.']
+    ];
+    $('#pillars').innerHTML = P.map((x) => '<div class="pillar"><div class="pillar-top"><span>' + x[0] + '</span><span>' + x[1] + '%</span></div><div class="bar"><i style="width:' + x[1] + '%"></i></div><p>' + x[2] + '</p></div>').join('');
+    $('#avoid').textContent = 'Frases genéricas, avisos e promoções só com texto. Juntos tiveram média de 34 curtidas, menos de 1/5 da média do perfil.';
+  }
   function renderXray(handle) {
     $('#x-handle').textContent = '@' + handle;
     const X = [
       ['Frequência', '1 post a cada 16 dias', 'Quem visita acha que o perfil está parado.', 'warn', 'Precisa melhorar'],
-      ['Identidade visual', '4 estilos diferentes', 'Cores e fontes mudam de um post para outro.', 'warn', 'Inconsistente'],
+      ['Identidade visual', '4 estilos diferentes', 'Os posts que fogem do marrom e dourado da marca são os que menos engajam.', 'warn', 'Inconsistente'],
       ['Bio', 'Sem chamada para ação', 'Falta dizer como pedir ou onde fica a loja.', 'warn', 'Ajustar'],
       ['Melhor horário', '18h às 20h', 'Quando seu público mais abre o Instagram.', 'ok', 'Vamos usar']
     ];
@@ -804,7 +1090,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
   }
   function renderTrio() {
     $('#trio').innerHTML = trio.map((p, i) => '<article class="ig' + (p.approved ? ' approved' : '') + '"><div class="ig-top"><span class="avatar" style="background:' + brand.c1 + ';color:' + textOn(brand.c1) + '">' + esc(initials(brand.name)) + '</span><span>' + esc(brand.handle) + '<small>' + esc(p.goal) + '</small></span></div>' +
-      renderArt(p, 'Post quadrado') + '<div class="ig-cap"><b>' + esc(brand.handle) + '</b>' + esc(p.cap) + '</div>' +
+      renderArt(p, 'Post quadrado') + '<p class="why"><b>Por que este post:</b> ' + esc(TRIO_WHY[i]) + '</p><div class="ig-cap"><b>' + esc(brand.handle) + '</b>' + esc(p.cap) + '</div>' +
       '<div class="trio-actions"><button class="btn ' + (p.approved ? 'btn-quiet' : '') + '" type="button" data-approve="' + i + '">' + (p.approved ? '✓ Aprovado' : 'Aprovar') + '</button><button class="btn btn-line" type="button" data-edit="' + i + '">Editar</button></div></article>').join('');
   }
   $('#trio').addEventListener('click', (e) => {
@@ -834,23 +1120,279 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       i++; renderSteps(i, i);
       if (i < STEPS.length) { setTimeout(tick, 650); return; }
       trio = TRIO_PLAN.map(([g, t], k) => compose(g, t, k));
-      renderXray(handle); renderTrio(); renderMonth();
+      renderXray(handle); renderFeed(); renderTrio(); renderMonth();
       $('#xray').hidden = false; btn.disabled = false;
       $('#xray').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     };
     setTimeout(tick, 650);
   });
 
+  // ---- Templates ----
+  const PAL = {
+    cafe: { bg: '#3b2416', fg: '#f7ecdf', acc: '#e9a23b' },
+    sage: { bg: '#dfe8dc', fg: '#1f3326', acc: '#2f6b45' },
+    rose: { bg: '#f6dcd6', fg: '#4a1f24', acc: '#c2475a' },
+    navy: { bg: '#13213c', fg: '#f2f4fa', acc: '#f5c342' },
+    lilac: { bg: '#e6e0f5', fg: '#2a1f4a', acc: '#6c4ad6' },
+    coral: { bg: '#1c1917', fg: '#f7f3ee', acc: '#ff7a3d' },
+    sand: { bg: '#efe6d6', fg: '#2b2620', acc: '#b8582f' },
+    ocean: { bg: '#0f5b66', fg: '#eef8f7', acc: '#7fe0d0' },
+    paper: { bg: '#ffffff', fg: '#161a2b', acc: '#2f4dff' },
+    wine: { bg: '#5a1a2b', fg: '#fbeef0', acc: '#f0b6c0' },
+    noir: { bg: '#161412', fg: '#f5f2ec', acc: '#c9a36a' },
+    midnight: { bg: '#0b1a2a', fg: '#eef3f8', acc: '#e3b98a' },
+    carbon: { bg: '#0d0d0d', fg: '#f4f4f4', acc: '#ff8a3d' },
+    emerald: { bg: '#07130e', fg: '#f1f7f4', acc: '#2fd17a' },
+    crimson: { bg: '#0a0304', fg: '#fff5f5', acc: '#ff2d3d' },
+    deep: { bg: '#0a2436', fg: '#f2f7fb', acc: '#5fd3f3' },
+    sun: { bg: '#f5b301', fg: '#17120a', acc: '#fff1c2' },
+    library: { bg: '#120c08', fg: '#ffffff', acc: '#3ef07a' }
+  };
+  // Foto enviada pelo usuário (reduzida para no máximo 1080px) ou um retrato de exemplo desenhado em CSS
+  let photoUrl = '';
+  function phBg(p, overlay) {
+    const base = photoUrl ? 'url(' + photoUrl + ') center/cover no-repeat'
+      : 'radial-gradient(ellipse 22% 16% at 50% 34%,' + p.fg + '30,transparent 70%),radial-gradient(ellipse 42% 30% at 50% 78%,' + p.fg + '22,transparent 70%),radial-gradient(ellipse 70% 60% at 50% 45%,' + p.acc + '38,transparent 75%),' + p.bg;
+    return (overlay ? overlay + ',' : '') + base;
+  }
+  const phLabel = () => photoUrl ? '' : '<span class="pm-ph">Sua foto aqui</span>';
+  const fit = (txt, max, k) => Math.min(max, k / Math.max(1, String(txt).length)).toFixed(1) + 'cqi';
+  const mark = (p) => '<span class="pm-mark" style="border-color:' + p.fg + '"><span>' + esc(initials(brand.name)) + '</span></span>';
+  const SERIF = "'Instrument Serif', Georgia, serif";
+  const photo = (p, label) => photoUrl ? '<div class="tp-photo" style="background:url(&quot;' + photoUrl + '&quot;) center/cover"></div>' : '<div class="tp-photo" style="background:radial-gradient(circle at 30% 35%,' + p.acc + '66,transparent 55%),radial-gradient(circle at 75% 70%,' + p.fg + '33,transparent 50%),linear-gradient(135deg,' + p.bg + ',' + p.acc + '88)"><span>' + (label || 'Sua foto aqui') + '</span></div>';
+  const foot = (p) => '<div class="tp-foot"><span>@' + esc(brand.handle) + '</span><span>' + esc(brand.name) + '</span></div>';
+  const pill = (p, t) => '<span class="tp-pill" style="background:' + p.acc + ';color:' + textOn(p.acc) + '">' + esc(t) + '</span>';
+  const LAYOUTS = {
+    bold: (d, p) => '<span class="tp-blob" style="background:' + p.acc + '"></span>' + pill(p, d.tag) + '<div class="tp-mid"><p class="tp-h">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p),
+    split: (d, p) => '<div class="tp-split" style="background:' + p.acc + ';color:' + textOn(p.acc) + '"><span class="tp-k">' + esc(d.tag) + '</span><p class="tp-h">' + esc(d.title) + '</p></div><div class="tp-mid" style="justify-content:flex-start"><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p),
+    frame: (d, p) => '<span class="tp-frame" style="border-color:' + p.acc + '"></span><div class="tp-mid tp-center"><span class="tp-k" style="color:' + p.acc + '">' + esc(d.tag) + '</span><p class="tp-h tp-serif">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div><div class="tp-foot tp-center"><span>@' + esc(brand.handle) + '</span></div>',
+    quote: (d, p) => '<span class="tp-q" style="color:' + p.acc + '">“</span><div class="tp-mid"><p class="tp-h tp-serif" style="font-size:8.2cqi">' + esc(d.title) + '</p><p class="tp-stars" style="color:' + p.acc + '">★★★★★</p><p class="tp-s"><strong>' + esc(d.sub) + '</strong></p></div>' + foot(p),
+    list: (d, p) => pill(p, d.tag) + '<div class="tp-mid"><p class="tp-h" style="font-size:8.5cqi">' + esc(d.title) + '</p><ol class="tp-list">' + (d.items || []).map((x, i) => '<li><b style="background:' + p.acc + ';color:' + textOn(p.acc) + '">' + (i + 1) + '</b>' + esc(x) + '</li>').join('') + '</ol></div>' + foot(p),
+    price: (d, p) => pill(p, d.tag) + '<div class="tp-mid"><p class="tp-h" style="font-size:9cqi">' + esc(d.title) + '</p><div class="tp-row"><span class="tp-badge" style="background:' + p.acc + ';color:' + textOn(p.acc) + '">' + esc(d.extra || '-30%') + '</span><p class="tp-s" style="margin:0">' + esc(d.sub) + '</p></div></div>' + foot(p),
+    stripe: (d, p) => '<div class="tp-stripe" style="background:repeating-linear-gradient(-45deg,' + p.acc + ' 0 14px,transparent 14px 28px)"></div><div class="tp-band" style="background:' + p.acc + ';color:' + textOn(p.acc) + '">' + esc(d.tag) + '</div><div class="tp-mid" style="justify-content:flex-end"><p class="tp-h">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p),
+    photo: (d, p) => photo(p) + '<div class="tp-cap" style="background:' + p.bg + '"><span class="tp-k" style="color:' + p.acc + '">' + esc(d.tag) + '</span><p class="tp-h" style="font-size:8cqi">' + esc(d.title) + '</p></div>',
+    poll: (d, p) => pill(p, d.tag) + '<div class="tp-mid"><p class="tp-h" style="font-size:9cqi">' + esc(d.title) + '</p><div class="tp-poll">' + (d.items || ['Sim', 'Não']).map((x, i) => '<div style="border-color:' + p.acc + '"><i style="width:' + (i ? 38 : 62) + '%;background:' + p.acc + '"></i><span>' + esc(x) + '</span><b>' + (i ? 38 : 62) + '%</b></div>').join('') + '</div></div>' + foot(p),
+    date: (d, p) => '<div class="tp-mid"><p class="tp-day" style="color:' + p.acc + '">' + esc(d.extra || '12') + '</p><span class="tp-k">' + esc(d.tag) + '</span><p class="tp-h tp-serif">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p),
+    beforeafter: (d, p) => '<div class="tp-ba"><div style="background:linear-gradient(135deg,#b9b4ac,#8c877f)"><span>Antes</span></div><div style="background:linear-gradient(135deg,' + p.acc + ',' + p.bg + ')"><span>Depois</span></div></div><div class="tp-cap" style="background:' + p.bg + '"><p class="tp-h" style="font-size:7.6cqi">' + esc(d.title) + '</p><p class="tp-s" style="margin-top:4px">' + esc(d.sub) + '</p></div>',
+    minimal: (d, p) => '<div class="tp-row" style="justify-content:space-between"><span class="tp-k">' + esc(d.tag) + '</span><span class="tp-k">' + esc(brand.name) + '</span></div><div class="tp-mid" style="justify-content:flex-end"><span class="tp-line" style="background:' + p.acc + '"></span><p class="tp-h tp-serif" style="font-size:11cqi">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>',
+    checklist: (d, p) => pill(p, d.tag) + '<div class="tp-mid"><p class="tp-h" style="font-size:8.5cqi">' + esc(d.title) + '</p><ul class="tp-check">' + (d.items || []).map((x) => '<li><b style="border-color:' + p.acc + ';color:' + p.acc + '">✓</b>' + esc(x) + '</li>').join('') + '</ul></div>' + foot(p),
+    outline: (d, p) => '<p class="tp-big" style="-webkit-text-stroke:2px ' + p.acc + '">' + esc(d.extra || 'NOVO') + '</p><div class="tp-mid" style="justify-content:flex-end"><p class="tp-h">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p),
+    ticket: (d, p) => '<div class="tp-mid"><div class="tp-ticket" style="background:' + p.fg + ';color:' + p.bg + '"><span class="tp-k" style="color:' + p.acc + '">' + esc(d.tag) + '</span><p class="tp-h" style="font-size:8.5cqi">' + esc(d.title) + '</p><div class="tp-tk-row" style="border-color:' + p.bg + '33">' + (d.items || []).map((x) => '<span>' + esc(x) + '</span>').join('') + '</div></div></div>' + foot(p),
+    cinema: (d, p) => '<div class="pm-bg" style="background:' + phBg(p, 'linear-gradient(180deg,#000000b0 0%,transparent 30%,transparent 50%,#000000e6 88%)') + '">' + phLabel() + '</div>' +
+      '<div class="pm-chips">' + (d.items || []).map((x) => '<span>' + esc(x) + '</span>').join('') + '</div>' +
+      '<p class="pm-blur">' + esc(d.tag) + '</p><div class="tp-mid" style="justify-content:flex-end;gap:1cqi"><div class="pm-lead"><span><i>' + esc(d.title) + '</i> ' + esc(d.sub) + '</span><em>Arraste ›</em></div>' +
+      '<p class="pm-word" style="font-size:' + fit(d.extra, 20, 150) + '">' + esc(d.extra) + '</p></div><p class="pm-copy">© ' + esc(brand.name) + ' · @' + esc(brand.handle) + '</p>',
+    glow: (d, p) => '<div class="pm-bg" style="background:' + phBg(p, 'linear-gradient(180deg,transparent 30%,' + p.bg + 'f0 75%),radial-gradient(circle at 8% 30%,#9fd4ff22,transparent 25%)') + '">' + phLabel() + '</div>' +
+      '<div class="tp-mid tp-center" style="justify-content:flex-end;gap:2cqi"><p class="pm-sans">' + esc(d.title) + '</p><p class="pm-it" style="color:' + p.acc + '">' + esc(d.extra) + '</p><p class="tp-s" style="max-width:70%">' + esc(d.sub) + '</p></div>' +
+      '<div class="pm-sig"><span class="pm-badge">' + mark(p) + '<span><b>' + esc(brand.name) + '</b><small>@' + esc(brand.handle) + '</small></span></span><span class="pm-sign">' + esc(brand.name) + '</span></div>',
+    swiss: (d, p) => { const row = '<div class="pm-row3">' + (d.items || []).map((x) => '<span>' + esc(x) + '</span>').join('') + '</div>';
+      return row + '<div class="tp-mid" style="gap:3cqi"><span class="pm-handle">' + mark(p) + '@' + esc(brand.handle) + '</span><p class="pm-mix"><span>' + esc(d.title) + '</span> <b>' + esc(d.extra) + '</b></p>' +
+      '<p class="pm-box" style="border-color:' + p.fg + '40">' + esc(d.sub) + '</p><p class="pm-read"><b style="color:' + p.acc + '">Leia</b> a legenda <span style="color:' + p.acc + '">↘</span></p></div>' + row; },
+    gridglow: (d, p) => '<div class="pm-bg" style="background:radial-gradient(ellipse 55% 35% at 50% 88%,' + p.acc + '66,transparent 70%),radial-gradient(ellipse 30% 25% at 6% 0%,#ffffff33,transparent 70%),linear-gradient(' + p.fg + '12 1px,transparent 1px) 0 0/11cqi 11cqi,linear-gradient(90deg,' + p.fg + '12 1px,transparent 1px) 0 0/11cqi 11cqi,' + p.bg + '"></div>' +
+      '<div class="tp-center" style="display:grid;justify-items:center">' + mark(p) + '</div><div class="tp-mid tp-center"><div class="pm-glass"><p class="pm-l1">' + esc((d.items || [])[0] || '') + '</p><p class="pm-l2">' + esc((d.items || [])[1] || '') + '</p><p class="pm-l3">' + esc((d.items || [])[2] || d.title) + '</p>' +
+      '<p class="pm-accent" style="color:' + p.acc + '">' + esc(d.sub) + '</p><div class="pm-dash"><i></i><i class="on"></i><i></i><i></i><i></i></div></div></div>',
+    neon: (d, p) => '<div class="pm-bg" style="background:radial-gradient(ellipse 70% 40% at 50% 100%,' + p.acc + '88,transparent 70%),radial-gradient(ellipse 40% 30% at 100% 0%,' + p.acc + '33,transparent 70%),' + p.bg + '"></div>' +
+      '<div class="pm-bar">' + mark(p) + '<i style="background:' + p.fg + '55"></i><span>' + esc(brand.name.toUpperCase()) + '</span></div>' +
+      '<div class="tp-mid tp-center" style="justify-content:flex-start;padding-top:6cqi;gap:3cqi"><p class="pm-sans" style="font-weight:600">' + esc(d.title) + '<br><span style="color:' + p.acc + ';font-weight:800">' + esc(d.extra) + '</span></p>' +
+      '<div class="pm-cta"><span style="background:' + p.acc + '26;border-color:' + p.acc + '">' + esc(d.tag) + '</span><b style="background:' + p.acc + '">↘</b></div></div>' +
+      '<div class="pm-orb" style="background:linear-gradient(145deg,' + p.acc + ',' + p.acc + '99);box-shadow:0 0 12cqi ' + p.acc + ',0 0 3cqi ' + p.acc + '">' + esc(initials(brand.name)) + '</div>',
+    headline: (d, p) => '<div class="pm-bg" style="background:' + phBg(p, 'linear-gradient(180deg,transparent 40%,' + p.bg + 'f2 86%)') + '">' + phLabel() + '</div>' +
+      '<div class="tp-mid tp-center" style="justify-content:flex-end;gap:0"><p class="hl-1" style="color:' + p.acc + '">' + esc(d.title) + '</p><p class="hl-2">' + esc(d.extra) + '</p><p class="hl-s">' + esc(d.sub) + '</p>' +
+      '<span class="hl-pill" style="background:' + p.acc + ';color:' + textOn(p.acc) + ';box-shadow:0 0 6cqi ' + p.acc + '99">' + esc(d.tag || 'Arraste') + ' <b style="background:' + textOn(p.acc) + ';color:' + p.acc + '">←</b></span></div>',
+    clarity: (d, p) => '<div class="pm-bg" style="background:' + phBg(p, 'linear-gradient(90deg,' + p.bg + 'e6 0%,' + p.bg + '80 45%,transparent 75%),linear-gradient(180deg,transparent 60%,' + p.bg + 'cc)') + '">' + phLabel() + '</div>' +
+      '<div class="cl-top"><span>www.' + esc(brand.handle) + '.com.br</span><span>@' + esc(brand.handle) + '</span></div>' +
+      '<div class="tp-mid" style="justify-content:flex-end;gap:3cqi"><span class="cl-icon" style="border-color:' + p.fg + '55">' + esc(initials(brand.name)) + '</span><p class="cl-h">' + esc(d.title) + ' <span style="color:' + p.acc + '">' + esc(d.extra) + '</span> ' + esc((d.items || [])[0] || '') + '</p><p class="cl-s">' + esc(d.sub) + '</p></div>',
+    vitrine: (d, p) => { const it = d.items || [];
+      return '<div class="pm-bg" style="background:' + (photoUrl ? phBg(p, 'radial-gradient(circle at 50% 42%,transparent 30%,#000000b3 85%)') : 'repeating-radial-gradient(circle at 50% 42%,transparent 0 6cqi,#00000014 6cqi 7cqi),radial-gradient(circle at 50% 42%,' + p.acc + ' 0%,' + p.acc + 'cc 35%,#1a0000 90%)') + '">' + phLabel() + '</div>' +
+      '<div class="vt-row"><span>' + esc(it[0] || '') + '</span><span>' + esc(it[1] || '') + '</span><span>' + esc(it[2] || '') + '</span><span>' + esc(it[3] || brand.name) + '</span></div>' +
+      '<div class="tp-mid" style="justify-content:flex-end;gap:2.4cqi"><p class="vt-h">' + esc(d.title) + '</p><p class="vt-s">' + esc(d.sub) + '</p><p class="vt-xs">' + esc(d.extra) + '</p></div>' +
+      '<div class="vt-foot"><span>' + esc(brand.name) + ' · a vitrine da sua marca</span><span class="vt-qr"><small>' + esc(d.tag) + '</small><i></i></span></div>'; },
+    poster: (d, p) => { const it = d.items || [];
+      return '<div class="ps-top"><span>' + esc(it[0] || '') + '</span><span>' + esc(it[1] || '') + '</span></div><p class="ps-h"><span style="color:' + p.acc + '">' + esc(d.title) + '</span><br>' + esc(d.sub) + '</p>' +
+      '<div class="ps-ph" style="background:' + (photoUrl ? 'url(&quot;' + photoUrl + '&quot;) center/cover' : 'radial-gradient(ellipse 30% 22% at 50% 30%,' + p.fg + '26,transparent 70%),radial-gradient(ellipse 48% 34% at 50% 85%,' + p.fg + '1f,transparent 70%)') + '">' + phLabel() + '</div>' +
+      '<div class="ps-foot">' + mark(p) + '<b>' + esc(brand.name) + '</b><i style="background:' + p.fg + '"></i><span>arrasta</span></div>'; },
+    lux: (d, p) => '<div class="pm-bg" style="background:' + phBg(p, 'linear-gradient(180deg,' + p.bg + ' 0%,' + p.bg + ' 38%,transparent 72%)') + '">' + (photoUrl ? '' : '<span class="pm-ph" style="top:78%">Sua foto aqui</span>') + '</div>' +
+      '<div class="lx-top"><span>@' + esc(brand.handle) + '</span><span>' + esc(d.tag) + '</span></div>' +
+      '<div class="tp-mid tp-center" style="justify-content:flex-start;padding-top:8cqi;gap:1cqi"><p class="lx-w" style="font-size:' + fit(d.extra, 19, 150) + '">' + esc(d.extra) + '</p><p class="lx-s">' + esc(d.title) + '<br><u>' + esc(d.sub) + '</u><br>' + esc((d.items || [])[0] || '') + '</p></div>',
+    stat: (d, p) => pill(p, d.tag) + '<div class="tp-mid"><p class="tp-num" style="color:' + p.acc + '">' + esc(d.extra || '87%') + '</p><p class="tp-h" style="font-size:8cqi">' + esc(d.title) + '</p><p class="tp-s">' + esc(d.sub) + '</p></div>' + foot(p)
+  };
+  const L_NAMES = { headline: 'Manchete', clarity: 'Clareza', vitrine: 'Revista', poster: 'Pôster', lux: 'Luxo', cinema: 'Cinema', glow: 'Editorial', swiss: 'Suíço', gridglow: 'Vidro', neon: 'Neon', bold: 'Destaque', split: 'Dividido', frame: 'Moldura', quote: 'Citação', list: 'Lista', price: 'Oferta', stripe: 'Faixa', photo: 'Foto', poll: 'Enquete', date: 'Data', beforeafter: 'Antes e depois', minimal: 'Minimal', checklist: 'Checklist', outline: 'Contorno', ticket: 'Ingresso', stat: 'Número' };
+  // [layout, paleta, categoria, formato, tag, título, subtítulo, extra, itens]
+  const T = [
+    ['price', 'cafe', 'Promoção', 'Post', 'Só hoje', 'Combo café da manhã', 'de R$ 39 por R$ 27', '-30%'],
+    ['bold', 'coral', 'Promoção', 'Post', 'Oferta', 'Semana do cliente', 'Descontos em toda a loja até domingo'],
+    ['stripe', 'navy', 'Promoção', 'Story', 'Liquida', 'Últimas peças da coleção', 'Até 50% off enquanto durar o estoque'],
+    ['price', 'rose', 'Promoção', 'Story', 'Pacote', 'Limpeza de pele + hidratação', 'por R$ 149 à vista', 'R$ 149'],
+    ['outline', 'coral', 'Promoção', 'Post', 'Black', 'Black Friday antecipada', 'Cupom válido até sexta', 'OFF'],
+    ['split', 'lilac', 'Promoção', 'Carrossel', 'Frete grátis', 'Compras acima de R$ 150', 'Válido para todo o Brasil nesta semana'],
+    ['list', 'sage', 'Dica', 'Carrossel', 'Dica', '3 erros que estragam sua planta', '', '', ['Regar todo dia', 'Deixar sem luz', 'Vaso sem furo']],
+    ['checklist', 'paper', 'Dica', 'Post', 'Checklist', 'Antes da sua consulta', '', '', ['Leve seus exames', 'Chegue 10 min antes', 'Anote suas dúvidas']],
+    ['bold', 'ocean', 'Dica', 'Post', 'Você sabia?', 'Protetor solar também em dia nublado', 'Até 80% dos raios UV atravessam as nuvens'],
+    ['list', 'navy', 'Dica', 'Post', 'Guia rápido', 'Como organizar suas finanças', '', '', ['Separe PF e PJ', 'Defina um pró-labore', 'Revise todo mês']],
+    ['minimal', 'sand', 'Dica', 'Story', 'Dica do dia', 'Menos é mais na decoração', 'Escolha uma peça de destaque por ambiente'],
+    ['split', 'sage', 'Dica', 'Carrossel', 'Passo a passo', 'Rotina de treino em casa', 'Arrasta para ver os 5 exercícios'],
+    ['checklist', 'lilac', 'Dica', 'Carrossel', 'Salve este post', 'Mala de maternidade', '', '', ['Documentos', 'Roupas do bebê', 'Itens de higiene']],
+    ['quote', 'paper', 'Depoimento', 'Post', 'Cliente', 'Atendimento impecável do começo ao fim. Já indiquei para toda a família.', 'Mariana S.'],
+    ['quote', 'wine', 'Depoimento', 'Story', 'Cliente', 'Meu cabelo nunca esteve tão bonito. Voltarei sempre!', 'Juliana R.'],
+    ['quote', 'sage', 'Depoimento', 'Post', 'Cliente', 'O melhor pão da região, sem exagero.', 'Carlos M.'],
+    ['beforeafter', 'rose', 'Depoimento', 'Post', 'Resultado', 'Transformação em 3 sessões', 'Tratamento facial personalizado'],
+    ['beforeafter', 'ocean', 'Depoimento', 'Carrossel', 'Resultado', 'Reforma da cozinha', 'Projeto entregue em 20 dias'],
+    ['stat', 'navy', 'Depoimento', 'Post', 'Resultados', 'dos clientes voltam no mesmo mês', 'Pesquisa interna com 240 clientes', '92%'],
+    ['photo', 'cafe', 'Bastidores', 'Post', 'Bastidores', 'A fornada das 5h da manhã'],
+    ['photo', 'sand', 'Bastidores', 'Story', 'Por trás', 'Separando os pedidos de hoje'],
+    ['minimal', 'paper', 'Bastidores', 'Post', 'Nossa história', 'Tudo começou numa cozinha de 6 m²', 'Hoje somos 12 pessoas fazendo o que amam'],
+    ['photo', 'lilac', 'Bastidores', 'Carrossel', 'Conheça a equipe', 'Quem cuida de você aqui'],
+    ['split', 'cafe', 'Bastidores', 'Post', 'Processo', 'Do grão à xícara', '36 horas de cuidado em cada detalhe'],
+    ['outline', 'navy', 'Novidade', 'Post', 'Lançamento', 'Coleção Primavera', 'Disponível a partir de sexta', 'NOVO'],
+    ['bold', 'lilac', 'Novidade', 'Story', 'Chegou', 'Agora com entrega no seu bairro', 'Peça pelo WhatsApp'],
+    ['photo', 'coral', 'Novidade', 'Post', 'Novo no cardápio', 'Focaccia de alecrim'],
+    ['stripe', 'ocean', 'Novidade', 'Post', 'Inauguração', 'Nova unidade no centro', 'Rua das Flores, 120'],
+    ['outline', 'rose', 'Novidade', 'Story', 'Em breve', 'Algo novo está chegando', 'Ative as notificações', 'EM BREVE'],
+    ['date', 'rose', 'Datas', 'Post', 'Maio', 'Feliz Dia das Mães', 'Para quem cuida de tudo com amor', '11'],
+    ['date', 'navy', 'Datas', 'Post', 'Dezembro', 'Boas festas', 'Obrigado por estar com a gente este ano', '25'],
+    ['frame', 'wine', 'Datas', 'Post', '12 de junho', 'Dia dos Namorados', 'Presentes a partir de R$ 49'],
+    ['date', 'sage', 'Datas', 'Story', 'Agosto', 'Dia dos Pais', 'Um brinde a quem nos ensinou', '10'],
+    ['frame', 'cafe', 'Datas', 'Post', 'Outubro', 'Dia do Cliente', 'Surpresas para quem vier à loja'],
+    ['frame', 'paper', 'Frase', 'Post', 'Segunda-feira', 'Feito é melhor que perfeito.', 'Boa semana para você'],
+    ['minimal', 'wine', 'Frase', 'Post', 'Reflexão', 'Cuidar de si também é produtividade.', ''],
+    ['frame', 'sand', 'Frase', 'Story', 'Bom dia', 'Pequenos passos, todos os dias.', ''],
+    ['bold', 'paper', 'Frase', 'Post', 'Motivação', 'Seu negócio merece ser visto.', 'Salve e compartilhe'],
+    ['ticket', 'navy', 'Evento', 'Post', 'Workshop', 'Pães de fermentação natural', '', '', ['Sáb 18/10', '9h às 12h', '15 vagas']],
+    ['ticket', 'coral', 'Evento', 'Story', 'Ao vivo', 'Live: tire suas dúvidas', '', '', ['Qui 16/10', '19h', 'No Instagram']],
+    ['stripe', 'lilac', 'Evento', 'Post', 'Save the date', 'Aniversário de 5 anos', 'Dia 30/10, com música e degustação'],
+    ['ticket', 'sage', 'Evento', 'Carrossel', 'Aula aberta', 'Yoga no parque', '', '', ['Dom 19/10', '8h', 'Gratuito']],
+    ['poll', 'lilac', 'Enquete', 'Story', 'Enquete', 'Qual sabor sai na próxima fornada?', '', '', ['Chocolate', 'Frutas vermelhas']],
+    ['poll', 'ocean', 'Enquete', 'Post', 'Sua opinião', 'Você prefere atendimento de manhã ou à noite?', '', '', ['Manhã', 'Noite']],
+    ['poll', 'coral', 'Enquete', 'Story', 'Vote', 'Qual cor vem na nova coleção?', '', '', ['Terracota', 'Verde oliva']],
+    ['stat', 'sage', 'Resultado', 'Post', 'Números', 'pedidos entregues este mês', 'Obrigado pela confiança', '1.240'],
+    ['stat', 'coral', 'Resultado', 'Story', 'Marca', 'anos cuidando de você', 'E contando', '10'],
+    ['checklist', 'sand', 'Resultado', 'Post', 'O que entregamos', 'Projeto de identidade completo', '', '', ['Logo e variações', 'Paleta e tipografia', 'Manual da marca']]
+  ];
+  const PREMIUM = [
+    ['headline', 'library', 'Dica', 'Post', 'Arraste', 'Termos secretos', 'agora ficou fácil!', 'para vender mais'],
+    ['clarity', 'deep', 'Novidade', 'Post', '', 'Clareza para', 'Você precisa de informação rápida, limpa e sem ruído para agir na hora certa.', 'decidir,', ['estratégia personalizada.']],
+    ['vitrine', 'crimson', 'Promoção', 'Post', 'Quero anunciar', 'Se o cliente vê, o cliente confia.', 'Posicione sua marca onde seu público decide.', 'Atendemos todo o Brasil.', ['2026 ©', 'Anuncie aqui', 'O cliente confia.']],
+    ['poster', 'sun', 'Novidade', 'Post', '', 'Por que alguém', 'postaria isso?', '', ['23.02.26', 'Lançamento']],
+    ['lux', 'noir', 'Dica', 'Post', 'Advogado', 'essenciais para a', 'segurança jurídica', 'Contratos', ['da sua empresa.']],
+    ['headline', 'noir', 'Dica', 'Story', 'Arraste', '3 erros que', 'o terceiro é o mais comum', 'afastam clientes'],
+    ['clarity', 'emerald', 'Resultado', 'Post', '', 'Números que', 'Relatórios claros todo mês para você saber exatamente o que funciona.', 'provam,', ['estratégia que entrega.']],
+    ['poster', 'crimson', 'Promoção', 'Story', '', 'Você ainda', 'não provou?', '', ['Só este mês', 'Oferta']],
+    ['lux', 'carbon', 'Depoimento', 'Story', 'Consultoria', 'que geram', 'resultados reais', 'Estratégias', ['no seu negócio.']],
+    ['vitrine', 'navy', 'Evento', 'Post', 'Garantir ingresso', 'O evento que o seu nicho esperava.', 'Três dias de conteúdo prático com quem faz acontecer.', 'Vagas limitadas.', ['2026 ©', 'Edição 1', 'Presencial']],
+    ['cinema', 'noir', 'Frase', 'Post', 'É por isso', 'que você', 'precisa de um', 'Designer', ['Estratégia', 'Autoridade', 'Criatividade']],
+    ['glow', 'midnight', 'Depoimento', 'Post', 'Depoimento', 'Histórias reais inspiram', 'Antes e depois documentados são a prova viva da transformação.', 'confiança real.'],
+    ['swiss', 'carbon', 'Frase', 'Post', '', 'Clientes não compram', 'E confiança começa pelo design.', 'o que não confiam.', ['Marca', 'Confiança', 'Design']],
+    ['gridglow', 'emerald', 'Novidade', 'Carrossel', 'Estratégia', '', 'Estratégias inteligentes para levar sua marca mais longe.', '', ['Estratégia que leva', 'sua marca para', 'o próximo nível']],
+    ['neon', 'crimson', 'Promoção', 'Post', 'Garantir minha vaga', 'Seu talento. Seu negócio.', '', 'Seu futuro.'],
+    ['cinema', 'crimson', 'Novidade', 'Carrossel', 'Chegou', 'o seu', 'novo', 'Lançamento', ['Qualidade', 'Confiança', 'Resultado']],
+    ['glow', 'noir', 'Frase', 'Story', 'Frase', 'Quem cuida dos detalhes', 'Cada escolha da sua marca comunica alguma coisa.', 'cuida do todo.'],
+    ['swiss', 'paper', 'Dica', 'Carrossel', '', 'Postar todo dia', 'Constância vence perfeição no Instagram.', 'não é sobre sorte.', ['Conteúdo', 'Constância', 'Resultado']],
+    ['gridglow', 'midnight', 'Dica', 'Post', 'Guia', '', 'O guia em 5 passos para transformar seguidores em clientes.', '', ['Como vender', 'mais pelo', 'Instagram']],
+    ['neon', 'emerald', 'Evento', 'Story', 'Quero participar', 'O próximo nível do seu negócio começa aqui.', '', 'Aula gratuita.'],
+    ['swiss', 'carbon', 'Depoimento', 'Story', '', 'Resultado não é sorte.', '“Em 3 meses, dobramos os pedidos pelo direct.” Ana, cliente', 'É método.', ['Método', 'Prova', 'Resultado']],
+    ['cinema', 'midnight', 'Resultado', 'Post', 'Resultado', 'mais de', '1.200 clientes', 'Atendidos', ['Confiança', 'Qualidade', 'Cuidado']]
+  ];
+  T.unshift(...PREMIUM.map((r) => { const x = r.slice(); x[9] = true; return x; }));
+  const TEMPLATES = T.map((r, i) => ({ id: 't' + (i + 1), layout: r[0], pal: r[1], cat: r[2], fmt: r[3], data: { tag: r[4], title: r[5], sub: r[6] || '', extra: r[7] || '', items: r[8] }, name: L_NAMES[r[0]] + ' · ' + r[2], isNew: !r[9] && i % 11 === 3, premium: !!r[9], ratio: r[9] && r[3] !== 'Story' ? '45' : '' }));
+  const TPL_CATS = ['Todos', 'Premium ✦', 'Promoção', 'Dica', 'Depoimento', 'Bastidores', 'Novidade', 'Datas', 'Frase', 'Evento', 'Enquete', 'Resultado'];
+  const TPL_FMTS = ['Todos', 'Post', 'Story', 'Carrossel'];
+  let tplCat = 'Todos', tplFmt = 'Todos', tplQ = '', tplBrand = store.get('tplBrand', false);
+
+  function palFor(t, useBrand) {
+    if (!useBrand) return PAL[t.pal];
+    if (t.premium && !['paper', 'sun'].includes(t.pal)) {
+      // estilos premium ficam escuros: a cor mais escura da marca vira a base e a outra vira o brilho
+      const dk = textOn(brand.c1) === '#ffffff' ? brand.c1 : textOn(brand.c2) === '#ffffff' ? brand.c2 : '#141414';
+      const ac = dk === brand.c1 ? brand.c2 : brand.c1;
+      return { bg: dk, fg: '#f6f3ee', acc: ac };
+    }
+    const light = (hex) => textOn(hex) === '#1b1206';
+    // mantém o contraste do template: fundo escuro recebe a cor principal se ela for escura, senão a de destaque
+    const dark = !light(PAL[t.pal].bg);
+    let bg = brand.c1, acc = brand.c2;
+    if (dark !== !light(bg)) { bg = brand.c2; acc = brand.c1; }
+    return { bg, fg: textOn(bg) === '#ffffff' ? '#ffffff' : '#1b1206', acc };
+  }
+  function tplArt(t, fmt, useBrand, over) {
+    const p = palFor(t, useBrand);
+    const d = Object.assign({}, t.data, over || {});
+    fmt = fmt || t.fmt;
+    return '<div class="tp-wrap' + (fmt === 'Story' ? ' story' : '') + '"><div class="tp' + (fmt === 'Story' ? ' story' : t.ratio ? ' r45' : '') + (t.premium ? ' pm' : '') + '" style="background:' + p.bg + ';color:' + p.fg + '">' + LAYOUTS[t.layout](d, p) +
+      (fmt === 'Carrossel' ? '<span class="tp-count">1/5</span>' : '') + '</div></div>';
+  }
+
+  function renderGallery() {
+    const q = tplQ.trim().toLowerCase();
+    const list = TEMPLATES.filter((t) => (tplCat === 'Todos' || t.cat === tplCat || (tplCat === 'Premium ✦' && t.premium)) && (tplFmt === 'Todos' || t.fmt === tplFmt) &&
+      (!q || (t.name + ' ' + t.data.title + ' ' + t.data.tag + ' ' + t.cat).toLowerCase().includes(q)));
+    $('#tpl-count').textContent = list.length + (list.length === 1 ? ' template' : ' templates');
+    $('#tpl-grid').innerHTML = list.length ? list.map((t) => '<button type="button" class="tpl-card" data-tpl="' + t.id + '"><div class="tpl-thumb">' + tplArt(t, t.fmt, tplBrand) + '</div>' +
+      '<div class="tpl-meta"><span class="tpl-name">' + esc(L_NAMES[t.layout]) + (t.isNew ? ' <span class="pill ok" style="padding:1px 7px;font-size:10px">Novo</span>' : '') + (t.premium ? ' <span class="pill prem">Premium</span>' : '') + '</span><span class="tpl-sub">' + t.cat + ' · ' + t.fmt + '</span></div></button>').join('')
+      : '<p style="color:var(--muted);grid-column:1/-1;padding:40px 0;text-align:center">Nenhum template com esses filtros. Tente outra categoria ou limpe a busca.</p>';
+  }
+  chips($('#tpl-cats'), 'tplcat', TPL_CATS, tplCat, (v) => { tplCat = v; renderGallery(); });
+  chips($('#tpl-fmts'), 'tplfmt', TPL_FMTS, tplFmt, (v) => { tplFmt = v; renderGallery(); });
+  $('#tpl-q').addEventListener('input', (e) => { tplQ = e.target.value; renderGallery(); });
+  $('#tpl-brand').checked = tplBrand;
+  $('#tpl-brand').addEventListener('change', (e) => { tplBrand = e.target.checked; store.set('tplBrand', tplBrand); renderGallery(); });
+
+  let openTpl = null;
+  function openModal(id) {
+    openTpl = TEMPLATES.find((t) => t.id === id); if (!openTpl) return;
+    $('#m-art').innerHTML = tplArt(openTpl, openTpl.fmt, tplBrand);
+    $('#m-title').textContent = L_NAMES[openTpl.layout];
+    $('#m-sub').textContent = openTpl.cat + ' · ' + openTpl.fmt + (tplBrand ? ' · com as cores da sua marca' : '');
+    $('#m-pal').innerHTML = ['bg', 'acc', 'fg'].map((k) => '<span style="background:' + palFor(openTpl, tplBrand)[k] + '"></span>').join('');
+    $('#modal').hidden = false; $('#m-use').focus();
+  }
+  function closeModal() { $('#modal').hidden = true; }
+  $('#tpl-grid').addEventListener('click', (e) => { const c = e.target.closest('[data-tpl]'); if (c) openModal(c.dataset.tpl); });
+  $('#m-close').addEventListener('click', closeModal);
+  $('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
+  $('#m-use').addEventListener('click', () => {
+    const t = openTpl; closeModal();
+    const g = GOALS.includes(({ 'Promoção': 'Vender', 'Dica': 'Dica', 'Depoimento': 'Depoimento', 'Bastidores': 'Bastidores', 'Novidade': 'Novidade' })[t.cat]) ? ({ 'Promoção': 'Vender', 'Dica': 'Dica', 'Depoimento': 'Depoimento', 'Bastidores': 'Bastidores', 'Novidade': 'Novidade' })[t.cat] : goal;
+    goal = g; chips($('#goal-chips'), 'goal', GOALS, goal, (v) => { goal = v; });
+    format = t.fmt === 'Post' ? 'Post quadrado' : t.fmt; chips($('#format-chips'), 'format', FORMATS, format, (v) => { format = v; $('#pv-format').textContent = format + ' · prévia'; if (current) $('#pv-art').innerHTML = renderArt(); });
+    $('#pv-format').textContent = format + ' · prévia';
+    current.tpl = t.id; generate();
+    location.hash = 'criar'; toast('Template aplicado com as cores da sua marca');
+  });
+  const tplById = (id) => TEMPLATES.find((t) => t.id === id);
+
+  function onPhoto(e) {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const img = new Image(), src = URL.createObjectURL(f);
+    img.onload = () => {
+      const k = Math.min(1, 1080 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(src);
+      c.toBlob((b) => {
+        if (photoUrl) URL.revokeObjectURL(photoUrl);
+        photoUrl = URL.createObjectURL(b);
+        document.querySelectorAll('.up-txt').forEach((t) => { t.textContent = 'Trocar foto'; });
+        renderGallery(); if (current) $('#pv-art').innerHTML = renderArt();
+        toast('Foto aplicada em todos os templates com foto');
+      }, 'image/jpeg', 0.86);
+    };
+    img.onerror = () => toast('Não consegui abrir essa imagem. Tente um arquivo JPG ou PNG.');
+    img.src = src;
+  }
+  $('#tpl-photo').addEventListener('change', onPhoto);
+  $('#post-photo').addEventListener('change', onPhoto);
+
   // ---- Navegação ----
-  const VIEWS = ['inicio', 'criar', 'calendario', 'marca', 'planos'];
+  const VIEWS = ['inicio', 'criar', 'templates', 'calendario', 'marca', 'planos'];
   function route() {
     const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio';
     document.querySelectorAll('[data-page]').forEach((s) => { s.hidden = s.dataset.page !== v; });
+    if (v === 'templates') renderGallery();
     document.querySelectorAll('.nav a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', route);
 
-  fillBrandForm(); renderBrandBits(); generate(); renderCal(); renderSteps(0, -1); route();
+  fillBrandForm(); renderBrandBits(); generate(); renderCal(); renderSteps(0, -1); renderGallery(); route();
 })();
 </script>
