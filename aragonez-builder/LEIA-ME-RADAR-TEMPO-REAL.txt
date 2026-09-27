@@ -1,0 +1,17 @@
+ARAGONEZ BUILDER — RADAR DE TEMAS EM TEMPO REAL
+
+A interface já contém o acesso "Tendências / Abrir Radar".
+Para transformar o radar em dados realmente em tempo real, conecte fontes no backend (Netlify Functions), nunca diretamente no navegador.
+
+Arquitetura recomendada:
+1. Usuário escolhe um nicho (Marketing, Proteção Veicular, Varejo, Saúde, Imobiliário, Educação, Automotivo etc.).
+2. Uma Netlify Function consulta fontes externas recentes (ex.: API de notícias / tendências).
+3. O backend normaliza título, fonte, data, resumo e URL.
+4. A IA do Builder agrupa os assuntos, detecta padrões e devolve ideias de pauta.
+5. O usuário envia uma pauta direto para Carrossel, Post, Stories ou Anúncio.
+
+Variáveis sugeridas no Netlify (quando a integração for feita):
+- NEWS_API_KEY ou GNEWS_API_KEY
+- GEMINI_API_KEY (já prevista na arquitetura atual)
+
+Importante: chaves devem ficar nas Environment Variables do Netlify.
