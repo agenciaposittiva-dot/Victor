@@ -143,6 +143,22 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 .trio-actions .btn { padding: 8px 12px; font-size: 13px; }
 .ig.approved { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok); }
 
+.month { display: grid; gap: 18px; }
+.month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+.slot { position: relative; aspect-ratio: 1 / 1.08; max-width: 100%; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 9px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.slot.ready { color: #fff; box-shadow: 0 0 0 2px var(--ok); }
+.slot.ready::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgba(0,0,0,.55)); }
+.slot.ready > * { position: relative; z-index: 1; }
+.slot .ok-dot { align-self: flex-end; width: 20px; height: 20px; border-radius: 50%; background: var(--ok); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+.slot .t { font-family: var(--display); font-weight: 800; font-size: 13px; line-height: 1.1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.slot .d { font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.slot.locked { border: 1.5px dashed var(--line); background: var(--bg); color: var(--muted); align-items: stretch; }
+.slot.locked .top { display: flex; justify-content: space-between; align-items: center; }
+.slot.locked svg { width: 22px; height: 22px; align-self: center; color: var(--accent); opacity: .7; }
+.slot.locked .kind { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.slot.total { border: 1px solid var(--line); background: var(--surface); align-items: center; justify-content: center; text-align: center; }
+.slot.total strong { font-family: var(--display); font-size: 1.6rem; color: var(--ink); line-height: 1; }
+
 /* Criar */
 .create { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px; align-items: start; }
 .result { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
@@ -324,6 +340,24 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
           <button class="btn" id="approve-all" type="button">Aprovar e agendar os 3</button>
         </div>
         <div class="trio" id="trio"></div>
+
+        <div class="head" style="margin-top:44px">
+          <div>
+            <h2 style="font-size:1.5rem">Um mês inteiro de posts, já planejado</h2>
+            <p>A IA montou a estratégia do mês: o melhor dia, o formato e o tema de cada post. Os 3 primeiros já estão prontos.</p>
+          </div>
+        </div>
+        <div class="panel month">
+          <div class="row" style="justify-content:space-between">
+            <h3>Seu calendário de publicações</h3>
+            <span class="pill ok">✓ Estratégia montada</span>
+          </div>
+          <div class="month-grid" id="month-grid"></div>
+          <div class="row" style="justify-content:space-between">
+            <p style="color:var(--muted);font-size:14px"><strong style="color:var(--ink)">3 prontos para publicar.</strong> O resto do mês, com artes, carrosséis e reels, fica liberado na assinatura.</p>
+            <a class="btn" href="#planos">Liberar o mês inteiro</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -748,6 +782,26 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
     ];
     $('#xray-grid').innerHTML = X.map((x) => '<div class="panel x-card"><span class="label" style="margin:0">' + x[0] + '</span><p class="x-val">' + x[1] + '</p><p>' + x[2] + '</p><span class="pill ' + x[3] + '">' + x[4] + '</span></div>').join('');
   }
+  const ICONS = {
+    Carrossel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="4" width="10" height="16" rx="2"/><path d="M3 7v10M21 7v10"/></svg>',
+    Arte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>',
+    Reel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4l3 5M14 4l3 5M10 13v4l4-2z"/></svg>'
+  };
+  const LOCK = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="width:12px;height:12px;opacity:1;color:inherit"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  const short = (d) => d.getDate() + ' ' + d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+  function renderMonth() {
+    const kinds = ['Carrossel', 'Arte', 'Reel'];
+    let html = trio.map((p, i) => {
+      const bg = p.layout === 1 ? brand.c2 : brand.c1;
+      return '<div class="slot ready" style="background:' + bg + '"><span class="ok-dot">✓</span><div><p class="t">' + esc(p.title) + '</p><p class="d">' + short(addDays(i + 1)) + '</p></div></div>';
+    }).join('');
+    for (let k = 0; k < 12; k++) {
+      const kind = kinds[k % 3];
+      html += '<div class="slot locked" aria-label="' + kind + ' bloqueado"><div class="top">' + LOCK + '<span class="d">' + short(addDays(5 + k * 2)) + '</span></div>' + ICONS[kind] + '<span class="kind">' + kind + '</span></div>';
+    }
+    html += '<div class="slot total"><div><strong>30</strong><p class="kind" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">dias</p></div></div>';
+    $('#month-grid').innerHTML = html;
+  }
   function renderTrio() {
     $('#trio').innerHTML = trio.map((p, i) => '<article class="ig' + (p.approved ? ' approved' : '') + '"><div class="ig-top"><span class="avatar" style="background:' + brand.c1 + ';color:' + textOn(brand.c1) + '">' + esc(initials(brand.name)) + '</span><span>' + esc(brand.handle) + '<small>' + esc(p.goal) + '</small></span></div>' +
       renderArt(p, 'Post quadrado') + '<div class="ig-cap"><b>' + esc(brand.handle) + '</b>' + esc(p.cap) + '</div>' +
@@ -780,7 +834,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
       i++; renderSteps(i, i);
       if (i < STEPS.length) { setTimeout(tick, 650); return; }
       trio = TRIO_PLAN.map(([g, t], k) => compose(g, t, k));
-      renderXray(handle); renderTrio();
+      renderXray(handle); renderTrio(); renderMonth();
       $('#xray').hidden = false; btn.disabled = false;
       $('#xray').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     };
