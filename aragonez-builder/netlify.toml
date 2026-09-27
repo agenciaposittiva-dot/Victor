@@ -1,0 +1,16 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# O nome do administrador aparece no rodapé do site (não é segredo);
+# sem isto a varredura de segredos do Netlify bloqueia o deploy.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "ARAGONEZ_ADMIN,ARAGONEZ_ADMIN_EMAIL,ARAGONEZ_GOOGLE_EMAILS,UPSTASH_REDIS_REST_URL,KV_REST_API_URL,SUPABASE_URL"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"

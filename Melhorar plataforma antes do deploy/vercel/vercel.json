@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/.netlify/functions/:fn",
+      "destination": "/api/:fn"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
+}

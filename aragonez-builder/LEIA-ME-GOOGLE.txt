@@ -1,0 +1,50 @@
+ARAGONEZ BUILDER — ENTRAR COM GOOGLE
+
+O botão "Entrar com Google" aparece na tela de login quando a nuvem está
+ligada (veja LEIA-ME-NUVEM.txt) e o GOOGLE_CLIENT_ID está cadastrado.
+Só entra quem tiver permissão:
+  · contas que o administrador vinculou a um e-mail em Menu › Acessos, ou
+  · e-mails listados em ARAGONEZ_GOOGLE_EMAILS (a conta é criada no 1º login).
+Qualquer outro e-mail do Google recebe "Este e-mail não tem permissão".
+
+====================================================
+1) CRIAR O ID DO CLIENTE NO GOOGLE (grátis, ~5 min)
+====================================================
+1. Abra console.cloud.google.com e crie um projeto (ex.: Aragonez Builder).
+2. Menu › APIs e serviços › Tela de permissão OAuth:
+   tipo Externo, nome do app, e-mail de suporte. Salve.
+   Em "Público-alvo", clique em Publicar app (ou adicione os e-mails da
+   equipe como usuários de teste).
+3. Menu › APIs e serviços › Credenciais › Criar credenciais ›
+   ID do cliente OAuth › Tipo: Aplicativo da Web.
+4. Em "Origens JavaScript autorizadas", adicione o endereço do site:
+      https://SEU-SITE.netlify.app
+   (e o domínio próprio, se tiver). Não precisa de URI de redirecionamento.
+5. Copie o "ID do cliente" (termina em .apps.googleusercontent.com).
+
+====================================================
+2) VARIÁVEIS NO NETLIFY
+====================================================
+Site configuration › Environment variables:
+   GOOGLE_CLIENT_ID        o ID copiado acima                 (obrigatório)
+   ARAGONEZ_ADMIN_EMAIL    seu e-mail Google de administrador (opcional)
+                           entra direto na conta ARAGONEZ_ADMIN
+   ARAGONEZ_GOOGLE_EMAILS  e-mails liberados, separados por vírgula (opcional)
+                           ex.: ana@agencia.com,joao@gmail.com
+
+Faça um novo deploy (Deploys › Trigger deploy).
+
+====================================================
+3) LIBERAR A EQUIPE
+====================================================
+Entre como administrador › Menu › Acessos:
+   · Novo acesso: preencha usuário e "E-mail Google". A senha é opcional.
+   · Contas existentes: botão "Vincular Google".
+Cada pessoa continua com o seu próprio workspace.
+
+====================================================
+SEGURANÇA
+====================================================
+O servidor confere o token com o próprio Google (tokeninfo): assinatura,
+validade, destinatário (tem de ser o seu GOOGLE_CLIENT_ID) e e-mail
+verificado. O navegador nunca decide sozinho quem entra.

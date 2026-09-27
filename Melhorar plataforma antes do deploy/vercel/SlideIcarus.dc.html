@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Oswald:wght@400;600;700&family=Barlow+Condensed:ital,wght@0,600;0,700;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</helmet>
+<div style="{{ boxStyle }}">
+  <div data-slide-stage="true" style="{{ stageStyle }}">
+    <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ photoStyle }}"></div>
+      <div style="{{ photoFadeStyle }}"></div>
+    </sc-if>
+    <div style="{{ fadeStyle }}"></div>
+    <sc-if value="{{ hasVeilTop }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ veilTopStyle }}"></div>
+    </sc-if>
+    {{ layerNodes }}
+
+    <sc-if value="{{ extMark }}" hint-placeholder-val="{{ false }}">
+      <img data-el="marca" src="{{ logoSrc }}" alt="" style="{{ extMarkStyle }}" />
+    </sc-if>
+    <sc-if value="{{ extRule }}" hint-placeholder-val="{{ false }}">
+      <div data-el="linha" style="{{ extRuleStyle }}"></div>
+    </sc-if>
+    <sc-if value="{{ extPill }}" hint-placeholder-val="{{ false }}">
+      <div data-el="arraste" style="{{ extPillStyle }}">
+        <span style="{{ extPillTextStyle }}">{{ pillText }}</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ extLogo }}" hint-placeholder-val="{{ false }}">
+      <div data-el="logo" style="{{ extLogoStyle }}">
+        <sc-if value="{{ hasLogoImg }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ logoSrc }}" alt="" style="{{ extLogoImgStyle }}" />
+        </sc-if>
+        <span style="{{ extLogoTextStyle }}">{{ brandLine }}</span>
+      </div>
+    </sc-if>
+
+    {{ rulerNodes }}
+
+    <sc-if value="{{ hasTexture }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ bandStyle }}">
+        <sc-if value="{{ texOndas }}" hint-placeholder-val="{{ true }}">
+          <img src="./waves.png" alt="" style="{{ wavesStyle }}" />
+        </sc-if>
+        <sc-if value="{{ texArcos }}" hint-placeholder-val="{{ true }}">
+          <svg viewBox="{{ arcView }}" width="{{ w }}" height="{{ h }}" style="position:absolute;left:0;bottom:0;display:block;">
+            <g fill="none" stroke="{{ accent }}" stroke-width="3" opacity="0.2">{{ arcNodes }}</g>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ texPattern }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ patternStyle }}"></div>
+        </sc-if>
+        <div style="{{ bandFadeStyle }}"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showBarMarca }}" hint-placeholder-val="{{ false }}">
+      <div data-el="barra" style="{{ barStyle }}">
+        <span>{{ brandLine }}</span>
+        <span>{{ handle }}</span>
+        <span>{{ year }}</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showBarInsta }}" hint-placeholder-val="{{ false }}">
+      <div data-el="barra" style="{{ barStyle }}">
+        <span style="display:flex;align-items:center;gap:12px;">
+          <span style="{{ barDotStyle }}"></span>
+          <b style="font-weight:700;">{{ handle }}</b>
+          <span style="{{ barMutedStyle }}">&#183; Instagram</span>
+        </span>
+        <b style="font-weight:800;letter-spacing:0.4px;">{{ counter }}</b>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isClassic }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ contentStyle }}">
+        <div style="display:flex;flex-direction:column;">
+          <div style="display:flex;gap:56px;align-items:flex-end;width:100%;">
+            <div style="flex:1;min-width:0;">
+              <sc-if value="{{ hasIcon }}" hint-placeholder-val="{{ true }}">
+                <div data-el="icone" style="{{ iconStyle }}">{{ iconNode }}</div>
+              </sc-if>
+              <sc-if value="{{ showMark }}" hint-placeholder-val="{{ true }}">
+                <img data-el="marca" src="{{ logoSrc }}" alt="" style="{{ markStyle }}" />
+              </sc-if>
+              <div data-el="titulo" style="{{ headStyle }}">{{ headNodes }}</div>
+              <sc-if value="{{ showRule }}" hint-placeholder-val="{{ true }}">
+                <div data-el="linha" style="{{ ruleStyle }}"></div>
+              </sc-if>
+              <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+                <div data-el="destaque" style="{{ subStyle }}">{{ subNodes }}</div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ hasSide }}" hint-placeholder-val="{{ true }}">
+              <div data-el="dados" style="{{ sideStyle }}">{{ sideNodes }}</div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ showPill }}" hint-placeholder-val="{{ true }}">
+            <div data-el="arraste" style="{{ pillStyle }}">
+              <span style="font-size:30px;font-weight:700;color:#141006;letter-spacing:0.2px;">{{ pillText }}</span>
+              <span style="{{ trackStyle }}">
+                <span style="width:30px;height:30px;border-radius:50%;background:#0d0b06;display:block;"></span>
+              </span>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ showLogo }}" hint-placeholder-val="{{ true }}">
+          <div data-el="logo" style="{{ logoStyle }}">
+            <sc-if value="{{ hasLogoImg }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ logoSrc }}" alt="" style="width:150px;display:block;margin-right:-26px;" />
+            </sc-if>
+            <div style="display:flex;flex-direction:column;align-items:stretch;">
+              <div style="{{ wordmarkStyle }}">ICARUS</div>
+              <div style="{{ tagStyle }}">ASSESSORIA</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHook }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ hookWrapStyle }}">
+        <sc-if value="{{ showChip }}" hint-placeholder-val="{{ true }}">
+          <div data-el="perfil" style="{{ chipStyle }}">
+            <sc-if value="{{ showAvatarImg }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ avatarSrc }}" alt="" style="{{ chipAvatarStyle }}" />
+            </sc-if>
+            <span style="{{ chipTextStyle }}">{{ handleBare }}</span>
+            <span style="{{ verifiedStyle }}">{{ verifiedNode }}</span>
+          </div>
+        </sc-if>
+        <div data-el="titulo" style="{{ hookHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="destaque" style="{{ hookSubStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasCta }}" hint-placeholder-val="{{ true }}">
+          <div data-el="cta" style="{{ ctaStyle }}">{{ ctaText }} &#8594;</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTexto }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ textoWrapStyle }}">
+        <div data-el="abertura" style="{{ leadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ bodyBoldStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasSide }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo2" style="{{ bodyStyle }}">{{ sideNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isClaro }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ claroWrapStyle }}">
+        <div data-el="titulo" style="{{ claroHeadStyle }}">{{ headNodes }}</div>
+        <div data-el="figuras" style="{{ figRowStyle }}">
+          <div style="{{ fig1Style }}"></div>
+          <sc-if value="{{ hasPhoto2 }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ fig2Style }}"></div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ claroBodyStyle }}">{{ subNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTweet }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ tweetWrapStyle }}">
+        <div data-el="perfil" style="{{ tweetHeadRowStyle }}">
+          <sc-if value="{{ showAvatarImg }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ avatarSrc }}" alt="" style="{{ tweetAvatarStyle }}" />
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <span style="display:flex;align-items:center;gap:12px;">
+              <b style="{{ tweetNameStyle }}">{{ authorName }}</b>
+              <span style="{{ verifiedStyle }}">{{ verifiedNode }}</span>
+            </span>
+            <span style="{{ tweetHandleStyle }}">{{ handle }}</span>
+          </div>
+        </div>
+        <div data-el="titulo" style="{{ tweetHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="destaque" style="{{ tweetSubStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <div style="flex:1;"></div>
+        <div data-el="acoes" style="{{ tweetFootStyle }}">
+          <span style="display:flex;align-items:center;gap:56px;">{{ tweetIcons }}</span>
+          <b style="font-weight:800;">{{ counter }}</b>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCartaz }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ cartazWrapStyle }}">
+        <div data-el="rotulos" style="{{ cartazTopStyle }}">
+          <span style="{{ cartazNameStyle }}">{{ authorName }}</span>
+          <span style="{{ cartazRoleStyle }}">{{ tag }}</span>
+        </div>
+        <div style="flex:1;"></div>
+        <sc-if value="{{ hasIcon }}" hint-placeholder-val="{{ true }}">
+          <div data-el="icone" style="{{ cartazIconStyle }}">{{ iconNode }}</div>
+        </sc-if>
+        <div data-el="titulo" style="{{ cartazHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasChips }}" hint-placeholder-val="{{ true }}">
+          <div data-el="tags" style="{{ chipsRowStyle }}">{{ chipNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="microtexto" style="{{ microStyle }}">{{ subNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMetade }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ metadeGridStyle }}">
+        <div style="{{ metadeLeftStyle }}">
+          <div data-el="rotulos" style="{{ metadeTopStyle }}">
+            <span style="{{ cartazNameStyle }}">{{ authorName }}</span>
+          </div>
+          <div style="flex:1;"></div>
+          <div data-el="titulo" style="{{ metadeHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="corpo1" style="{{ metadeBodyStyle }}">{{ subNodes }}</div>
+          </sc-if>
+          <sc-if value="{{ hasSideRaw }}" hint-placeholder-val="{{ true }}">
+            <div data-el="corpo2" style="{{ metadeItalicStyle }}">{{ sideNodes }}</div>
+          </sc-if>
+          <div style="flex:1;"></div>
+        </div>
+        <div data-el="figura" style="{{ metadeRightStyle }}">
+          <div data-el="rotulos2" style="{{ metadeRoleStyle }}">{{ tag }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPalavra }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ hasWordMark }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ wordMarkStyle }}">{{ palavra }}</div>
+      </sc-if>
+      <div style="{{ palavraWrapStyle }}">
+        <div data-el="rotulos" style="{{ cartazTopStyle }}">
+          <span style="{{ cartazNameStyle }}">{{ authorName }}</span>
+          <span style="{{ cartazRoleStyle }}">{{ tag }}</span>
+        </div>
+        <div style="flex:1;"></div>
+        <div data-el="abertura" style="{{ palavraLeadStyle }}">{{ headNodes }}</div>
+        <div data-el="palavra" style="{{ palavraBigStyle }}">{{ palavra }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ palavraSerifStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasSideRaw }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo2" style="{{ palavraBodyStyle }}">{{ sideNodes }}</div>
+        </sc-if>
+        <div style="flex:1;"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSocial }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ socialWrapStyle }}">
+        <div data-el="perfil" style="{{ socialTopStyle }}">
+          <span style="display:flex;align-items:center;gap:14px;">
+            <sc-if value="{{ showAvatarImg }}" hint-placeholder-val="{{ true }}">
+              <img src="{{ avatarSrc }}" alt="" style="{{ socialAvatarStyle }}" />
+            </sc-if>
+            <span style="display:flex;flex-direction:column;">
+              <b style="{{ socialNameStyle }}">{{ authorName }}</b>
+              <span style="{{ socialRoleStyle }}">{{ tag }}</span>
+            </span>
+          </span>
+          <span style="display:flex;align-items:center;gap:22px;">{{ socialIcons }}</span>
+        </div>
+        <div style="flex:1;"></div>
+        <div data-el="titulo" style="{{ socialHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="destaque" style="{{ socialSubStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasCtaFull }}" hint-placeholder-val="{{ true }}">
+          <div data-el="cta" style="{{ socialPillStyle }}">{{ ctaText }} &#8592;</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isViral }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ refWrapStyle }}">
+        <div data-el="rotulos" style="{{ refTopStyle }}">
+          <span>{{ refTag }}</span>
+          <span>{{ handle }}</span>
+          <span>{{ refYear }}</span>
+        </div>
+        <div style="{{ refBottomStyle }}">
+          <div data-el="perfil" style="{{ viralBadgeStyle }}">
+            <span style="{{ viralDotStyle }}">✦</span>
+            <span style="{{ viralHandleStyle }}">{{ handle }}</span>
+            <span style="{{ verifiedStyle }}">{{ verifiedNode }}</span>
+          </div>
+          <div data-el="titulo" style="{{ viralHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ viralSubStyle }}">
+              <span style="{{ viralArrowStyle }}">→</span>
+              <span>{{ subNodes }}</span>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isChips }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ refWrapStyle }}">
+        <sc-if value="{{ hasRefChips }}" hint-placeholder-val="{{ true }}">
+          <div data-el="rotulos" style="{{ refChipsRowStyle }}">{{ refChipNodes }}</div>
+        </sc-if>
+        <div style="{{ refBottomStyle }}">
+          <sc-if value="{{ hasRefCta }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ chipsPillStyle }}"><span>{{ refCta }}</span><span style="{{ chipsPillDotStyle }}">→</span></div>
+          </sc-if>
+          <sc-if value="{{ hasRefTag }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ chipsKickerStyle }}">{{ refTag }}</div>
+          </sc-if>
+          <div data-el="titulo" style="{{ chipsHeadStyle }}">{{ headNodes }}</div>
+          <div style="{{ chipsFootStyle }}">
+            <span style="{{ refYearStyle }}">{{ refYear }}</span>
+            <span style="{{ chipsAuthorStyle }}">
+              <sc-if value="{{ showAvatarImg }}" hint-placeholder-val="{{ true }}">
+                <img src="{{ avatarSrc }}" alt="" style="{{ chipsAvatarStyle }}" />
+              </sc-if>
+              <span>
+                <span style="{{ chipsNameStyle }}">{{ brandLine }}</span>
+                <span style="{{ chipsHandleStyle }}">{{ handle }}</span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSerif }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ refWrapStyle }}">
+        <div data-el="rotulos" style="{{ refTopStyle }}">
+          <span>{{ handle }}</span>
+          <span>{{ refNum }}</span>
+        </div>
+        <div style="{{ refBottomStyle }}">
+          <div data-el="titulo" style="{{ serifHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ serifSubStyle }}">{{ subNodes }}</div>
+          </sc-if>
+          <div style="{{ serifFootStyle }}">
+            <span style="{{ serifCopyStyle }}">{{ brandLine }}</span>
+            <sc-if value="{{ hasRefCta }}" hint-placeholder-val="{{ true }}">
+              <span style="{{ serifPillStyle }}"><span>{{ refCta }}</span><span style="{{ serifPillDotStyle }}">→</span></span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCitacao }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ citGridStyle }}">
+        <div>
+          <sc-if value="{{ hasRefTag }}" hint-placeholder-val="{{ true }}">
+            <div data-el="rotulos" style="{{ citLeadStyle }}">{{ refTag }}</div>
+          </sc-if>
+          <div data-el="titulo" style="{{ citQuoteStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSideRaw }}" hint-placeholder-val="{{ true }}">
+            <div data-el="corpo" style="{{ citBodyStyle }}">{{ sideNodes }}</div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ hasRefPhoto }}" hint-placeholder-val="{{ true }}">
+          <img src="{{ refPhotoSrc }}" alt="" style="{{ citPhotoStyle }}" />
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTextoImg }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ tiGridStyle }}">
+        <div>
+          <div data-el="titulo" style="{{ tiHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSideRaw }}" hint-placeholder-val="{{ true }}">
+            <div data-el="corpo" style="{{ tiBodyStyle }}">{{ sideNodes }}</div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ hasRefPhoto }}" hint-placeholder-val="{{ true }}">
+          <img src="{{ refPhotoSrc }}" alt="" style="{{ tiPhotoStyle }}" />
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPassos }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ passEdgeStyle }}"></div>
+      <div style="{{ passWrapStyle }}">
+        <div data-el="rotulos" style="{{ passDotsStyle }}">{{ passDotNodes }}</div>
+        <div style="{{ passBodyWrapStyle }}">
+          <div data-el="titulo" style="{{ passHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ passSubStyle }}">{{ subNodes }}</div>
+          </sc-if>
+          <sc-if value="{{ hasSideRaw }}" hint-placeholder-val="{{ true }}">
+            <div data-el="corpo" style="{{ passListStyle }}">{{ sideNodes }}</div>
+          </sc-if>
+          <sc-if value="{{ hasRefWhy }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ passQuoteStyle }}">{{ refWhy }}</div>
+          </sc-if>
+        </div>
+        <div style="{{ passFootStyle }}">{{ brandLine }}</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFecho }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ refWrapStyle }}">
+        <sc-if value="{{ hasFechoTags }}" hint-placeholder-val="{{ true }}">
+          <div data-el="rotulos" style="{{ fechoTagsRowStyle }}">{{ fechoTagNodes }}</div>
+        </sc-if>
+        <div style="{{ refBottomStyle }}">
+          <div data-el="titulo" style="{{ fechoHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ fechoSubStyle }}">{{ subNodes }}</div>
+          </sc-if>
+          <sc-if value="{{ hasRefCta }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ fechoBoxStyle }}">{{ refCta }}</div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLista }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ listaWrapStyle }}">
+        <div data-el="rotulos" style="{{ labelRowStyle }}">
+          <span>{{ labelLeft }}</span>
+          <span>{{ labelRight }}</span>
+        </div>
+        <div data-el="titulo" style="{{ listaHeadStyle }}">{{ headNodes }}</div>
+        <div data-el="itens" style="{{ listaItemsStyle }}">{{ itemNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="fecho" style="{{ listaCloseStyle }}">{{ subNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isNumero }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ numWrapStyle }}">
+        <div data-el="rotulos" style="{{ labelRowStyle }}">
+          <span>{{ labelLeft }}</span>
+          <span>{{ labelRight }}</span>
+        </div>
+        <sc-if value="{{ hasTag }}" hint-placeholder-val="{{ true }}">
+          <div data-el="selo" style="{{ numBadgeStyle }}">{{ tag }}</div>
+        </sc-if>
+        <div data-el="titulo" style="{{ numHeadStyle }}">{{ headNodes }}</div>
+        <div data-el="figuras" style="{{ galleryStyle }}">
+          <div style="{{ g1Style }}"></div>
+          <div style="{{ g2Style }}"></div>
+          <div style="{{ g3Style }}"></div>
+        </div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ numBodyStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasWhy }}" hint-placeholder-val="{{ true }}">
+          <div data-el="porque" style="{{ whyBoxStyle }}">
+            <span style="{{ whyLabelStyle }}">{{ whyLabel }}</span>
+            <span style="{{ whyTextStyle }}">{{ whyNodes }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProblema }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ hasWatermark }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ watermarkStyle }}">{{ num }}</div>
+      </sc-if>
+      <div style="{{ probWrapStyle }}">
+        <div data-el="rotulos" style="{{ labelRowStyle }}">
+          <span>{{ labelLeft }}</span>
+          <span>{{ labelRight }}</span>
+        </div>
+        <sc-if value="{{ hasTag }}" hint-placeholder-val="{{ true }}">
+          <div data-el="selo" style="{{ probTagStyle }}">{{ tag }}</div>
+        </sc-if>
+        <div data-el="titulo" style="{{ probHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ probBodyStyle }}">{{ subNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasSide }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo2" style="{{ probBody2Style }}">{{ sideNodes }}</div>
+        </sc-if>
+        <sc-if value="{{ hasCtaFull }}" hint-placeholder-val="{{ true }}">
+          <div data-el="cta" style="{{ ctaFullStyle }}">{{ ctaText }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSublinhado }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ subWrapStyle }}">
+        <div data-el="titulo" style="{{ underHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="corpo1" style="{{ underBodyStyle }}">{{ subNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEditorial }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ edWrapStyle }}">
+        <div data-el="rotulos" style="{{ labelRowStyle }}">
+          <span>{{ labelLeft }}</span>
+          <span>{{ labelRight }}</span>
+        </div>
+        <div data-el="figura" style="{{ edCardStyle }}"></div>
+        <div style="display:flex;flex-direction:column;gap:26px;">
+          <sc-if value="{{ hasTag }}" hint-placeholder-val="{{ true }}">
+            <div data-el="selo" style="{{ tagBadgeStyle }}">{{ tag }}</div>
+          </sc-if>
+          <div data-el="titulo" style="{{ edHeadStyle }}">{{ headNodes }}</div>
+          <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+            <div data-el="destaque" style="{{ edSubStyle }}">{{ subNodes }}</div>
+          </sc-if>
+        </div>
+        <div data-el="rodape" style="{{ footRowStyle }}">
+          <span>{{ footerLeft }}</span>
+          <span>{{ footerRight }}</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isBloco }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ blocoWrapStyle }}">
+        <div data-el="rotulos" style="{{ labelRowStyle }}">
+          <span>{{ labelLeft }}</span>
+          <span>{{ labelRight }}</span>
+        </div>
+        <div style="{{ blocoStackStyle }}">
+          <div data-el="titulo" style="{{ blocoHeadStyle }}">{{ headNodes }}</div>
+          <div data-el="figura" style="{{ blocoCardStyle }}"></div>
+        </div>
+        <div data-el="rodape" style="{{ footRowStyle }}">
+          <span>{{ footerLeft }}</span>
+          <span>{{ footerRight }}</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLegenda }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ legWrapStyle }}">
+        <sc-if value="{{ showBrandChip }}" hint-placeholder-val="{{ true }}">
+          <div data-el="perfil" style="{{ brandChipStyle }}">
+            <sc-if value="{{ showAvatarImg }}" hint-placeholder-val="{{ true }}">
+              <img src="{{ avatarSrc }}" alt="" style="{{ legAvatarStyle }}" />
+            </sc-if>
+            <div style="display:flex;flex-direction:column;">
+              <b style="{{ legNameStyle }}">{{ authorName }}</b>
+              <span style="{{ legHandleStyle }}">{{ handle }}</span>
+            </div>
+          </div>
+        </sc-if>
+        <div data-el="titulo" style="{{ legHeadStyle }}">{{ headNodes }}</div>
+        <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+          <div data-el="destaque" style="{{ legSubStyle }}">{{ subNodes }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showDots }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ dotsStyle }}">{{ dotNodes }}</div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:454,&quot;height&quot;:567},&quot;layout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;capa&quot;,&quot;titulo&quot;,&quot;dados&quot;,&quot;foto&quot;,&quot;final&quot;,&quot;hook&quot;,&quot;texto&quot;,&quot;claro&quot;,&quot;tweet&quot;,&quot;editorial&quot;,&quot;bloco&quot;,&quot;legenda&quot;,&quot;lista&quot;,&quot;numero&quot;,&quot;problema&quot;,&quot;sublinhado&quot;],&quot;default&quot;:&quot;hook&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;headline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;O FIM DO ALCANCE: POR QUE NINGUÉM VÊ SEUS POSTS?&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;sub&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;O Instagram mudou as regras e ninguém avisou você&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;side&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;cta&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Salve para não esquecer&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;num&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;why&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whyLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;FUNCIONA PORQUE&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tag&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;numTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;escuro&quot;,&quot;claro&quot;],&quot;default&quot;:&quot;escuro&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;blocoTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cor&quot;,&quot;escuro&quot;],&quot;default&quot;:&quot;cor&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;photo&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;photo2&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;photo3&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;photoX&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:50,&quot;min&quot;:0,&quot;max&quot;:100,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;photoY&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:50,&quot;min&quot;:0,&quot;max&quot;:100,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;photoZoom&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:100,&quot;min&quot;:100,&quot;max&quot;:300,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;font&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Archivo&quot;,&quot;Anton&quot;,&quot;Oswald&quot;,&quot;Barlow Condensed&quot;,&quot;Manrope&quot;,&quot;EB Garamond&quot;,&quot;Helvetica&quot;],&quot;default&quot;:&quot;Archivo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;fontDisplay&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Archivo&quot;,&quot;Anton&quot;,&quot;Oswald&quot;,&quot;Barlow Condensed&quot;,&quot;Manrope&quot;,&quot;EB Garamond&quot;,&quot;Helvetica&quot;],&quot;default&quot;:&quot;Archivo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;caseMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;alta&quot;,&quot;baixa&quot;,&quot;original&quot;],&quot;default&quot;:&quot;alta&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;fontScale&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:100,&quot;min&quot;:60,&quot;max&quot;:160,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;handle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;@seuperfil&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;authorName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Seu Nome&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;avatarSrc&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;avatarOff&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;brandLine&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Powered by Aragonez Builder&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;year&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;2026 //&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;labelLeft&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;INSTAGRAM&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;labelRight&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;ESTRATÉGIAS&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;footerLeft&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;footerRight&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;bar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;barMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;marca&quot;,&quot;insta&quot;],&quot;default&quot;:&quot;marca&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;counter&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;dots&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;dotTotal&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;tsType&quot;:&quot;number&quot;},&quot;dotIndex&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;tsType&quot;:&quot;number&quot;},&quot;w&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1080,&quot;tsType&quot;:&quot;number&quot;},&quot;h&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1350,&quot;tsType&quot;:&quot;number&quot;},&quot;icon&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nenhum&quot;,&quot;circulo&quot;,&quot;anel&quot;,&quot;quadrado&quot;,&quot;diamante&quot;,&quot;triangulo&quot;,&quot;seta&quot;,&quot;play&quot;,&quot;mais&quot;,&quot;check&quot;],&quot;default&quot;:&quot;nenhum&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;iconSrc&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;iconSize&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:110,&quot;min&quot;:40,&quot;max&quot;:320,&quot;tsType&quot;:&quot;number&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#F7B518&quot;,&quot;#FF3B12&quot;,&quot;#FFC72C&quot;,&quot;#5B4DF5&quot;],&quot;default&quot;:&quot;#FFFFFF&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;bg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#050403&quot;,&quot;#0F0D0A&quot;,&quot;#101418&quot;],&quot;default&quot;:&quot;#050403&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;bgMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;solido&quot;,&quot;degrade&quot;],&quot;default&quot;:&quot;solido&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;bg2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#7A1010&quot;,&quot;#B32900&quot;,&quot;#2A1A6B&quot;],&quot;default&quot;:&quot;#7A1010&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;gradAngle&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:165,&quot;min&quot;:0,&quot;max&quot;:360,&quot;unit&quot;:&quot;°&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;bgLight&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#FFFFFF&quot;,&quot;#F2F0FC&quot;,&quot;#F6F4EE&quot;],&quot;default&quot;:&quot;#FFFFFF&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;text&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#FFFFFF&quot;,&quot;#F4EFE7&quot;],&quot;default&quot;:&quot;#FFFFFF&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;textDark&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#111318&quot;,&quot;#0D0C16&quot;],&quot;default&quot;:&quot;#111318&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;logoSrc&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;scale&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.42,&quot;min&quot;:0.05,&quot;max&quot;:1,&quot;step&quot;:0.01,&quot;tsType&quot;:&quot;number&quot;},&quot;pill&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;pillText&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;arraste para o lado&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;logo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;rule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;flip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;texture&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nenhuma&quot;,&quot;ondas&quot;,&quot;arcos&quot;,&quot;linhas&quot;,&quot;grade&quot;,&quot;pontos&quot;],&quot;default&quot;:&quot;nenhuma&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;offsets&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;},&quot;selected&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;},&quot;editing&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;}}">
+function edSizeSafe(base, plain, fscale) {
+  let s = base;
+  const n = (plain || '').length;
+  if (n > 170) s = base * 0.62;
+  else if (n > 130) s = base * 0.72;
+  else if (n > 95) s = base * 0.82;
+  else if (n > 65) s = base * 0.9;
+  return s * (fscale || 1);
+}
+
+const FONTS = {
+  'Archivo': '"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif',
+  'Anton': '"Anton",Impact,sans-serif',
+  'Oswald': '"Oswald","Archivo",sans-serif',
+  'Barlow Condensed': '"Barlow Condensed","Archivo",sans-serif',
+  'Manrope': '"Manrope","Archivo",sans-serif',
+  'EB Garamond': '"EB Garamond",Georgia,serif',
+  'Helvetica': '"Helvetica Neue",Helvetica,Arial,sans-serif'
+};
+
+class Component extends DCLogic {
+  parse(text, accent, opts) {
+    const src = String(text == null ? '' : text);
+    if (!src) return null;
+    const o = opts || {};
+    const out = [];
+    const re = /(\*[^*]+\*|~[^~]+~|==[^=]+==|%[^%]+%|_[^_]+_|\/\/[^\n]+?\/\/|\+[^+]+\+|\^[^^]+\^|--[^\n]+?--)/g;
+    let last = 0, m, k = 0;
+    const push = (t, style) => out.push(React.createElement('span', { key: 'n' + k++, style }, t));
+    while ((m = re.exec(src)) !== null) {
+      if (m.index > last) push(src.slice(last, m.index));
+      const tok = m[0];
+      if (tok.slice(0, 2) === '==') {
+        if (o.colorOnly) push(tok.slice(2, -2), { color: accent });
+        else push(tok.slice(2, -2), {
+          background: accent, color: '#0b0906', padding: '0.06em 0.22em',
+          boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone'
+        });
+      } else if (tok[0] === '*') {
+        push(tok.slice(1, -1), o.boldMark ? { fontWeight: 800 } : { color: accent });
+      } else if (tok[0] === '%') {
+        /* Serif itálico: a assinatura editorial das referências. */
+        push(tok.slice(1, -1), { fontFamily: '"Playfair Display","DM Serif Display",Georgia,serif', fontStyle: 'italic', fontWeight: 400 });
+      } else if (tok[0] === '_') {
+        push(tok.slice(1, -1), { fontWeight: 400 });
+      } else if (tok.slice(0, 2) === '//') {
+        push(tok.slice(2, -2), { fontStyle: 'italic' });
+      } else if (tok.slice(0, 2) === '--') {
+        push(tok.slice(2, -2), { fontSize: '0.7em', opacity: 0.72 });
+      } else if (tok[0] === '+') {
+        push(tok.slice(1, -1), { fontWeight: 800 });
+      } else if (tok[0] === '^') {
+        push(tok.slice(1, -1), { fontSize: '1.35em', lineHeight: 1 });
+      } else {
+        push(tok.slice(1, -1), { textDecoration: 'line-through', textDecorationThickness: '0.07em' });
+      }
+      last = m.index + tok.length;
+    }
+    if (last < src.length) push(src.slice(last));
+    return out;
+  }
+
+  /* Ajuste fino por elemento: tamanho e fonte só do texto escolhido.
+     Em vez de alterar os 40 estilos um a um, o resultado do renderVals
+     é percorrido e cada estilo de texto recebe o multiplicador do seu grupo. */
+  aplicarAjustesPorElemento(out) {
+    const p = this.props;
+    const FONTS_LOCAL = {
+      'Archivo': "'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif",
+      'Anton': "'Anton','Impact',sans-serif",
+      'Bebas Neue': "'Bebas Neue','Impact',sans-serif",
+      'Oswald': "'Oswald','Helvetica Neue',sans-serif",
+      'Playfair Display': "'Playfair Display',Georgia,serif",
+      'Space Grotesk': "'Space Grotesk','Helvetica Neue',sans-serif",
+      'DM Serif Display': "'DM Serif Display',Georgia,serif",
+      'Syne': "'Syne','Helvetica Neue',sans-serif"
+    };
+
+    const grupos = {
+      titulo: { escala: Number(p.headScale) || 100, fonte: p.headFont || '' },
+      destaque: { escala: Number(p.subScale) || 100, fonte: p.subFont || '' },
+      corpo: { escala: Number(p.sideScale) || 100, fonte: p.sideFont || '' }
+    };
+    if (grupos.titulo.escala === 100 && grupos.destaque.escala === 100 && grupos.corpo.escala === 100 &&
+        !grupos.titulo.fonte && !grupos.destaque.fonte && !grupos.corpo.fonte) return out;
+
+    /* O agrupamento por nome de chave precisa cobrir todo estilo de texto novo,
+       senão o controle por elemento fica sem efeito naquele layout. */
+    const grupoDaChave = (chave) => {
+      if (/Dots|Bar|Logo|Photo|Root|Frame|Card|Wrap|Mark|Icon|Avatar|Veil|Edge|Pill|Grid|Row|Top|Badge|Chip/.test(chave)) return null;
+      if (/^head|Head|citQuote|leadStyle|palavraBig/.test(chave)) return 'titulo';
+      if (/^sub|Sub|micro|Micro|Kicker|citLead|palavraLead/.test(chave)) return 'destaque';
+      if (/Side|side|Body|Items|Item|Close|Why|bodyStyle|bodyBold|passList|passQuote|fechoBox|serifCopy|palavraSerif/.test(chave)) return 'corpo';
+      return null;
+    };
+
+    /* Sombra do texto: 0 desliga, 100 é a sombra cheia. */
+    const sombra = (p.textShadow === undefined || p.textShadow === null) ? 0 : Number(p.textShadow);
+    Object.keys(out).forEach((chave) => {
+      if (!/Style$/.test(chave)) return;
+      const estilo = out[chave];
+      if (!estilo || typeof estilo !== 'object' || typeof estilo.fontSize !== 'string') return;
+      const g = grupoDaChave(chave);
+      if (!g) return;
+      if (sombra > 0) {
+        const raio = Math.round(6 + (sombra / 100) * 22);
+        out[chave] = Object.assign({}, estilo, {
+          textShadow: '0 ' + Math.round(raio / 3) + 'px ' + raio + 'px rgba(0,0,0,' + (0.25 + (sombra / 100) * 0.55).toFixed(2) + ')'
+        });
+      }
+      const cfg = grupos[g];
+      const px = parseFloat(estilo.fontSize);
+      if (!isFinite(px)) return;
+      const novo = Object.assign({}, estilo);
+      if (cfg.escala !== 100) novo.fontSize = Math.max(10, Math.round(px * cfg.escala / 100)) + 'px';
+      if (cfg.fonte && FONTS_LOCAL[cfg.fonte]) novo.fontFamily = FONTS_LOCAL[cfg.fonte];
+      out[chave] = novo;
+    });
+    return out;
+  }
+
+  renderVals() {
+    return this.aplicarAjustesPorElemento(this.montarVals());
+  }
+
+  montarVals() {
+    const p = this.props;
+    const accent = p.accent || '#F7B518';
+    const scale = p.scale == null ? 0.42 : p.scale;
+    const layout = p.layout || 'titulo';
+    const head = p.headline || '';
+    const sub = p.sub || '';
+    const side = p.side || '';
+
+    const isHook = layout === 'hook';
+    const isTexto = layout === 'texto';
+    const isClaro = layout === 'claro';
+    const isTweet = layout === 'tweet';
+    const isEditorial = layout === 'editorial';
+    const isBloco = layout === 'bloco';
+    const isLegenda = layout === 'legenda';
+    const isLista = layout === 'lista';
+    const isNumero = layout === 'numero';
+    const isProblema = layout === 'problema';
+    const isSublinhado = layout === 'sublinhado';
+    const isCartaz = layout === 'cartaz';
+    const isMetade = layout === 'metade';
+    const isPalavra = layout === 'palavra';
+    const isSocial = layout === 'social';
+    /* Layouts inspirados nas referências de carrossel enviadas. */
+    const isViral = layout === 'viral';
+    const isChips = layout === 'chips';
+    const isSerif = layout === 'serif';
+    const isCitacao = layout === 'citacao';
+    const isTextoImg = layout === 'textoimg';
+    const isPassos = layout === 'passos';
+    const isFecho = layout === 'fecho';
+    const isRef = isViral || isChips || isSerif || isCitacao || isTextoImg || isPassos || isFecho;
+    const refLight = isCitacao || isTextoImg || isPassos;
+    const isNew = isLista || isNumero || isProblema || isSublinhado || isCartaz || isMetade || isPalavra || isSocial || isRef;
+    const isClassic = !isHook && !isTexto && !isClaro && !isTweet && !isEditorial && !isBloco && !isLegenda && !isNew;
+    const fullPhoto = isCartaz || isSocial || isViral || isChips || isSerif || isFecho;
+    const blocoLight = isBloco && p.blocoTheme !== 'escuro';
+    const numLight = isNumero && p.numTheme === 'claro';
+    const light = isClaro || isTweet || blocoLight || numLight || refLight;
+    const hasSide = (layout === 'dados' || isTexto || isProblema) && side.trim().length > 0;
+
+    const toRgb = (c) => {
+      const h = String(c || '').replace('#', '');
+      const f = h.length === 3 ? h.split('').map(x => x + x).join('') : h;
+      return [0, 2, 4].map(i => parseInt(f.substr(i, 2), 16) || 0);
+    };
+    const rgba = (c, a) => { const r = toRgb(c); return 'rgba(' + r[0] + ',' + r[1] + ',' + r[2] + ',' + a + ')'; };
+
+    const bg = blocoLight ? (p.blocoBg || accent) : (light ? (p.bgLight || (isTweet ? '#FFFFFF' : '#F2F0FC')) : (p.bg || '#050403'));
+    const textColor = light ? (p.textDark || '#111318') : (p.text || '#ffffff');
+    const W = p.w || 1080, H = p.h || 1350;
+
+    const bodyFont = FONTS[p.font] || FONTS['Archivo'];
+    const dispFont = FONTS[p.fontDisplay] || bodyFont;
+    const caseMode = p.caseMode || 'alta';
+    const tcase = caseMode === 'alta' ? 'uppercase' : (caseMode === 'baixa' ? 'lowercase' : 'none');
+
+    const off = p.offsets || {};
+    const tf = (k) => {
+      const o = off[k];
+      return o ? 'translate(' + (o.x || 0) + 'px,' + (o.y || 0) + 'px)' : 'none';
+    };
+    const sel = p.selected;
+    const selList = Array.isArray(sel) ? sel : (sel ? [sel] : []);
+    const ring = (k) => (p.editing && selList.indexOf(k) !== -1 ? 'inset 0 0 0 3px ' + accent : 'none');
+
+    const tex = p.texture || 'nenhuma';
+    const line = rgba(accent, 0.22);
+    const patterns = {
+      linhas: 'repeating-linear-gradient(180deg, ' + line + ' 0 3px, transparent 3px 26px)',
+      grade: 'repeating-linear-gradient(45deg, ' + line + ' 0 3px, transparent 3px 34px)',
+      pontos: 'radial-gradient(' + line + ' 2.5px, transparent 2.6px)'
+    };
+    const arcNodes = [];
+    for (let i = 0; i < 14; i++) arcNodes.push(React.createElement('circle', { key: 'a' + i, cx: 110, cy: H + 310, r: 420 + i * 70 }));
+
+    const ic = p.icon || 'nenhum';
+    const iconSize = p.iconSize || 110;
+    const shapes = {
+      circulo: [['circle', { cx: 50, cy: 50, r: 44, fill: accent }]],
+      anel: [['circle', { cx: 50, cy: 50, r: 40, fill: 'none', stroke: accent, strokeWidth: 11 }]],
+      quadrado: [['rect', { x: 8, y: 8, width: 84, height: 84, fill: accent }]],
+      diamante: [['polygon', { points: '50,4 96,50 50,96 4,50', fill: accent }]],
+      triangulo: [['polygon', { points: '50,8 94,90 6,90', fill: accent }]],
+      seta: [['polygon', { points: '10,42 62,42 62,16 92,50 62,84 62,58 10,58', fill: accent }]],
+      play: [['polygon', { points: '24,10 90,50 24,90', fill: accent }]],
+      mais: [['rect', { x: 42, y: 8, width: 16, height: 84, fill: accent }], ['rect', { x: 8, y: 42, width: 84, height: 16, fill: accent }]],
+      check: [['polyline', { points: '12,54 38,80 88,20', fill: 'none', stroke: accent, strokeWidth: 14, strokeLinecap: 'round', strokeLinejoin: 'round' }]]
+    };
+    let iconNode = null;
+    if (p.iconSrc) iconNode = React.createElement('img', { src: p.iconSrc, alt: '', style: { width: iconSize + 'px', display: 'block' } });
+    else if (shapes[ic]) iconNode = React.createElement('svg', {
+      viewBox: '0 0 100 100', width: iconSize, height: iconSize, style: { display: 'block' }
+    }, shapes[ic].map((s, si) => React.createElement(s[0], Object.assign({ key: 's' + si }, s[1]))));
+
+    const cfg = {
+      capa:   { photoH: '74%', pad: '0 80px 92px', justify: 'flex-end', align: 'left', headSize: 84 },
+      titulo: { photoH: '56%', pad: '0 80px 92px', justify: 'flex-end', align: 'left', headSize: 78 },
+      dados:  { photoH: '56%', pad: '0 80px 92px', justify: 'flex-end', align: 'left', headSize: 66 },
+      foto:   { photoH: '100%', pad: '96px 80px 92px', justify: 'flex-start', align: 'center', headSize: 72 },
+      final:  { photoH: '100%', pad: '90px 80px 96px', justify: 'space-between', align: 'center', headSize: 70 },
+      hook:   { photoH: '100%' }, texto: { photoH: '100%' }, claro: { photoH: '0%' }, tweet: { photoH: '0%' },
+      editorial: { photoH: '0%' }, bloco: { photoH: '0%' }, legenda: { photoH: '100%' },
+      lista: { photoH: '0%' }, numero: { photoH: '0%' }, problema: { photoH: '0%' },
+      sublinhado: { photoH: '52%' },
+      cartaz: { photoH: '100%' }, social: { photoH: '100%' },
+      metade: { photoH: '0%' }, palavra: { photoH: '0%' },
+      viral: { photoH: '100%' }, chips: { photoH: '100%' },
+      serif: { photoH: '100%' }, fecho: { photoH: '100%' },
+      citacao: { photoH: '0%' }, textoimg: { photoH: '0%' }, passos: { photoH: '0%' }
+    }[layout] || {};
+
+    const fscale = (p.fontScale || 100) / 100;
+    const plain = head.replace(/[*~=]/g, '');
+    let size = cfg.headSize || 76;
+    if (plain.length > 140) size -= 22;
+    else if (plain.length > 100) size -= 14;
+    else if (plain.length > 66) size -= 7;
+    const hasBlock = head.indexOf('==') !== -1;
+    const centered = cfg.align === 'center';
+    const photo = p.photo || '';
+
+    let hookSize = 100;
+    if (plain.length > 130) hookSize = 70;
+    else if (plain.length > 95) hookSize = 78;
+    else if (plain.length > 62) hookSize = 88;
+
+    let leadSize = 54;
+    if (plain.length > 220) leadSize = 42;
+    else if (plain.length > 150) leadSize = 48;
+
+    let tweetSize = 84;
+    if (plain.length > 140) tweetSize = 62;
+    else if (plain.length > 100) tweetSize = 70;
+    else if (plain.length > 70) tweetSize = 78;
+
+    let edSize = 66;
+    if (plain.length > 150) edSize = 50;
+    else if (plain.length > 110) edSize = 56;
+    else if (plain.length > 80) edSize = 61;
+
+    let legSize = 48;
+    if (plain.length > 130) legSize = 36;
+    else if (plain.length > 90) legSize = 41;
+
+    size = Math.round(size * fscale);
+    hookSize = Math.round(hookSize * fscale);
+    leadSize = Math.round(leadSize * fscale);
+    tweetSize = Math.round(tweetSize * fscale);
+    edSize = Math.round(edSize * fscale);
+    legSize = Math.round(legSize * fscale);
+
+    const dotTotal = p.dotTotal || 0;
+    const dotIndex = p.dotIndex || 0;
+    const dotNodes = [];
+    for (let d = 0; d < dotTotal; d++) dotNodes.push(React.createElement('span', {
+      key: 'd' + d,
+      style: {
+        width: '11px', height: '11px', borderRadius: '50%',
+        background: d === dotIndex ? (light ? '#3B3A55' : '#ffffff') : rgba(light ? '#3B3A55' : '#ffffff', 0.32)
+      }
+    }));
+
+    const pad2 = (n) => (n < 10 ? '0' + n : '' + n);
+    const counter = p.counter || (dotTotal ? pad2(dotIndex + 1) + '/' + pad2(dotTotal) : '');
+    const barMode = p.barMode || 'marca';
+    const showBar = p.bar !== false;
+    const barPad = Math.round(W * 0.037);
+    const handleRaw = (p.handle || '').trim();
+    const logoSrc = p.logoSrc || '';
+    const avatarSrc = p.avatarSrc || logoSrc;
+
+    const verifiedNode = React.createElement('svg', { viewBox: '0 0 24 24', width: 34, height: 34, style: { display: 'block' } },
+      React.createElement('path', {
+        fill: '#1D9BF0',
+        d: 'M12 1.6l2.3 2.1 3.1-.4 1 3 2.9 1.2-.8 3 1.9 2.5-2.3 2.1.1 3.1-3 .9-1.6 2.7-3-.8-2.8 1.3-1.9-2.4-3.1-.5-.2-3.1L1.4 15l1.3-2.8-1-3 2.9-1.2.9-3 3.1.5L11 1.6z'
+      }),
+      React.createElement('path', { fill: '#fff', d: 'M10.7 15.6l-2.9-2.9 1.3-1.3 1.6 1.6 4-4 1.3 1.3-5.3 5.3z' })
+    );
+
+    const tIcon = (d) => React.createElement('svg', {
+      key: d.slice(0, 6), viewBox: '0 0 24 24', width: 46, height: 46,
+      fill: 'none', stroke: rgba(textColor, 0.62), strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round',
+      style: { display: 'block' }
+    }, React.createElement('path', { d: d }));
+    const tweetIcons = [
+      tIcon('M4 5h16v11H8l-4 4V5z'),
+      tIcon('M7 8h10l-3-3M17 16H7l3 3M17 8v8M7 8v8'),
+      tIcon('M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z'),
+      tIcon('M12 16V4m0 0L8 8m4-4l4 4M5 15v4h14v-4')
+    ];
+
+    return {
+      accent: accent, w: W, h: H,
+      logoSrc: logoSrc,
+      avatarSrc: avatarSrc,
+      isClassic: isClassic, isHook: isHook, isTexto: isTexto, isClaro: isClaro, isTweet: isTweet,
+      isEditorial: isEditorial, isBloco: isBloco, isLegenda: isLegenda,
+      isLista: isLista, isNumero: isNumero, isProblema: isProblema, isSublinhado: isSublinhado,
+      isCartaz: isCartaz, isMetade: isMetade, isPalavra: isPalavra, isSocial: isSocial,
+
+      /* ——— Layouts das referências ——— */
+      isViral: isViral, isChips: isChips, isSerif: isSerif,
+      isCitacao: isCitacao, isTextoImg: isTextoImg, isPassos: isPassos, isFecho: isFecho,
+      refTag: (p.tag || '').replace(/\n/g, ' '),
+      hasRefTag: !!(p.tag || '').trim(),
+      refYear: p.year || '',
+      refNum: p.num || '',
+      hasRefNum: !!String(p.num || '').trim(),
+      refCta: p.cta || '',
+      hasRefCta: !!(p.cta || '').trim(),
+      refWhy: p.why || '',
+      hasRefWhy: !!(p.why || '').trim(),
+
+      hasRefPhoto: !!photo && (isCitacao || isTextoImg),
+      refPhotoSrc: photo || '',
+      refYearStyle: { fontSize: '21px', fontWeight: 700, color: rgba(textColor, 0.72) },
+      refWrapStyle: {
+        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+        justifyContent: 'space-between', padding: Math.round(W * 0.055) + 'px',
+        fontFamily: bodyFont, color: light ? '#12100e' : textColor
+      },
+      refTopStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '18px',
+        fontSize: '21px', fontWeight: 700, letterSpacing: '0.2px',
+        color: light ? 'rgba(18,16,14,0.68)' : rgba(textColor, 0.82)
+      },
+      refBottomStyle: { display: 'flex', flexDirection: 'column', gap: '20px' },
+
+      viralBadgeStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '14px', alignSelf: 'flex-start',
+        background: rgba(bg, 0.42), border: '1px solid ' + rgba(textColor, 0.16),
+        borderRadius: '999px', padding: '12px 22px 12px 12px', marginBottom: '10px'
+      },
+      viralDotStyle: {
+        width: '38px', height: '38px', borderRadius: '50%', background: accent,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: '#171106', fontSize: '20px', fontWeight: 900, flex: '0 0 38px'
+      },
+      viralHandleStyle: { fontSize: '27px', fontWeight: 800, letterSpacing: '-0.4px', color: textColor },
+      viralHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(104, plain, fscale)) + 'px',
+        fontWeight: 900, lineHeight: 0.94, letterSpacing: '-2.4px',
+        textTransform: caseMode === 'baixa' ? 'lowercase' : 'uppercase',
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      viralSubStyle: {
+        display: 'flex', alignItems: 'flex-start', gap: '14px',
+        fontFamily: dispFont, fontSize: Math.round(34 * fscale) + 'px', fontWeight: 800,
+        lineHeight: 1.18, letterSpacing: '-0.4px', textTransform: 'uppercase',
+        whiteSpace: 'pre-wrap', transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      viralArrowStyle: { color: accent, fontSize: '30px', lineHeight: 1.05, flex: '0 0 auto' },
+
+      refChipNodes: (side || '').split('\n').filter(x => x.trim()).slice(0, 4).map((linha, ci) =>
+        React.createElement('span', {
+          key: 'rc' + ci,
+          style: {
+            border: '1px solid ' + rgba(textColor, 0.5), borderRadius: '999px',
+            padding: '11px 26px', fontSize: '20px', fontWeight: 600,
+            letterSpacing: '1.4px', textTransform: 'uppercase', color: rgba(textColor, 0.92),
+            whiteSpace: 'nowrap'
+          }
+        }, linha.trim())
+      ),
+      hasRefChips: (isChips || isViral) && side.trim().length > 0,
+      refChipsRowStyle: { display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'space-between' },
+      chipsPillStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '16px', alignSelf: 'center',
+        background: accent, color: '#171106', borderRadius: '999px',
+        padding: '15px 16px 15px 30px', fontSize: '23px', fontWeight: 800,
+        letterSpacing: '1.1px', textTransform: 'uppercase', marginBottom: '26px'
+      },
+      chipsPillDotStyle: {
+        width: '38px', height: '38px', borderRadius: '50%', background: '#171106', color: accent,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 800
+      },
+      chipsKickerStyle: {
+        fontFamily: dispFont, fontSize: Math.round(40 * fscale) + 'px', fontWeight: 800,
+        lineHeight: 1.06, letterSpacing: '-0.8px', textTransform: 'uppercase',
+        textAlign: 'center', color: rgba(textColor, 0.95), marginBottom: '6px',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      chipsHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(94, plain, fscale)) + 'px',
+        fontWeight: 900, lineHeight: 0.95, letterSpacing: '-2.2px',
+        textTransform: caseMode === 'baixa' ? 'lowercase' : 'uppercase',
+        textAlign: 'center', color: accent, whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      chipsFootStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: '18px', marginTop: '26px'
+      },
+      chipsAuthorStyle: { display: 'flex', alignItems: 'center', gap: '16px' },
+      chipsAvatarStyle: {
+        width: '58px', height: '58px', borderRadius: '50%', objectFit: 'cover',
+        boxShadow: '0 0 0 2px ' + rgba(textColor, 0.28), flex: '0 0 58px'
+      },
+      chipsNameStyle: { display: 'block', fontSize: '24px', fontWeight: 800, lineHeight: 1.24, color: textColor },
+      chipsHandleStyle: { display: 'block', fontSize: '24px', fontWeight: 700, lineHeight: 1.24, color: rgba(textColor, 0.7) },
+
+      serifHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(78, plain, fscale)) + 'px',
+        fontWeight: 700, lineHeight: 1.1, letterSpacing: '-1.6px',
+        textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      serifSubStyle: {
+        fontFamily: bodyFont, fontSize: Math.round(36 * fscale) + 'px', fontWeight: 400,
+        lineHeight: 1.42, letterSpacing: '-0.3px', marginTop: '20px',
+        color: light ? 'rgba(18,16,14,0.78)' : rgba(textColor, 0.9),
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      serifFootStyle: {
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+        gap: '18px', paddingTop: '30px', marginTop: '8px',
+        borderTop: '1px solid ' + (light ? 'rgba(18,16,14,0.12)' : rgba(textColor, 0.16))
+      },
+      serifCopyStyle: {
+        fontSize: '19px', fontWeight: 500, lineHeight: 1.5,
+        color: light ? 'rgba(18,16,14,0.6)' : rgba(textColor, 0.6)
+      },
+      serifPillStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '14px',
+        border: '1px solid ' + (light ? 'rgba(18,16,14,0.2)' : rgba(textColor, 0.28)),
+        borderRadius: '999px', padding: '10px 12px 10px 24px',
+        fontSize: '17px', fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase',
+        color: light ? '#12100e' : textColor, whiteSpace: 'nowrap'
+      },
+      serifPillDotStyle: {
+        width: '38px', height: '38px', borderRadius: '50%',
+        background: light ? '#12100e' : textColor, color: light ? '#fff' : bg,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '19px', fontWeight: 700
+      },
+
+      citGridStyle: {
+        position: 'absolute', inset: 0, display: 'grid',
+        gridTemplateColumns: '1.05fr 0.95fr', alignItems: 'center', gap: Math.round(W * 0.04) + 'px',
+        padding: Math.round(W * 0.055) + 'px', fontFamily: bodyFont, color: '#12100e'
+      },
+      citLeadStyle: {
+        fontSize: Math.round(31 * fscale) + 'px', fontWeight: 400, lineHeight: 1.4,
+        color: 'rgba(18,16,14,0.72)', marginBottom: '26px', whiteSpace: 'pre-wrap'
+      },
+      citQuoteStyle: {
+        fontFamily: '"Playfair Display","DM Serif Display",Georgia,serif',
+        fontSize: Math.round(edSizeSafe(72, plain, fscale)) + 'px', fontWeight: 400,
+        fontStyle: 'italic', lineHeight: 1.12, letterSpacing: '-1.4px',
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      citBodyStyle: {
+        fontSize: Math.round(31 * fscale) + 'px', fontWeight: 400, lineHeight: 1.46,
+        color: 'rgba(18,16,14,0.86)', marginTop: '28px',
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('corpo'), boxShadow: ring('corpo')
+      },
+      citPhotoStyle: {
+        width: '100%', height: '82%', objectFit: 'cover', objectPosition: 'center',
+        borderRadius: '8px', display: 'block', alignSelf: 'center'
+      },
+
+      tiGridStyle: {
+        position: 'absolute', inset: 0, display: 'grid',
+        gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: Math.round(W * 0.045) + 'px',
+        padding: Math.round(W * 0.055) + 'px', fontFamily: bodyFont, color: '#12100e'
+      },
+      tiHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(60, plain, fscale)) + 'px',
+        fontWeight: 500, lineHeight: 1.16, letterSpacing: '-1.4px',
+        textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      tiBodyStyle: {
+        fontSize: Math.round(30 * fscale) + 'px', fontWeight: 400, lineHeight: 1.5,
+        color: 'rgba(18,16,14,0.88)', marginTop: '30px',
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('corpo'), boxShadow: ring('corpo')
+      },
+      tiPhotoStyle: {
+        width: '100%', aspectRatio: '4 / 3', objectFit: 'cover',
+        borderRadius: '6px', display: 'block'
+      },
+
+      passWrapStyle: {
+        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+        padding: Math.round(W * 0.06) + 'px', fontFamily: bodyFont, color: '#12100e'
+      },
+      passEdgeStyle: {
+        position: 'absolute', left: 0, top: 0, bottom: 0, width: Math.round(W * 0.035) + 'px',
+        background: '#12100e', borderTopRightRadius: '26px', borderBottomRightRadius: '26px'
+      },
+      passDotsStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '22px',
+        marginBottom: 'auto'
+      },
+      passDotNodes: (() => {
+        const total = Math.max(1, Math.min(9, parseInt(p.palavra, 10) || 5));
+        const atual = Math.max(1, Math.min(total, parseInt(p.num, 10) || 1));
+        const out = [];
+        for (let i = 1; i <= total; i++) {
+          const on = i === atual;
+          out.push(React.createElement('span', {
+            key: 'pd' + i,
+            style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px' }
+          },
+            React.createElement('span', {
+              style: {
+                fontSize: '21px', fontWeight: on ? 800 : 600,
+                color: on ? accent : 'rgba(18,16,14,0.45)'
+              }
+            }, (i < 10 ? '0' : '') + i),
+            React.createElement('span', {
+              style: {
+                width: '7px', height: '7px', borderRadius: '50%',
+                background: on ? accent : 'rgba(18,16,14,0.3)'
+              }
+            })
+          ));
+        }
+        return out;
+      })(),
+      passBodyWrapStyle: { display: 'flex', flexDirection: 'column', margin: 'auto 0' },
+      passHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(52, plain, fscale)) + 'px',
+        fontWeight: 800, lineHeight: 1.2, letterSpacing: '-1.1px',
+        textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      passSubStyle: {
+        fontSize: Math.round(30 * fscale) + 'px', fontWeight: 400, lineHeight: 1.5,
+        color: 'rgba(18,16,14,0.74)', marginTop: '18px', whiteSpace: 'pre-wrap',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      passListStyle: {
+        fontSize: Math.round(28 * fscale) + 'px', fontWeight: 400, lineHeight: 1.62,
+        color: 'rgba(18,16,14,0.88)', marginTop: '26px', whiteSpace: 'pre-wrap',
+        transform: tf('corpo'), boxShadow: ring('corpo')
+      },
+      passQuoteStyle: {
+        borderLeft: '2px solid rgba(18,16,14,0.28)', paddingLeft: '26px',
+        marginTop: '38px', marginLeft: 'auto', maxWidth: '74%',
+        fontSize: Math.round(26 * fscale) + 'px', fontWeight: 400, lineHeight: 1.56,
+        color: 'rgba(18,16,14,0.78)', whiteSpace: 'pre-wrap'
+      },
+      passFootStyle: {
+        marginTop: 'auto', textAlign: 'center',
+        fontSize: '19px', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase',
+        color: 'rgba(18,16,14,0.42)'
+      },
+
+      fechoTagNodes: (side || '').split('\n').filter(x => x.trim()).slice(0, 4).map((linha, ti) => {
+        const partes = linha.split('|');
+        return React.createElement('span', {
+          key: 'ft' + ti,
+          style: {
+            display: 'inline-flex', flexDirection: 'column', borderRadius: '9px',
+            overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
+          }
+        },
+          React.createElement('span', {
+            style: {
+              background: rgba(textColor, 0.92), color: bg, padding: '8px 16px',
+              fontSize: '21px', fontWeight: 800
+            }
+          }, (partes[0] || '').trim()),
+          partes[1] ? React.createElement('span', {
+            style: {
+              background: rgba(bg, 0.86), color: rgba(textColor, 0.86), padding: '7px 16px',
+              fontSize: '17px', fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase'
+            }
+          }, partes[1].trim()) : null
+        );
+      }),
+      hasFechoTags: isFecho && side.trim().length > 0,
+      fechoTagsRowStyle: { display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: 'auto' },
+      fechoHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(58, plain, fscale)) + 'px',
+        fontWeight: 800, lineHeight: 1.18, letterSpacing: '-1.2px',
+        textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      fechoSubStyle: {
+        fontSize: Math.round(29 * fscale) + 'px', fontWeight: 400, lineHeight: 1.46,
+        color: rgba(textColor, 0.86), marginTop: '18px', whiteSpace: 'pre-wrap',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      fechoBoxStyle: {
+        background: rgba(textColor, 0.92), color: bg, borderRadius: '14px',
+        padding: '26px 32px', marginTop: '32px', alignSelf: 'flex-start', maxWidth: '86%',
+        fontSize: Math.round(27 * fscale) + 'px', fontWeight: 600, lineHeight: 1.42,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty'
+      },
+      hasSideRaw: side.trim().length > 0,
+      palavra: p.palavra || '',
+      hasWordMark: !!(p.palavra || '').trim(),
+      hasChips: isCartaz && side.trim().length > 0,
+      chipNodes: (side || '').split('\n').filter(x => x.trim()).map((linha, ci) =>
+        React.createElement('span', {
+          key: 'c' + ci,
+          style: { display: 'flex', alignItems: 'center', gap: '20px', fontSize: '22px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }
+        },
+          ci ? React.createElement('span', { style: { color: accent, fontWeight: 400 } }, ci % 2 ? '+' : '\u00d7') : null,
+          React.createElement('span', null, linha.trim())
+        )
+      ),
+      socialIcons: ['M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z', 'M4 5h16v11H8l-4 4V5z', 'M21 4L3 11l7 3 3 7 8-17z', 'M7 4h10v16l-5-4-5 4V4z'].map((d, si) =>
+        React.createElement('svg', {
+          key: 'si' + si, viewBox: '0 0 24 24', width: 40, height: 40,
+          fill: si === 3 ? accent : '#ffffff', style: { display: 'block' }
+        }, React.createElement('path', { d: d }))
+      ),
+
+      cartazWrapStyle: {
+        position: 'absolute', inset: 0, padding: '52px 58px 46px', display: 'flex',
+        flexDirection: 'column', gap: '20px', color: '#fff'
+      },
+      cartazTopStyle: {
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '20px',
+        transform: tf('rotulos'), boxShadow: ring('rotulos')
+      },
+      cartazNameStyle: { fontSize: '24px', fontWeight: 800, lineHeight: 1.15, letterSpacing: '0.4px', textTransform: 'uppercase', whiteSpace: 'pre-wrap' },
+      cartazRoleStyle: { fontSize: '24px', fontWeight: 800, lineHeight: 1.15, letterSpacing: '0.4px', textTransform: 'uppercase', textAlign: 'right', whiteSpace: 'pre-wrap' },
+      cartazIconStyle: {
+        display: 'block', width: 'fit-content', margin: '0 auto', lineHeight: 0,
+        transform: tf('icone'), boxShadow: ring('icone')
+      },
+      cartazHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(96, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 0.94, letterSpacing: '-1.4px', textTransform: tcase, textAlign: 'center',
+        whiteSpace: 'pre-wrap', textWrap: 'balance', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      chipsRowStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '18px',
+        borderTop: '1px solid rgba(255,255,255,0.28)', borderBottom: '1px solid rgba(255,255,255,0.28)',
+        padding: '18px 4px', transform: tf('tags'), boxShadow: ring('tags')
+      },
+      microStyle: {
+        fontSize: '15px', lineHeight: 1.28, letterSpacing: '0.4px', textTransform: 'uppercase',
+        color: rgba(accent, 0.85), maxHeight: '84px', overflow: 'hidden',
+        transform: tf('microtexto'), boxShadow: ring('microtexto')
+      },
+
+      metadeGridStyle: { position: 'absolute', inset: 0, display: 'flex' },
+      metadeLeftStyle: {
+        width: '58%', flex: '0 0 58%', background: bg, padding: '52px 46px 52px 58px',
+        display: 'flex', flexDirection: 'column', gap: '26px', color: textColor
+      },
+      metadeTopStyle: { transform: tf('rotulos'), boxShadow: ring('rotulos') },
+      metadeHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(64, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 0.98, letterSpacing: '-0.8px', textTransform: tcase, color: accent,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      metadeBodyStyle: {
+        fontSize: Math.round(30 * fscale) + 'px', lineHeight: 1.34, whiteSpace: 'pre-wrap',
+        textWrap: 'pretty', transform: tf('corpo1'), boxShadow: ring('corpo1')
+      },
+      metadeItalicStyle: {
+        fontFamily: FONTS['EB Garamond'], fontStyle: 'italic', fontSize: Math.round(28 * fscale) + 'px',
+        lineHeight: 1.34, color: accent, whiteSpace: 'pre-wrap',
+        transform: tf('corpo2'), boxShadow: ring('corpo2')
+      },
+      metadeRightStyle: {
+        flex: 1, position: 'relative', padding: '52px 46px',
+        backgroundImage: photo ? 'url("' + photo + '")' : 'none',
+        backgroundColor: rgba(textColor, 0.08), backgroundSize: 'cover',
+        backgroundPosition: (p.photoX == null ? 50 : p.photoX) + '% ' + (p.photoY == null ? 50 : p.photoY) + '%',
+        filter: p.pb ? 'grayscale(1) contrast(1.1)' : 'none',
+        transform: tf('figura'), boxShadow: ring('figura')
+      },
+      metadeRoleStyle: {
+        fontSize: '24px', fontWeight: 800, letterSpacing: '0.4px', textTransform: 'uppercase',
+        textAlign: 'right', color: '#fff', whiteSpace: 'pre-wrap',
+        transform: tf('rotulos2'), boxShadow: ring('rotulos2')
+      },
+
+      palavraWrapStyle: {
+        position: 'absolute', inset: 0, padding: '52px 62px', display: 'flex',
+        flexDirection: 'column', gap: '18px', color: textColor
+      },
+      palavraLeadStyle: {
+        fontSize: Math.round(38 * fscale) + 'px', fontWeight: 700, lineHeight: 1.24, textAlign: 'center',
+        whiteSpace: 'pre-wrap', textWrap: 'balance', transform: tf('abertura'), boxShadow: ring('abertura')
+      },
+      palavraBigStyle: {
+        fontFamily: dispFont, fontSize: Math.round(120 * fscale) + 'px', fontWeight: 800,
+        lineHeight: 0.92, letterSpacing: '-2px', textTransform: 'uppercase', textAlign: 'center',
+        color: accent, transform: tf('palavra'), boxShadow: ring('palavra')
+      },
+      palavraSerifStyle: {
+        fontFamily: FONTS['EB Garamond'], fontSize: Math.round(38 * fscale) + 'px', lineHeight: 1.26,
+        textAlign: 'center', whiteSpace: 'pre-wrap', transform: tf('corpo1'), boxShadow: ring('corpo1')
+      },
+      palavraBodyStyle: {
+        fontSize: Math.round(28 * fscale) + 'px', lineHeight: 1.38, textAlign: 'center', opacity: 0.9,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo2'), boxShadow: ring('corpo2')
+      },
+      wordMarkStyle: {
+        position: 'absolute', left: '-20px', bottom: '-40px', fontFamily: dispFont,
+        fontSize: '210px', fontWeight: 800, lineHeight: 0.8, letterSpacing: '-4px',
+        textTransform: 'uppercase', color: rgba(accent, 0.16), pointerEvents: 'none', whiteSpace: 'nowrap'
+      },
+
+      socialWrapStyle: {
+        position: 'absolute', inset: 0, padding: '46px 52px 62px', display: 'flex',
+        flexDirection: 'column', gap: '22px', color: '#fff'
+      },
+      socialTopStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px',
+        transform: tf('perfil'), boxShadow: ring('perfil')
+      },
+      socialAvatarStyle: { width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid ' + accent, display: 'block' },
+      socialNameStyle: { fontSize: '30px', fontWeight: 800, letterSpacing: '-0.3px' },
+      socialRoleStyle: { fontSize: '17px', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', color: rgba('#ffffff', 0.7) },
+      socialHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(88, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 1.0, letterSpacing: '-1.2px', textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      socialSubStyle: {
+        display: 'flex', alignItems: 'center', gap: '16px', fontSize: Math.round(32 * fscale) + 'px',
+        color: accent, whiteSpace: 'pre-wrap', transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      socialPillStyle: {
+        alignSelf: 'flex-start', background: accent, color: '#141006', borderRadius: '999px',
+        padding: '16px 30px', fontSize: '26px', fontWeight: 800, letterSpacing: '1.2px',
+        textTransform: 'uppercase', boxShadow: '0 0 34px ' + rgba(accent, 0.5),
+        transform: tf('cta')
+      },
+      num: p.num || '',
+      hasWatermark: !!(p.num || '').trim(),
+      hasWhy: !!(p.why || '').trim(),
+      whyLabel: p.whyLabel || 'FUNCIONA PORQUE',
+      whyNodes: this.parse(p.why || '', accent, { colorOnly: true, boldMark: true }),
+      hasCtaFull: !!(p.cta || '').trim(),
+      itemNodes: (p.side || '').split('\n').filter(x => x.trim()).map((linha, li) => {
+        const at = linha.indexOf(':');
+        const lab = at > 0 ? linha.slice(0, at + 1) : '';
+        const rest = at > 0 ? linha.slice(at + 1) : linha;
+        return React.createElement('span', {
+          key: 'it' + li,
+          style: { display: 'flex', gap: '18px', alignItems: 'baseline', fontSize: Math.round(30 * fscale) + 'px', lineHeight: 1.34 }
+        },
+          React.createElement('span', { style: { color: accent, flex: '0 0 auto', fontWeight: 700 } }, '\u2192'),
+          React.createElement('span', null,
+            lab ? React.createElement('b', { style: { fontWeight: 800 } }, lab) : null,
+            lab ? ' ' : '',
+            React.createElement('span', { style: { opacity: 0.86 } }, rest.trim())
+          )
+        );
+      }),
+
+      listaWrapStyle: {
+        position: 'absolute', inset: 0, padding: '58px 62px 66px', display: 'flex',
+        flexDirection: 'column', gap: '34px', color: textColor
+      },
+      listaHeadStyle: {
+        marginTop: 'auto', fontFamily: dispFont, fontSize: Math.round(edSizeSafe(66, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 1.02, letterSpacing: '-0.6px', textTransform: tcase, whiteSpace: 'pre-wrap',
+        textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      listaItemsStyle: {
+        display: 'flex', flexDirection: 'column', gap: '20px',
+        transform: tf('itens'), boxShadow: ring('itens')
+      },
+      listaCloseStyle: {
+        marginBottom: 'auto', fontSize: Math.round(30 * fscale) + 'px', lineHeight: 1.36, opacity: 0.7,
+        whiteSpace: 'pre-wrap', transform: tf('fecho'), boxShadow: ring('fecho')
+      },
+
+      numWrapStyle: {
+        position: 'absolute', inset: 0, padding: '58px 58px 62px', display: 'flex',
+        flexDirection: 'column', gap: '26px', color: textColor
+      },
+      numBadgeStyle: {
+        alignSelf: 'flex-start', width: '58px', height: '58px', borderRadius: '8px', background: accent,
+        color: '#0b0906', fontSize: '30px', fontWeight: 800, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', transform: tf('selo'), boxShadow: ring('selo')
+      },
+      numHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(78, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 0.98, letterSpacing: '-0.8px', textTransform: tcase, color: accent,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      galleryStyle: {
+        display: 'flex', gap: '14px', padding: '16px', borderRadius: '16px',
+        background: rgba(textColor, 0.07), transform: tf('figuras'), boxShadow: ring('figuras')
+      },
+      g1Style: {
+        flex: 1, height: '250px', borderRadius: '8px', background: photo ? 'url("' + photo + '") center/cover' : rgba(textColor, 0.1)
+      },
+      g2Style: {
+        flex: 1, height: '250px', borderRadius: '8px', background: p.photo2 ? 'url("' + p.photo2 + '") center/cover' : rgba(textColor, 0.1)
+      },
+      g3Style: {
+        flex: 1, height: '250px', borderRadius: '8px', background: p.photo3 ? 'url("' + p.photo3 + '") center/cover' : rgba(textColor, 0.1)
+      },
+      numBodyStyle: {
+        fontSize: Math.round(29 * fscale) + 'px', lineHeight: 1.4, opacity: 0.88,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo1'), boxShadow: ring('corpo1')
+      },
+      whyBoxStyle: {
+        display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto',
+        borderLeft: '5px solid ' + accent, background: rgba(textColor, 0.05),
+        padding: '20px 24px', transform: tf('porque'), boxShadow: ring('porque')
+      },
+      whyLabelStyle: { fontSize: '19px', fontWeight: 800, letterSpacing: '1.6px', textTransform: 'uppercase', color: accent },
+      whyTextStyle: { fontSize: Math.round(28 * fscale) + 'px', lineHeight: 1.36 },
+
+      probWrapStyle: {
+        position: 'absolute', inset: 0, padding: '58px 62px 66px', display: 'flex',
+        flexDirection: 'column', gap: '24px', color: textColor
+      },
+      probTagStyle: {
+        fontSize: '20px', fontWeight: 700, letterSpacing: '2.6px', textTransform: 'uppercase',
+        color: rgba(textColor, 0.55), transform: tf('selo'), boxShadow: ring('selo')
+      },
+      probHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(96, plain, fscale)) + 'px', fontWeight: 800,
+        lineHeight: 0.94, letterSpacing: '-1.2px', textTransform: tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      probBodyStyle: {
+        fontSize: Math.round(30 * fscale) + 'px', lineHeight: 1.38, opacity: 0.74,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo1'), boxShadow: ring('corpo1')
+      },
+      probBody2Style: {
+        fontSize: Math.round(30 * fscale) + 'px', fontWeight: 700, lineHeight: 1.38,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo2'), boxShadow: ring('corpo2')
+      },
+      ctaFullStyle: {
+        marginTop: 'auto', background: accent, color: '#0b0906', borderRadius: '10px',
+        padding: '26px 20px', textAlign: 'center', fontSize: '30px', fontWeight: 700,
+        transform: tf('cta'), boxShadow: ring('cta')
+      },
+      watermarkStyle: {
+        position: 'absolute', right: '-30px', bottom: '90px', fontFamily: dispFont,
+        fontSize: '420px', fontWeight: 800, lineHeight: 0.8, color: rgba(textColor, 0.05), pointerEvents: 'none'
+      },
+
+      subWrapStyle: {
+        position: 'absolute', left: 0, right: 0, bottom: 0, padding: '0 66px 90px',
+        display: 'flex', flexDirection: 'column', gap: '34px', color: textColor
+      },
+      underHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.round(edSizeSafe(58, plain, fscale)) + 'px', fontWeight: 700,
+        lineHeight: 1.5, letterSpacing: '-0.4px', textTransform: tcase, whiteSpace: 'pre-wrap',
+        textDecoration: 'underline', textDecorationThickness: '2px', textUnderlineOffset: '10px',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      underBodyStyle: {
+        fontFamily: FONTS['EB Garamond'], fontSize: Math.round(34 * fscale) + 'px', lineHeight: 1.34,
+        opacity: 0.9, whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('corpo1'), boxShadow: ring('corpo1')
+      },
+      hasTag: !!(p.tag || '').trim(),
+      tag: p.tag || '',
+      labelLeft: p.labelLeft || '', labelRight: p.labelRight || '',
+      footerLeft: p.footerLeft || '', footerRight: p.footerRight || '',
+      showAvatar: p.avatarOff !== true,
+      showBrandChip: isLegenda && (!!(p.authorName || '').trim() || p.avatarOff !== true),
+      hasPhoto: !!photo && (!light || fullPhoto) && !isMetade && !isPalavra,
+      veilTopStyle: {
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5,
+        background: 'rgba(5,4,3,' + ((p.veilTop === undefined ? 0 : Number(p.veilTop)) / 100) + ')'
+      },
+      hasVeilTop: Number(p.veilTop) > 0,
+      hasPhoto2: !!p.photo2,
+
+      /* ——— Camadas livres: PNG, formas, ícones e segunda imagem ——— */
+      layerNodes: (() => {
+        let lista = p.layers;
+        if (typeof lista === 'string') { try { lista = JSON.parse(lista); } catch (e) { lista = []; } }
+        if (!Array.isArray(lista)) return null;
+        const sel = p.layerSel;
+        const nós = lista.map((c, li) => {
+          const kind = c.kind || 'rect';
+          const base = {
+            position: 'absolute',
+            left: (Number(c.x) || 0) + '%',
+            top: (Number(c.y) || 0) + '%',
+            width: (c.w === undefined ? 30 : Number(c.w)) + '%',
+            height: (c.h === undefined ? 20 : Number(c.h)) + '%',
+            transform: 'rotate(' + (Number(c.rot) || 0) + 'deg)',
+            opacity: (c.opacity === undefined ? 100 : Number(c.opacity)) / 100,
+            pointerEvents: 'none',
+            zIndex: c.above ? 40 : 6
+          };
+          if (c.shadow) {
+            const sb = Number(c.shadowBlur) || 34;
+            base.filter = 'drop-shadow(0 ' + Math.round(sb / 2) + 'px ' + sb + 'px rgba(0,0,0,' + ((Number(c.shadowOp) || 45) / 100) + '))';
+          }
+          if (sel === li) {
+            base.outline = '2px dashed ' + accent;
+            base.outlineOffset = '3px';
+          }
+
+          if (kind === 'png' || kind === 'image') {
+            const z = Number(c.zoom) || 100;
+            return React.createElement('div', { key: 'ly' + li, style: Object.assign({}, base, { overflow: kind === 'image' ? 'hidden' : 'visible', borderRadius: (Number(c.radius) || 0) + 'px' }) },
+              React.createElement('div', {
+                style: {
+                  position: 'absolute', inset: 0,
+                  backgroundImage: 'url("' + (c.url || '') + '")',
+                  backgroundSize: kind === 'png' ? 'contain' : (z + '%'),
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: (Number(c.cropX) === 0 || c.cropX ? Number(c.cropX) : 50) + '% ' + (Number(c.cropY) === 0 || c.cropY ? Number(c.cropY) : 50) + '%'
+                }
+              })
+            );
+          }
+          if (kind === 'icon') {
+            return React.createElement('div', {
+              key: 'ly' + li,
+              style: Object.assign({}, base, {
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: c.color || accent, fontSize: (Number(c.size) || 90) + 'px', lineHeight: 1
+              })
+            }, React.createElement('span', {
+              dangerouslySetInnerHTML: {
+                __html: '<svg viewBox="0 0 64 64" width="100%" height="100%" fill="' + (c.color || accent) + '" stroke="' + (c.color || accent) + '">' + (c.glyph || '') + '</svg>'
+              },
+              style: { display: 'block', width: '100%', height: '100%' }
+            }));
+          }
+          if (kind === 'line') {
+            return React.createElement('div', {
+              key: 'ly' + li,
+              style: Object.assign({}, base, {
+                height: (Number(c.thick) || 4) + 'px',
+                background: c.color || accent
+              })
+            });
+          }
+          if (kind === 'text') {
+            return React.createElement('div', {
+              key: 'ly' + li,
+              style: Object.assign({}, base, {
+                display: 'flex', alignItems: 'center',
+                justifyContent: c.align === 'right' ? 'flex-end' : (c.align === 'center' ? 'center' : 'flex-start'),
+                color: c.color || textColor,
+                background: c.bg || 'transparent',
+                borderRadius: (Number(c.radius) || 0) + 'px',
+                padding: (Number(c.pad) || 0) + 'px',
+                fontFamily: c.serif ? '"Playfair Display",Georgia,serif' : bodyFont,
+                fontSize: (Number(c.size) || 34) + 'px',
+                fontWeight: Number(c.weight) || 700,
+                fontStyle: c.italic ? 'italic' : 'normal',
+                lineHeight: 1.25,
+                whiteSpace: 'pre-wrap'
+              })
+            }, c.text || '');
+          }
+          /* rect, círculo e pílula */
+          const raio = kind === 'circle' ? '50%' : (kind === 'pill' ? '999px' : (Number(c.radius) || 0) + 'px');
+          return React.createElement('div', {
+            key: 'ly' + li,
+            style: Object.assign({}, base, {
+              background: c.fill === 'none' ? 'transparent' : (c.color || accent),
+              border: c.stroke ? ((Number(c.strokeW) || 2) + 'px solid ' + (c.strokeColor || c.color || accent)) : 'none',
+              borderRadius: raio
+            })
+          });
+        });
+        return nós;
+      })(),
+
+      /* Réguas e guias sobre o card em edição */
+      showRulers: !!p.rulers,
+      rulerNodes: (() => {
+        if (!p.rulers) return null;
+        const linhas = [];
+        const passo = 10;
+        for (let i = passo; i < 100; i += passo) {
+          const forte = i === 50;
+          linhas.push(React.createElement('div', {
+            key: 'rv' + i,
+            style: {
+              position: 'absolute', top: 0, bottom: 0, left: i + '%', width: '1px',
+              background: forte ? 'rgba(247,181,24,0.55)' : 'rgba(255,255,255,0.14)'
+            }
+          }));
+          linhas.push(React.createElement('div', {
+            key: 'rh' + i,
+            style: {
+              position: 'absolute', left: 0, right: 0, top: i + '%', height: '1px',
+              background: forte ? 'rgba(247,181,24,0.55)' : 'rgba(255,255,255,0.14)'
+            }
+          }));
+        }
+        /* margem de segurança */
+        linhas.push(React.createElement('div', {
+          key: 'safe',
+          style: {
+            position: 'absolute', left: '6%', right: '6%', top: '5%', bottom: '5%',
+            border: '1px dashed rgba(247,181,24,0.4)'
+          }
+        }));
+        return React.createElement('div', {
+          style: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 60 }
+        }, linhas);
+      })(),
+      hasSub: sub.trim().length > 0,
+      hasSide: hasSide,
+      hasCta: isHook && !!(p.cta || '').trim(),
+      ctaText: p.cta || '',
+      showMark: !!p.mark && !!logoSrc, showLogo: !!p.logo, showRule: !!p.rule, showPill: !!p.pill,
+
+      /* Os mesmos quatro elementos nos layouts que não são clássicos:
+         antes eles só existiam no bloco clássico e os botões não faziam nada. */
+      extMark: !isClassic && !!p.mark && !!logoSrc,
+      extLogo: !isClassic && !!p.logo,
+      extRule: !isClassic && !!p.rule,
+      extPill: !isClassic && !!p.pill,
+      extMarkStyle: {
+        transform: tf('marca'), boxShadow: ring('marca'),
+        position: 'absolute', left: Math.round(W * 0.055) + 'px', top: Math.round(W * 0.055) + 'px',
+        width: Math.round(W * 0.1) + 'px', height: 'auto', objectFit: 'contain', zIndex: 45,
+        filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.45))'
+      },
+      extRuleStyle: {
+        transform: tf('linha'), boxShadow: ring('linha'),
+        position: 'absolute', left: Math.round(W * 0.055) + 'px',
+        bottom: Math.round(W * 0.2) + 'px', width: Math.round(W * 0.16) + 'px', height: '6px',
+        background: accent, borderRadius: '3px', zIndex: 45
+      },
+      extPillStyle: {
+        transform: 'translateX(-50%) ' + (tf('arraste') === 'none' ? '' : tf('arraste')), boxShadow: ring('arraste') || '0 10px 30px rgba(0,0,0,.35)',
+        position: 'absolute', left: '50%', bottom: Math.round(W * 0.055) + 'px',
+        display: 'flex', alignItems: 'center', gap: '14px',
+        background: accent, borderRadius: '999px', padding: '14px 26px', zIndex: 45,
+        whiteSpace: 'nowrap'
+      },
+      extPillTextStyle: { fontSize: '26px', fontWeight: 800, color: '#141006', letterSpacing: '0.2px' },
+      extLogoStyle: {
+        transform: tf('logo'), boxShadow: ring('logo'),
+        position: 'absolute', right: Math.round(W * 0.055) + 'px', bottom: Math.round(W * 0.055) + 'px',
+        display: 'flex', alignItems: 'center', gap: '12px', zIndex: 45
+      },
+      extLogoImgStyle: {
+        width: Math.round(W * 0.13) + 'px', height: 'auto', objectFit: 'contain',
+        filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.45))'
+      },
+      extLogoTextStyle: {
+        fontSize: '24px', fontWeight: 800, letterSpacing: '-0.2px',
+        color: light ? '#12100e' : textColor
+      },
+      hasLogoImg: !!logoSrc,
+      showBarMarca: showBar && barMode === 'marca' && !isTweet && !isEditorial && !isBloco && !isNew,
+      showBarInsta: showBar && barMode === 'insta' && !isTweet && !isEditorial && !isBloco && !isNew,
+      showChip: isHook && !!handleRaw && p.avatarOff !== true,
+      showAvatarImg: !!avatarSrc && p.avatarOff !== true,
+      handle: handleRaw,
+      handleBare: handleRaw.replace(/^@/, ''),
+      authorName: p.authorName || 'Seu Nome',
+      counter: counter,
+      brandLine: p.brandLine || 'Powered by Aragonez Builder',
+      year: p.year || '2026 //',
+      pillText: p.pillText || 'arraste para o lado',
+      verifiedNode: verifiedNode,
+      tweetIcons: tweetIcons,
+      headNodes: this.parse(head, accent, isTexto ? { colorOnly: true } : {}),
+      subNodes: this.parse(sub, accent, (isTexto || isClaro) ? { colorOnly: true, boldMark: true } : {}),
+      sideNodes: this.parse(side, accent, { colorOnly: true, boldMark: true }),
+      hasIcon: !!iconNode, iconNode: iconNode,
+      hasTexture: tex !== 'nenhuma' && !light,
+      texOndas: tex === 'ondas', texArcos: tex === 'arcos', texPattern: !!patterns[tex],
+      arcView: '0 0 ' + W + ' ' + H, arcNodes: arcNodes,
+      showDots: !!dotTotal && !!p.dots && !isTweet,
+      dotNodes: dotNodes,
+
+      boxStyle: { width: Math.round(W * scale) + 'px', height: Math.round(H * scale) + 'px', overflow: 'hidden', flex: '0 0 auto' },
+      stageStyle: {
+        width: W + 'px', height: H + 'px', position: 'relative', overflow: 'hidden',
+        background: p.bgMode === 'degrade'
+          ? 'linear-gradient(' + (p.gradAngle == null ? 165 : p.gradAngle) + 'deg,' + (p.bg2 || accent) + ' 0%,' + bg + ' 68%)'
+          : bg,
+        transform: 'scale(' + scale + ')', transformOrigin: 'top left', fontFamily: bodyFont
+      },
+      photoStyle: {
+        position: 'absolute', top: 0, left: 0, right: 0, height: cfg.photoH,
+        backgroundImage: 'url("' + photo + '")',
+        backgroundSize: 'cover',
+        backgroundPosition: (p.photoX == null ? 50 : p.photoX) + '% ' + (p.photoY == null ? 50 : p.photoY) + '%',
+        backgroundRepeat: 'no-repeat',
+        transform: 'scale(' + ((p.photoZoom || 100) / 100) + ')',
+        transformOrigin: (p.photoX == null ? 50 : p.photoX) + '% ' + (p.photoY == null ? 50 : p.photoY) + '%',
+        filter: 'saturate(1.05) contrast(1.05)',
+        maskImage: 'linear-gradient(180deg,#000 0%,#000 30%,rgba(0,0,0,0.9) 48%,rgba(0,0,0,0.68) 62%,rgba(0,0,0,0.42) 76%,rgba(0,0,0,0.18) 88%,rgba(0,0,0,0) 100%)',
+        WebkitMaskImage: 'linear-gradient(180deg,#000 0%,#000 30%,rgba(0,0,0,0.9) 48%,rgba(0,0,0,0.68) 62%,rgba(0,0,0,0.42) 76%,rgba(0,0,0,0.18) 88%,rgba(0,0,0,0) 100%)',
+        maskSize: '100% 100%',
+        WebkitMaskSize: '100% 100%'
+      },
+      photoFadeStyle: {
+        position: 'absolute', top: 0, left: 0, right: 0,
+        height: cfg.photoH || '100%',
+        pointerEvents: 'none',
+        background: 'linear-gradient(180deg,' + rgba(bg, 0) + ' 24%,' + rgba(bg, 0.08) + ' 40%,' +
+          rgba(bg, 0.24) + ' 54%,' + rgba(bg, 0.46) + ' 66%,' + rgba(bg, 0.68) + ' 76%,' +
+          rgba(bg, 0.85) + ' 85%,' + rgba(bg, 0.95) + ' 93%,' + bg + ' 100%)'
+      },
+      fadeStyle: (() => {
+        /* fadeAmt: 100 = o degradê padrão do layout. Abaixo clareia, acima escurece. */
+        const amt = (p.fadeAmt === undefined || p.fadeAmt === null) ? 100 : Number(p.fadeAmt);
+        const k = Math.max(0, Math.min(200, amt)) / 100;
+        const a = (v) => rgba(bg, Math.max(0, Math.min(1, v * k)));
+        return {
+          position: 'absolute', inset: 0,
+          background: isCartaz || isSocial
+            ? 'linear-gradient(180deg,' + a(0.5) + ' 0%,' + a(0.05) + ' 22%,' + a(0.1) + ' 40%,' + a(0.62) + ' 62%,' + a(0.9) + ' 82%,' + a(0.96) + ' 100%)'
+            : light ? 'none'
+            : isHook
+              ? 'linear-gradient(180deg,' + a(0.5) + ' 0%,' + a(0) + ' 24%,' + a(0) + ' 40%,' + a(0.8) + ' 60%,' + a(0.97) + ' 78%)'
+              : isTexto
+                ? 'linear-gradient(180deg,' + a(0.35) + ' 0%,' + a(0.1) + ' 22%,' + a(0.8) + ' 40%,' + a(0.96) + ' 52%)'
+                : (layout === 'final' || layout === 'foto')
+                  ? 'linear-gradient(180deg,' + a(0.94) + ' 0%,' + a(0.72) + ' 42%,' + a(0.35) + ' 70%,' + a(0.85) + ' 100%)'
+                  : 'linear-gradient(180deg,' + a(0) + ' 18%,' + a(0.12) + ' 30%,' + a(0.34) + ' 40%,' + a(0.62) + ' 49%,' + a(0.84) + ' 57%,' + a(0.95) + ' 65%,' + a(1) + ' 76%)'
+        };
+      })(),
+      bandStyle: {
+        position: 'absolute', left: 0, right: 0, bottom: 0, height: '46%', overflow: 'hidden', pointerEvents: 'none',
+        maskImage: 'linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.12) 14%,rgba(0,0,0,0.4) 28%,rgba(0,0,0,0.72) 42%,rgba(0,0,0,0.92) 58%,#000 74%)',
+        WebkitMaskImage: 'linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.12) 14%,rgba(0,0,0,0.4) 28%,rgba(0,0,0,0.72) 42%,rgba(0,0,0,0.92) 58%,#000 74%)',
+        maskSize: '100% 100%', WebkitMaskSize: '100% 100%'
+      },
+      wavesStyle: { position: 'absolute', left: 0, bottom: 0, width: W + 'px', display: 'block' },
+      patternStyle: { position: 'absolute', inset: 0, backgroundImage: patterns[tex] || 'none', backgroundSize: tex === 'pontos' ? '30px 30px' : 'auto' },
+      bandFadeStyle: { position: 'absolute', inset: 0, background: 'linear-gradient(180deg,' + bg + ' 0%,' + rgba(bg, 0.9) + ' 12%,' + rgba(bg, 0.6) + ' 24%,' + rgba(bg, 0.28) + ' 36%,' + rgba(bg, 0) + ' 52%)' },
+
+      barStyle: {
+        position: 'absolute', top: barPad, left: barPad, right: barPad,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        fontSize: '25px', fontWeight: 500, letterSpacing: '-0.2px',
+        color: light ? rgba(textColor, 0.78) : rgba('#ffffff', 0.9),
+        transform: tf('barra'), boxShadow: ring('barra')
+      },
+      barDotStyle: { width: '20px', height: '20px', borderRadius: '50%', background: '#1D9BF0', display: 'block' },
+      barMutedStyle: { color: light ? rgba(textColor, 0.5) : rgba('#ffffff', 0.6) },
+
+      contentStyle: {
+        position: 'absolute', inset: 0, padding: cfg.pad, display: 'flex',
+        flexDirection: 'column', justifyContent: cfg.justify,
+        alignItems: centered ? 'center' : 'stretch', color: textColor
+      },
+      markStyle: { width: '230px', display: 'block', margin: '0 0 26px -18px', transform: tf('marca'), boxShadow: ring('marca') },
+      iconStyle: {
+        display: 'block', width: 'fit-content', marginBottom: '26px', lineHeight: 0,
+        marginLeft: centered ? 'auto' : 0, marginRight: centered ? 'auto' : 0,
+        transform: tf('icone'), boxShadow: ring('icone')
+      },
+      headStyle: {
+        fontFamily: dispFont, fontSize: size + 'px', fontWeight: 800, lineHeight: hasBlock ? 1.34 : 1.04,
+        letterSpacing: '-0.6px', textTransform: tcase, whiteSpace: 'pre-wrap',
+        textWrap: 'pretty', textAlign: centered ? 'center' : 'left',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      ruleStyle: {
+        height: '7px', background: accent, margin: '30px 0 26px',
+        width: centered ? '62%' : '78%', marginLeft: centered ? 'auto' : 0, marginRight: centered ? 'auto' : 0,
+        transform: tf('linha'), boxShadow: ring('linha')
+      },
+      subStyle: {
+        fontSize: Math.max(34, size - 22) + 'px', fontWeight: 800, lineHeight: hasBlock ? 1.34 : 1.1,
+        letterSpacing: '-0.4px', textTransform: tcase, whiteSpace: 'pre-wrap',
+        marginTop: p.rule ? 0 : '26px', textAlign: centered ? 'center' : 'left',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      sideStyle: {
+        width: '40%', flex: '0 0 40%', textAlign: 'right', fontSize: '40px', fontWeight: 800,
+        lineHeight: 1.45, textTransform: tcase, whiteSpace: 'pre-wrap',
+        borderRight: '10px solid ' + accent, paddingRight: '26px',
+        transform: tf('dados'), boxShadow: ring('dados')
+      },
+      pillStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '20px', alignSelf: centered ? 'center' : 'flex-start',
+        background: accent, borderRadius: '999px', padding: '14px 16px 14px 30px', marginTop: '44px',
+        transform: tf('arraste'), boxShadow: ring('arraste')
+      },
+      trackStyle: {
+        width: '66px', height: '38px', borderRadius: '999px', background: 'rgba(255,255,255,0.55)',
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 4px'
+      },
+      logoStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', transform: tf('logo'), boxShadow: ring('logo') },
+      wordmarkStyle: { fontSize: '86px', fontWeight: 800, letterSpacing: '-1px', lineHeight: 0.9, color: textColor },
+      tagStyle: { fontSize: '17px', fontWeight: 600, letterSpacing: '13px', color: accent, textAlign: 'right', marginTop: '8px' },
+
+      hookWrapStyle: {
+        position: 'absolute', left: 0, right: 0, bottom: 0, padding: '0 68px 92px',
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '26px', color: '#fff'
+      },
+      chipStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '18px',
+        background: 'rgba(18,18,18,0.66)', border: '1px solid rgba(255,255,255,0.16)',
+        borderRadius: '999px', padding: '10px 26px 10px 12px',
+        transform: tf('perfil'), boxShadow: ring('perfil')
+      },
+      chipAvatarStyle: { width: '62px', height: '62px', borderRadius: '50%', objectFit: 'cover', background: accent, display: 'block' },
+      chipTextStyle: { fontSize: '38px', fontWeight: 700, letterSpacing: '-0.4px' },
+      verifiedStyle: { display: 'block', lineHeight: 0 },
+      hookHeadStyle: {
+        fontFamily: dispFont, fontSize: hookSize + 'px', fontWeight: 800,
+        lineHeight: 1.0, textTransform: tcase, letterSpacing: '-1.2px',
+        whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      hookSubStyle: {
+        fontSize: '42px', fontWeight: 400, fontStyle: 'italic', lineHeight: 1.22,
+        color: 'rgba(255,255,255,0.82)', whiteSpace: 'pre-wrap',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      ctaStyle: {
+        display: 'inline-block', border: '2px solid rgba(255,255,255,0.6)', borderRadius: '999px',
+        padding: '16px 34px', fontSize: '30px', fontWeight: 700, letterSpacing: '0.6px',
+        textTransform: 'uppercase', marginTop: '6px',
+        transform: tf('cta'), boxShadow: ring('cta')
+      },
+
+      textoWrapStyle: {
+        position: 'absolute', left: 0, right: 0, bottom: 0, padding: '0 72px 104px',
+        display: 'flex', flexDirection: 'column', gap: '40px', color: textColor
+      },
+      leadStyle: {
+        fontFamily: FONTS['EB Garamond'], fontSize: leadSize + 'px', lineHeight: 1.24,
+        letterSpacing: '-0.2px', whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('abertura'), boxShadow: ring('abertura')
+      },
+      bodyBoldStyle: { fontSize: '31px', fontWeight: 700, lineHeight: 1.42, whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo1'), boxShadow: ring('corpo1') },
+      bodyStyle: { fontSize: '31px', fontWeight: 400, lineHeight: 1.46, whiteSpace: 'pre-wrap', textWrap: 'pretty', color: rgba(textColor, 0.86), transform: tf('corpo2'), boxShadow: ring('corpo2') },
+
+      claroWrapStyle: {
+        position: 'absolute', inset: 0, padding: '150px 72px 110px',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '54px', color: textColor
+      },
+      claroHeadStyle: {
+        fontFamily: dispFont, fontSize: Math.min(66, size + 4) + 'px', fontWeight: 700, lineHeight: 1.18,
+        letterSpacing: '-1px', textAlign: 'center', textTransform: caseMode === 'alta' ? 'uppercase' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'balance', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      figRowStyle: { display: 'flex', gap: '22px', width: '100%', transform: tf('figuras'), boxShadow: ring('figuras') },
+      fig1Style: {
+        flex: 1, minWidth: 0, height: '430px', borderRadius: '10px',
+        background: photo ? 'url("' + photo + '") center/cover' : rgba(accent, 0.14),
+        border: '1px solid ' + rgba(textColor, 0.1)
+      },
+      fig2Style: {
+        flex: 1, minWidth: 0, height: '430px', borderRadius: '10px',
+        background: 'url("' + (p.photo2 || '') + '") center/cover', border: '1px solid ' + rgba(textColor, 0.1)
+      },
+      claroBodyStyle: { fontSize: '30px', fontWeight: 400, lineHeight: 1.45, textAlign: 'center', whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('corpo1'), boxShadow: ring('corpo1') },
+
+      tweetWrapStyle: {
+        position: 'absolute', inset: 0, padding: '0 72px 64px',
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: '26px',
+        paddingTop: Math.round(H * 0.2) + 'px', color: textColor
+      },
+      tweetHeadRowStyle: { display: 'flex', alignItems: 'center', gap: '26px', transform: tf('perfil'), boxShadow: ring('perfil') },
+      tweetAvatarStyle: { width: '104px', height: '104px', borderRadius: '50%', objectFit: 'cover', background: accent, display: 'block' },
+      tweetNameStyle: { fontFamily: dispFont, fontSize: '44px', fontWeight: 800, letterSpacing: '-0.4px' },
+      tweetHandleStyle: { fontFamily: dispFont, fontSize: '36px', fontWeight: 700, color: rgba(textColor, 0.52) },
+      tweetHeadStyle: {
+        fontFamily: dispFont, fontSize: tweetSize + 'px', fontWeight: 800, lineHeight: 1.03,
+        letterSpacing: '-1.2px', textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'pretty', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      tweetSubStyle: {
+        fontFamily: dispFont, fontSize: '40px', fontWeight: 700, fontStyle: 'italic', lineHeight: 1.2,
+        color: rgba(textColor, 0.55), whiteSpace: 'pre-wrap', transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+      tweetFootStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        borderTop: '1px solid ' + rgba(textColor, 0.12), paddingTop: '34px', fontSize: '34px',
+        color: rgba(textColor, 0.62), transform: tf('acoes'), boxShadow: ring('acoes')
+      },
+
+      edWrapStyle: {
+        position: 'absolute', inset: 0, padding: '60px 60px 52px', display: 'flex',
+        flexDirection: 'column', gap: '46px', color: textColor
+      },
+      labelRowStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        fontSize: '22px', fontWeight: 700, letterSpacing: '1.6px', textTransform: 'uppercase',
+        color: rgba(textColor, 0.62), transform: tf('rotulos'), boxShadow: ring('rotulos')
+      },
+      footRowStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto',
+        fontSize: '22px', fontWeight: 600, letterSpacing: '0.4px',
+        color: rgba(textColor, 0.55), transform: tf('rodape'), boxShadow: ring('rodape')
+      },
+      edCardStyle: {
+        height: '46%', borderRadius: '20px', overflow: 'hidden',
+        backgroundImage: 'url("' + photo + '")', backgroundColor: rgba(textColor, 0.08),
+        backgroundSize: 'cover',
+        backgroundPosition: (p.photoX == null ? 50 : p.photoX) + '% ' + (p.photoY == null ? 50 : p.photoY) + '%',
+        transform: tf('figura'), boxShadow: ring('figura')
+      },
+      tagBadgeStyle: {
+        alignSelf: 'flex-start', background: accent, color: '#0b0906',
+        borderRadius: '8px', padding: '9px 18px', fontSize: '21px', fontWeight: 800,
+        letterSpacing: '1.4px', textTransform: 'uppercase',
+        transform: tf('selo'), boxShadow: ring('selo')
+      },
+      edHeadStyle: {
+        fontFamily: dispFont, fontSize: edSize + 'px', fontWeight: 800, lineHeight: 1.1,
+        letterSpacing: '-0.8px', textTransform: tcase, whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      edSubStyle: {
+        fontSize: Math.round(28 * fscale) + 'px', fontWeight: 600, lineHeight: 1.4,
+        color: rgba(textColor, 0.8), whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+
+      blocoWrapStyle: {
+        position: 'absolute', inset: 0, padding: '60px 60px 52px', display: 'flex',
+        flexDirection: 'column', gap: '44px', color: textColor
+      },
+      blocoStackStyle: {
+        display: 'flex', flexDirection: p.flip ? 'column-reverse' : 'column', gap: '44px', flex: 1, minHeight: 0
+      },
+      blocoHeadStyle: {
+        fontFamily: dispFont, fontSize: edSize + 'px', fontWeight: 800, lineHeight: 1.08,
+        letterSpacing: '-0.8px', textTransform: tcase, whiteSpace: 'pre-wrap', textWrap: 'pretty',
+        transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      blocoCardStyle: {
+        flex: 1, minHeight: 0, borderRadius: '4px', overflow: 'hidden',
+        backgroundImage: 'url("' + photo + '")', backgroundColor: rgba(textColor, 0.1),
+        backgroundSize: 'cover',
+        backgroundPosition: (p.photoX == null ? 50 : p.photoX) + '% ' + (p.photoY == null ? 50 : p.photoY) + '%',
+        transform: tf('figura'), boxShadow: ring('figura')
+      },
+
+      legWrapStyle: {
+        position: 'absolute', left: 0, right: 0, bottom: 0, padding: '0 74px 96px',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '30px', color: '#fff'
+      },
+      brandChipStyle: {
+        display: 'inline-flex', alignItems: 'center', gap: '16px',
+        background: 'rgba(12,12,12,0.72)', border: '1px solid rgba(255,255,255,0.14)',
+        borderRadius: '14px', padding: '12px 24px',
+        transform: tf('perfil'), boxShadow: ring('perfil')
+      },
+      legAvatarStyle: { width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', background: accent, display: 'block' },
+      legNameStyle: { fontSize: '30px', fontWeight: 800, letterSpacing: '-0.2px' },
+      legHandleStyle: { fontSize: '22px', fontWeight: 500, color: 'rgba(255,255,255,0.6)' },
+      legHeadStyle: {
+        fontFamily: dispFont, fontSize: legSize + 'px', fontWeight: 800, lineHeight: 1.22,
+        letterSpacing: '-0.5px', textAlign: 'center', textTransform: caseMode === 'alta' ? 'none' : tcase,
+        whiteSpace: 'pre-wrap', textWrap: 'balance', transform: tf('titulo'), boxShadow: ring('titulo')
+      },
+      legSubStyle: {
+        fontSize: Math.round(26 * fscale) + 'px', fontWeight: 400, lineHeight: 1.4, textAlign: 'center',
+        color: 'rgba(255,255,255,0.72)', whiteSpace: 'pre-wrap',
+        transform: tf('destaque'), boxShadow: ring('destaque')
+      },
+
+      dotsStyle: { position: 'absolute', left: 0, right: 0, bottom: Math.round(W * 0.028), display: 'flex', justifyContent: 'center', gap: '9px' }
+    };
+  }
+}
+</script>
+</body>
+</html>

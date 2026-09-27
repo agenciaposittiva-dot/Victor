@@ -1,0 +1,86 @@
+ARAGONEZ BUILDER — LIGAR A NUVEM (passo a passo)
+
+Com a nuvem ligada:
+  · o login vale em qualquer computador
+  · cada conta abre um workspace próprio (clientes, projetos, demandas, artes)
+  · o administrador cria os acessos pela própria plataforma
+  · o workspace é enviado sozinho a cada minuto
+
+Você precisa de duas coisas: um banco (grátis) e as variáveis de ambiente.
+Escolha UM dos caminhos abaixo.
+
+==================================================
+CAMINHO A — VERCEL KV (mais rápido, seu site já está no Vercel)
+==================================================
+1) vercel.com > abra o seu projeto > aba Storage
+2) Create Database > escolha Upstash for Redis > Create
+3) Connect Project > selecione o projeto > Connect
+   O Vercel cadastra sozinho KV_REST_API_URL e KV_REST_API_TOKEN.
+4) Siga para a seção VARIÁVEIS DO ADMINISTRADOR, abaixo.
+
+==================================================
+CAMINHO B — UPSTASH DIRETO (serve para Netlify também)
+==================================================
+1) console.upstash.com > entre com Google ou GitHub
+2) Create Database > nome livre > região mais perto do Brasil
+   (us-east-1 funciona bem) > Create
+3) Na página do banco, seção REST API, copie:
+      UPSTASH_REDIS_REST_URL
+      UPSTASH_REDIS_REST_TOKEN
+4) Cadastre esses dois nomes nas variáveis do seu provedor
+   (Vercel: Settings > Environment Variables /
+    Netlify: Site configuration > Environment variables)
+5) Siga para VARIÁVEIS DO ADMINISTRADOR.
+
+==================================================
+CAMINHO C — SUPABASE (se preferir banco SQL)
+==================================================
+1) supabase.com > New project
+2) SQL Editor > rode:
+
+   create table if not exists aragonez_kv (
+     key text primary key,
+     value jsonb
+   );
+
+3) Settings > API, copie:
+      Project URL        -> SUPABASE_URL
+      service_role key   -> SUPABASE_SERVICE_KEY
+   (use a service_role, não a anon: a função roda no servidor)
+4) Cadastre as duas variáveis e siga abaixo.
+
+==================================================
+VARIÁVEIS DO ADMINISTRADOR (obrigatório em qualquer caminho)
+==================================================
+   ARAGONEZ_ADMIN        seu usuário de administrador   ex.: victor
+   ARAGONEZ_ADMIN_PASS   a senha do administrador       use uma senha forte
+
+Essa conta é criada automaticamente no primeiro login e é a única que
+pode criar outros acessos. Não use victor123.
+
+==================================================
+DEPOIS DE CADASTRAR
+==================================================
+1) Refaça o deploy (Redeploy no Vercel / Trigger deploy no Netlify).
+   Variável nova só vale em deploy novo.
+2) Abra no navegador, trocando SEU-SITE:
+      https://SEU-SITE.vercel.app/api/cloud
+      (no Netlify: /.netlify/functions/cloud)
+   Resposta esperada:
+      {"ok":true,"configurado":{"kv":true,...},"backend":"kv"}
+   Se vier "ok":false com "sem-banco", falta o banco.
+   Se "adminDefinido":false, falta ARAGONEZ_ADMIN_PASS.
+3) Entre na plataforma com ARAGONEZ_ADMIN e ARAGONEZ_ADMIN_PASS.
+   Na tela de login deve aparecer "Acesso na nuvem".
+4) Menu > Acessos: crie os logins da sua equipe.
+5) Configurações > Nuvem: confira a última sincronização.
+   O botão "Enviar agora" sobe o que já existe neste navegador.
+
+==================================================
+IMPORTANTE
+==================================================
+· Os dados que já estão neste navegador não somem: entre com a sua conta
+  e clique em Configurações > Nuvem > Enviar agora para subir tudo.
+· Sem nenhuma dessas variáveis a plataforma continua funcionando,
+  só que cada navegador guarda o seu próprio workspace.
+· As chaves ficam apenas no servidor. O navegador nunca vê nenhuma delas.

@@ -1,0 +1,124 @@
+ARAGONEZ BUILDER — O QUE MUDOU NESTA VERSÃO
+
+ESTÚDIO (nova seção "Estúdio" no menu lateral)
+As funções do protótipo do Posittiva Builder agora fazem parte da plataforma,
+com o visual preto e dourado e a marca do cliente ativo:
+- Análise do feed: informe o @ e a IA monta o raio-x (frequência, identidade, bio,
+  horário), os 3 pilares de conteúdo, o que parar de fazer, 3 posts prontos com o
+  motivo de cada um e o calendário do mês: 3 posts liberados e o resto bloqueado
+  até a assinatura. Com Apify ou Graph API configurados, o feed real aparece post a
+  post, com os selos Top e Baixo. Sem fonte de dados, a análise é feita pelo perfil
+  da marca e a tela avisa, sem inventar métricas.
+- Post com foto: objetivo, formato (post, carrossel ou story), tema e foto enviada.
+  A IA escreve título, apoio, legenda e hashtags. Dá para gerar outra versão,
+  copiar a legenda e agendar.
+- Templates Premium: 70 templates com busca, categorias, formatos, "ver com as
+  cores da minha marca" e "testar com sua foto".
+- Estúdio de carrossel: a IA escreve o roteiro de 6 a 9 cards a partir do tema.
+  Cada card tem o próprio template (o texto é mantido ao trocar), objetos livres
+  para arrastar e redimensionar com guias, edição de texto no card, camadas,
+  desfazer/refazer, paletas e envio de imagem e logo (a logo do cliente entra sozinha).
+- Agenda do mês: os posts agendados no Estúdio, mês a mês.
+Sem chave de IA, o Estúdio continua funcionando com textos-modelo e avisa no topo.
+Trocar o cliente no cabeçalho recarrega o Estúdio com a nova marca.
+Arquivos: estudio/index.html (módulo) + seção nova em index.html / Aragonez Builder.dc.html.
+
+
+LAYOUTS PREMIUM (marcados com ✦ na lista de layouts)
+Nove layouts novos, disponíveis em qualquer card de carrossel, post, stories ou anúncio:
+- Cinema: foto inteira, etiquetas no topo (campo "terceiro texto", uma por linha),
+  selo desfocado, linha de apoio com "arraste" e palavra grande em serifada.
+- Manchete: foto inteira, selo na cor de destaque, título claro e botão com brilho.
+- Revista: estilo capa de revista, rótulos no topo, título forte e código no rodapé.
+- Pôster: fundo na cor de destaque, título condensado em caixa alta e foto no meio.
+- Luxo: título em serifada itálica, subtítulo com *palavra* sublinhada e foto embaixo.
+- Clareza: foto com degradê lateral, ícone da marca e texto alinhado à esquerda.
+- Neon: brilho na cor de destaque, CTA com seta e foto (ou logo) em destaque.
+- Vidro: grade com brilho, logo no topo e card de vidro com o texto no centro.
+- Suíço: tipográfico, título fino com *partes em negrito* e caixa de apoio.
+As fontes Playfair Display, DM Serif Display, Hanken Grotesk, Bebas Neue, Space Grotesk
+e Syne agora carregam de verdade no slide (antes apareciam como opção mas caíam no Georgia).
+
+LAYOUT DE CADA CARD EM MINIATURA
+No editor, botão "▦ Ver em miniatura" ao lado de "Trocar layout": mostra todos os
+layouts já desenhados com o texto do card atual. Um clique aplica só naquele card.
+
+REDIMENSIONAR QUALQUER ELEMENTO NO CARD
+Clique num título, subtítulo, selo, logo, rótulo ou figura: aparece uma alça no canto.
+Arraste para aumentar ou diminuir (25% a 400%). Duplo clique na alça volta ao tamanho
+original. "Zerar" e "Zerar tudo" também limpam os tamanhos. Desfazer e refazer funcionam normalmente.
+
+RAIO-X: ESTRATÉGIA A PARTIR DO FEED
+Com a fonte de dados conectada (Graph API ou Apify), o Raio-X agora mostra:
+- o feed post a post, com imagem, curtidas, comentários e selo Top (30% acima da média)
+  ou Baixo (metade da média ou menos);
+- a estratégia do próximo mês: percentual de cada pilar e a evidência tirada do feed;
+- "Parar de fazer", com o motivo baseado no desempenho;
+- próximos posts sugeridos com "Por que este post" e o botão Criar conteúdo.
+A função instagram agora devolve também a imagem de cada post (media_url/thumbnail_url
+na Graph API e displayUrl no Apify). Nenhuma variável nova é necessária.
+
+--------------------------------------------------
+VERSÃO ANTERIOR
+--------------------------------------------------
+
+NAVEGAÇÃO
+Início · Criar · Radar · Tendências · Templates · Projetos
+"Criar" agora abre o hub de formatos. Cada formato tem a sua própria página:
+Carrossel (4:5), Post único (1:1), Stories (9:16) e Anúncio (1:1).
+Cada página traz o tema, os botões de geração, a estrutura do formato e só os
+templates daquele formato, com a arte real renderizada na capa.
+
+RADAR DE MARCA (botão "Abrir Radar" na home)
+Página própria de direcionamento. O usuário informa:
+Instagram, nome da marca, nicho, público, site, objetivo, tom, logo e cor de destaque.
+Ao clicar em "Analisar marca com IA", a plataforma devolve:
+- diagnóstico e posicionamento sugerido
+- 4 pilares de conteúdo
+- 8 ganchos prontos (copiar ou virar carrossel em um clique)
+- 6 ideias de post com o formato indicado
+- assuntos em alta no nicho (cruzados com notícias reais, quando a chave está configurada)
+- palavras que a marca usa e palavras que evita
+- 12 hashtags e uma legenda de exemplo
+O perfil pode ser salvo em "Salvar perfil da marca" e é reaproveitado pela IA no editor.
+A logo enviada entra nos slides gerados.
+
+TENDÊNCIAS (nav "Tendências")
+Página própria com 16 nichos e campo livre. Abas:
+Temas em alta · Copys prontas · Textos · Notícias · Semana · Hashtags
+"Textos" traz roteiros completos que já entram no editor slide a slide.
+"Semana" devolve um plano de 7 dias com formato e tema por dia.
+Todo item tem ação: copiar, criar carrossel, criar post ou virar carrossel.
+
+BIBLIOTECA DE TEMPLATES
+36 templates. Os 15 novos cobrem proteção veicular, imobiliário, saúde,
+odontologia, advocacia, contabilidade, estética, varejo, pet, eventos,
+educação e serviços, nos quatro formatos.
+As capas dos cards mostram a arte real do template (não é mais imagem fixa):
+o slide é renderizado ao vivo com a identidade da marca ativa.
+
+NOTÍCIAS EM TEMPO REAL — CHAVES NO NETLIFY
+Site configuration > Environment variables:
+GNEWS_API_KEY  = chave do gnews.io (recomendado: tem português/Brasil)
+NEWS_API_KEY   = chave do newsapi.org (alternativa)
+Teste depois do deploy: https://SEU-SITE.netlify.app/.netlify/functions/news
+Resposta esperada: {"ok":true,"configured":{"gnews":true,"newsapi":false},...}
+Sem chave a plataforma continua funcionando: os assuntos passam a ser ângulos
+recorrentes do nicho gerados pela IA, e a interface avisa isso na tela.
+
+CHAVES DE IA (continuam iguais)
+GEMINI_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY
+Teste: https://SEU-SITE.netlify.app/.netlify/functions/ai
+
+ARQUIVOS
+index.html                     → entrada do site (igual ao Aragonez Builder.dc.html)
+Aragonez Builder.dc.html       → mesmo app, para edição
+SlideIcarus.dc.html            → componente que desenha cada slide
+support.js / ai-client.js      → runtime e ponte de IA
+netlify/functions/ai.js        → IA (Gemini, OpenAI, Anthropic)
+netlify/functions/news.js      → notícias por nicho
+uploads-assets/                → imagens de referência dos templates
+logo-icarus.png / waves.png    → identidade
+
+LOGIN
+Administrador: veja LEIA-ME-NUVEM.txt (não há mais senha fixa no código).
