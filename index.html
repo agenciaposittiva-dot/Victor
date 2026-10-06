@@ -12,20 +12,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231d1b18'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='30' font-weight='700' fill='%23faf7f2'%3EVA%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
   <header class="site-header">
     <div class="container header-inner">
       <a href="#inicio" class="logo">Victor Aragonez<span>.</span></a>
-      <nav class="nav" aria-label="Principal">
+      <nav class="nav" id="menu" aria-label="Principal">
         <a href="#sobre">Sobre</a>
         <a href="#servicos">Serviços</a>
+        <a href="#processo">Processo</a>
         <a href="#projetos">Projetos</a>
         <a href="#depoimentos">Depoimentos</a>
+        <a href="#contato" class="nav-cta">Fale comigo</a>
       </nav>
-      <a href="#contato" class="btn btn-small">Fale comigo</a>
+      <a href="#contato" class="btn btn-small header-cta">Fale comigo</a>
+      <button class="nav-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span>
+      </button>
     </div>
   </header>
 
@@ -59,13 +66,27 @@
     <!-- SOBRE -->
     <section class="section" id="sobre">
       <div class="container two-col">
-        <div>
+        <div class="reveal">
           <p class="eyebrow">Sobre mim</p>
           <h2>Estratégia antes da estética. Resultado depois das duas.</h2>
         </div>
-        <div class="prose">
+        <div class="prose reveal">
           <p>Comecei no design gráfico e, com o tempo, percebi que uma marca bonita não basta: ela precisa comunicar o valor certo para a pessoa certa. Hoje uno estratégia, identidade visual e presença digital em um só processo.</p>
           <p>Trabalho de perto com cada cliente, com etapas claras e prazos combinados, para que você saiba exatamente o que está sendo feito e por quê.</p>
+          <ul class="values">
+            <li>
+              <strong>Clareza</strong>
+              <span>Cada decisão de design tem um motivo, e você entende qual é.</span>
+            </li>
+            <li>
+              <strong>Consistência</strong>
+              <span>Uma marca que se reconhece em qualquer ponto de contato.</span>
+            </li>
+            <li>
+              <strong>Proximidade</strong>
+              <span>Atendimento direto comigo, do primeiro briefing à entrega.</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -73,70 +94,163 @@
     <!-- SERVIÇOS -->
     <section class="section section-alt" id="servicos">
       <div class="container">
-        <p class="eyebrow">Serviços</p>
-        <h2>Como posso ajudar</h2>
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Serviços</p>
+            <h2>Como posso ajudar</h2>
+          </div>
+          <p class="section-intro">Soluções completas para marcas que querem ser lembradas, escolhidas e recomendadas.</p>
+        </div>
         <div class="cards">
-          <article class="card">
-            <span class="card-num">01</span>
+          <article class="card reveal">
+            <div class="card-top">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+              </span>
+              <span class="card-num">01</span>
+            </div>
             <h3>Identidade Visual</h3>
             <p>Logo, paleta, tipografia e manual de marca para você se apresentar de forma profissional e consistente.</p>
+            <ul class="card-list">
+              <li>Logotipo e variações</li>
+              <li>Paleta e tipografia</li>
+              <li>Manual de marca</li>
+            </ul>
           </article>
-          <article class="card">
-            <span class="card-num">02</span>
+          <article class="card reveal">
+            <div class="card-top">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+              </span>
+              <span class="card-num">02</span>
+            </div>
             <h3>Estratégia de Marca</h3>
             <p>Posicionamento, público, tom de voz e mensagem principal, a base para todas as suas decisões de comunicação.</p>
+            <ul class="card-list">
+              <li>Posicionamento</li>
+              <li>Persona e público</li>
+              <li>Tom de voz e mensagem</li>
+            </ul>
           </article>
-          <article class="card">
-            <span class="card-num">03</span>
+          <article class="card reveal">
+            <div class="card-top">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg>
+              </span>
+              <span class="card-num">03</span>
+            </div>
             <h3>Presença Digital</h3>
             <p>Sites, landing pages e direção visual para redes sociais que convertem visitantes em clientes.</p>
+            <ul class="card-list">
+              <li>Sites e landing pages</li>
+              <li>Templates para redes</li>
+              <li>Direção de arte</li>
+            </ul>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- PROJETOS -->
-    <section class="section" id="projetos">
+    <!-- PROCESSO -->
+    <section class="section" id="processo">
       <div class="container">
-        <p class="eyebrow">Projetos</p>
-        <h2>Trabalhos selecionados</h2>
-        <div class="projects">
-          <!-- EDITAR: troque cada .project-thumb por <img src="assets/projeto1.jpg" alt="..."> -->
-          <article class="project">
-            <div class="project-thumb thumb-1"></div>
-            <h3>Café Aurora</h3>
-            <p>Identidade visual e embalagens</p>
-          </article>
-          <article class="project">
-            <div class="project-thumb thumb-2"></div>
-            <h3>Clínica Viva</h3>
-            <p>Estratégia de marca e site</p>
-          </article>
-          <article class="project">
-            <div class="project-thumb thumb-3"></div>
-            <h3>Studio Norte</h3>
-            <p>Rebranding e redes sociais</p>
-          </article>
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Processo</p>
+            <h2>Do briefing à entrega, sem surpresas</h2>
+          </div>
+          <p class="section-intro">Um método em quatro etapas, com aprovação sua em cada uma delas.</p>
         </div>
-        <div class="section-more">
-          <a href="https://www.behance.net/euvictoraragonez" class="btn btn-ghost" target="_blank" rel="noopener">Ver portfólio completo no Behance</a>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step-num">01</span>
+            <h3>Imersão</h3>
+            <p>Conversa e briefing para entender seu negócio, seus clientes e seus objetivos.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step-num">02</span>
+            <h3>Estratégia</h3>
+            <p>Pesquisa de mercado e definição do posicionamento que vai guiar o projeto.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step-num">03</span>
+            <h3>Criação</h3>
+            <p>Desenvolvimento visual com apresentação do conceito e rodadas de ajuste.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step-num">04</span>
+            <h3>Entrega</h3>
+            <p>Arquivos finais organizados e orientação para aplicar a marca no dia a dia.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section class="section section-alt" id="projetos">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Projetos</p>
+            <h2>Trabalhos selecionados</h2>
+          </div>
+          <a href="https://www.behance.net/euvictoraragonez" class="link-arrow" target="_blank" rel="noopener">Ver portfólio completo <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="projects">
+          <!-- EDITAR: troque cada .project-thumb por <img src="assets/projeto1.jpg" alt="...">
+               e o href de cada projeto pelo link do case no Behance -->
+          <a class="project project-featured reveal" href="https://www.behance.net/euvictoraragonez" target="_blank" rel="noopener">
+            <div class="project-thumb thumb-1"></div>
+            <div class="project-info">
+              <span class="project-tag">Identidade visual · Embalagens</span>
+              <h3>Café Aurora</h3>
+              <p>Uma marca acolhedora para uma cafeteria artesanal que queria sair do comum.</p>
+            </div>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="project reveal" href="https://www.behance.net/euvictoraragonez" target="_blank" rel="noopener">
+            <div class="project-thumb thumb-2"></div>
+            <div class="project-info">
+              <span class="project-tag">Estratégia · Site</span>
+              <h3>Clínica Viva</h3>
+            </div>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="project reveal" href="https://www.behance.net/euvictoraragonez" target="_blank" rel="noopener">
+            <div class="project-thumb thumb-3"></div>
+            <div class="project-info">
+              <span class="project-tag">Rebranding · Redes sociais</span>
+              <h3>Studio Norte</h3>
+            </div>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- DEPOIMENTOS -->
-    <section class="section section-alt" id="depoimentos">
+    <section class="section" id="depoimentos">
       <div class="container">
-        <p class="eyebrow">Depoimentos</p>
-        <h2>O que dizem os clientes</h2>
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Depoimentos</p>
+            <h2>O que dizem os clientes</h2>
+          </div>
+        </div>
         <div class="quotes">
-          <figure class="quote">
-            <blockquote>“O processo foi claro do início ao fim. Nossa marca finalmente parece o que somos, e os clientes perceberam.”</blockquote>
-            <figcaption><strong>Mariana Costa</strong> · Café Aurora</figcaption>
+          <figure class="quote reveal">
+            <blockquote>O processo foi claro do início ao fim. Nossa marca finalmente parece o que somos, e os clientes perceberam.</blockquote>
+            <figcaption>
+              <span class="avatar" aria-hidden="true">MC</span>
+              <span><strong>Mariana Costa</strong>Fundadora · Café Aurora</span>
+            </figcaption>
           </figure>
-          <figure class="quote">
-            <blockquote>“Além do visual, saímos com uma estratégia que guia tudo o que comunicamos. Valeu cada centavo.”</blockquote>
-            <figcaption><strong>Dr. Rafael Lima</strong> · Clínica Viva</figcaption>
+          <figure class="quote reveal">
+            <blockquote>Além do visual, saímos com uma estratégia que guia tudo o que comunicamos. Valeu cada centavo.</blockquote>
+            <figcaption>
+              <span class="avatar" aria-hidden="true">RL</span>
+              <span><strong>Dr. Rafael Lima</strong>Diretor · Clínica Viva</span>
+            </figcaption>
           </figure>
         </div>
       </div>
@@ -168,6 +282,38 @@
     </div>
   </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menu mobile
+    const header = document.querySelector('.site-header');
+    const toggle = document.querySelector('.nav-toggle');
+    const setMenu = (open) => {
+      header.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', open);
+      toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    };
+    toggle.addEventListener('click', () => setMenu(!header.classList.contains('menu-open')));
+    document.querySelectorAll('#menu a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+    // Sombra no header ao rolar
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Animação de entrada das seções
+    const items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      items.forEach((el) => io.observe(el));
+    } else {
+      items.forEach((el) => el.classList.add('is-visible'));
+    }
+  </script>
 </body>
 </html>
