@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { Fundo as TFundo } from '@/dominio/schemas';
 import { resolverCor, resolverPreenchimento } from '@/dominio/tokens';
 import { estiloBrilho } from './fundoEstilo';
+import { EspacoSemImagem } from './Camadas';
 import { useRender } from './contexto';
 
 const cheio: CSSProperties = { position: 'absolute', inset: 0 };
@@ -17,15 +18,17 @@ export function Fundo({ fundo, w, h }: { fundo: TFundo; w: number; h: number }) 
     case 'gradiente':
       return <div data-fundo style={{ ...base, background: resolverPreenchimento(fundo, kit) }} />;
     case 'imagem': {
-      const url = (fundo.assetId ? urlDoAsset?.(fundo.assetId) : undefined) || fundo.url;
+      // como nas camadas: com assetId, nunca entra outra imagem no lugar
+      const url = fundo.assetId ? urlDoAsset?.(fundo.assetId) : fundo.url;
       const foco = fundo.foco ?? { x: 0.5, y: 0.5 };
       return (
         <div data-fundo style={{ ...base, background: resolverCor(fundo.cor, kit) ?? '#111111' }}>
-          {url && (
+          {url ? (
             <img
               src={url}
               alt=""
               draggable={false}
+              data-asset={fundo.assetId}
               style={{
                 ...cheio,
                 width: '100%',
@@ -34,6 +37,10 @@ export function Fundo({ fundo, w, h }: { fundo: TFundo; w: number; h: number }) 
                 objectPosition: `${foco.x * 100}% ${foco.y * 100}%`,
               }}
             />
+          ) : (
+            fundo.assetId && (
+              <EspacoSemImagem assetId={fundo.assetId} texto="" faltou="Imagem do fundo não encontrada" />
+            )
           )}
         </div>
       );

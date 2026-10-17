@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run build && playwright test",
+    "capturas:editor": "npm run build && node scripts/capturar-editor.mjs",
     "segredos": "node scripts/verificar-segredos.mjs",
     "verificar": "npm run typecheck && npm run lint && npm run format:check && vitest run && npm run segredos"
   },

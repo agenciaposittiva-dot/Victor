@@ -8,6 +8,11 @@ export type ContextoRender = {
   componentes: Componente[];
   /** resolve assetId → URL (Brand Kit, biblioteca, uploads). */
   urlDoAsset?: (assetId: string) => string | undefined;
+  /** editor: espaço vazio mostra o texto de espera ("Imagem", "Logo") e o aviso de foto não encontrada;
+   *  exportacao: o espaço fica vazio (só o fundo da camada), sem texto nenhum. */
+  modo: 'editor' | 'exportacao';
+  /** no editor: o arquivo foi procurado e não existe (ou não deu para ler). */
+  arquivoFaltando?: (assetId: string) => boolean;
 };
 
 export const CtxRender = createContext<ContextoRender | null>(null);

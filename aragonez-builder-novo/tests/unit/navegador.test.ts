@@ -30,6 +30,9 @@ describe('apagaDadosSemUso (WebKit com a regra dos 7 dias)', () => {
     ['Safari do iPhone', UA.safariIphone, 5, true],
     ['Chrome do iPhone (CriOS)', UA.chromeIphone, 5, true],
     ['iPad se apresentando como Macintosh com 5 toques', UA.ipadComoMac, 5, true],
+    // só os toques decidem: o mesmo texto de "Mac com Chrome" é iPad (WebKit) com tela de toque e Mac sem ela
+    ['UA de Mac com "Chrome" e 5 toques (iPad pedindo o site de computador)', UA.chromeMac, 5, true],
+    ['UA de Mac com "Chrome" e 0 toques (Mac de verdade)', UA.chromeMac, 0, false],
     ['Chrome do Android', UA.chromeAndroid, 5, false],
     ['Chrome do Windows', UA.chromeWindows, 0, false],
   ])('%s', (_nome, ua, toques, esperado) => {

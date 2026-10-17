@@ -1,8 +1,9 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { Icone, type NomeIcone } from './Icone';
 import css from './Botao.module.css';
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+// com ref (React 19: ref é uma prop comum e vai junto para o <button>)
+type Props = ComponentPropsWithRef<'button'> & {
   variante?: 'primario' | 'secundario' | 'fantasma' | 'perigo';
   tamanho?: 'pequeno' | 'medio' | 'grande';
   icone?: NomeIcone;

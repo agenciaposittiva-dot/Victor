@@ -20,7 +20,7 @@ import {
   resolverPreenchimento,
   resolverTexto,
 } from '@/dominio/tokens';
-import { fontesDosSlides } from '@/exportar/fontesUsadas';
+import { fontesDosSlides } from '@/exportar/usosDosSlides';
 import { nomeDoSlide, slug } from '@/exportar/nomes';
 import { KIT_TESTE, LAYOUT_TESTE, projetoTeste } from '@/seeds/teste';
 

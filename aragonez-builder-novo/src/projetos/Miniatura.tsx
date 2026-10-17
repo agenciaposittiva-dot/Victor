@@ -1,8 +1,8 @@
 import { memo, useEffect, useMemo } from 'react';
-import { arquivosDoDocumento, carregarArquivos, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
+import { arquivoFaltando, garantirArquivos, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
 import { layoutComFaixa, montarSlides } from '@/dominio/montagem';
 import type { BrandKit, Layout, Projeto } from '@/dominio/schemas';
-import { fontesDosSlides } from '@/exportar/fontesUsadas';
+import { arquivosDosSlides, fontesDosSlides } from '@/exportar/usosDosSlides';
 import { garantirFontes } from '@/render/fontes';
 import { Escala, JanelaDaFaixa, ProvedorRender, Slide } from '@/render/Slide';
 
@@ -28,17 +28,12 @@ export const Miniatura = memo(function Miniatura({
   const i = Math.min(indice, slides.length - 1);
   useEffect(() => {
     garantirFontes(fontesDosSlides(layout, slides, kit, projeto)).catch(() => undefined);
-    // só as fotos do slide mostrado (e da faixa, que atravessa), não as do projeto inteiro
-    const mostrado = slides[i];
-    void carregarArquivos(
-      arquivosDoDocumento({
-        slides: mostrado ? [{ id: '', tipoId: '', camadas: mostrado.camadas, fundo: mostrado.fundo }] : [],
-        faixa: efetivo.faixa?.camadas ?? [],
-      }),
-    );
-  }, [layout, slides, kit, projeto, efetivo, i]);
+    // só as fotos do slide mostrado (e as da faixa que passam por ele), não as do projeto inteiro
+    const { arquivos } = arquivosDosSlides(layout, slides, kit, projeto);
+    void garantirArquivos(arquivos.filter((a) => !a.slides.length || a.slides.includes(i)).map((a) => a.assetId));
+  }, [layout, slides, kit, projeto, i]);
   return (
-    <ProvedorRender layout={efetivo} kit={kit} urlDoAsset={urlDoAsset}>
+    <ProvedorRender layout={efetivo} kit={kit} urlDoAsset={urlDoAsset} arquivoFaltando={arquivoFaltando}>
       <Escala escala={largura / w} w={w} h={h}>
         {layout.continuo ? (
           <JanelaDaFaixa layout={efetivo} slides={slides} indice={i} />

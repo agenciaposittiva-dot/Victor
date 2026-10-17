@@ -58,6 +58,13 @@
   padding: 7px 11px;
   font-size: 13px;
 }
+/* no toque, todo botão tem alvo de pelo menos 44 px (o pequeno também: avisos, campos do painel, diálogos) */
+@media (pointer: coarse) {
+  .botao {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 .grande {
   padding: 13px 22px;
   font-size: 15px;

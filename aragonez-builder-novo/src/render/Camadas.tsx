@@ -88,10 +88,54 @@ function Texto({ c }: { c: CamadaTexto }) {
   );
 }
 
+/** Espaço da imagem sem foto. No editor: listras com o texto de espera ("Imagem", "Logo" ou o placeholder do
+ *  layout), listras sem texto enquanto o arquivo carrega e o aviso quando o arquivo não existe. Na exportação:
+ *  vazio (só o fundo da camada); se era para ter um arquivo, a marca data-arquivo-faltando avisa a captura. */
+export function EspacoSemImagem({
+  assetId,
+  texto,
+  faltou,
+}: {
+  assetId?: string;
+  texto: string;
+  /** texto do aviso de arquivo que não existe (ex.: "Foto não encontrada"). */
+  faltou: string;
+}) {
+  const { modo, arquivoFaltando } = useRender();
+  if (modo === 'exportacao')
+    return assetId ? <div data-arquivo-faltando={assetId} style={{ position: 'absolute', inset: 0 }} /> : null;
+  const naoAchou = !!assetId && !!arquivoFaltando?.(assetId);
+  const carregando = !!assetId && !naoAchou;
+  return (
+    <div
+      data-espera={naoAchou ? 'faltando' : carregando ? 'carregando' : 'vazio'}
+      aria-busy={carregando || undefined}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'grid',
+        placeItems: 'center',
+        background: naoAchou
+          ? 'repeating-linear-gradient(135deg, rgba(220,38,38,.28) 0 18px, rgba(220,38,38,.14) 18px 36px)'
+          : 'repeating-linear-gradient(135deg, rgba(128,128,128,.16) 0 18px, rgba(128,128,128,.08) 18px 36px)',
+        boxShadow: naoAchou ? 'inset 0 0 0 4px rgba(220,38,38,.85)' : undefined,
+        color: naoAchou ? '#b91c1c' : 'rgba(128,128,128,.9)',
+        font: '500 28px/1.2 system-ui, sans-serif',
+        textAlign: 'center',
+        padding: 16,
+      }}
+    >
+      {naoAchou ? faltou : carregando ? null : texto}
+    </div>
+  );
+}
+
 function Imagem({ c }: { c: CamadaImagem }) {
-  const { kit, urlDoAsset } = useRender();
-  // a foto enviada (assetId) vale antes da url do layout
-  const url = (c.assetId ? urlDoAsset?.(c.assetId) : undefined) || c.url;
+  const { kit, urlDoAsset, modo } = useRender();
+  // a foto enviada (assetId) vale antes da url do layout; com assetId, nunca entra outra imagem no lugar
+  const url = c.assetId ? urlDoAsset?.(c.assetId) : c.url;
+  // sem foto, na exportação o espaço fica vazio: nem moldura nem sombra de uma caixa vazia (no editor, ficam)
+  const vazia = !url && modo === 'exportacao';
   const foco = c.foco ?? { x: 0.5, y: 0.5 };
   const pos = `${foco.x * 100}% ${foco.y * 100}%`;
   const f = c.filtros;
@@ -111,7 +155,7 @@ function Imagem({ c }: { c: CamadaImagem }) {
       style={caixa(c, {
         overflow: 'hidden',
         borderRadius: c.raio,
-        ...(c.sombra && { boxShadow: sombraCss(c.sombra, kit) }),
+        ...(c.sombra && !vazia && { boxShadow: sombraCss(c.sombra, kit) }),
       })}
     >
       {url ? (
@@ -119,6 +163,7 @@ function Imagem({ c }: { c: CamadaImagem }) {
           src={url}
           alt=""
           draggable={false}
+          data-asset={c.assetId}
           style={{
             display: 'block',
             width: '100%',
@@ -130,24 +175,13 @@ function Imagem({ c }: { c: CamadaImagem }) {
           }}
         />
       ) : (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'grid',
-            placeItems: 'center',
-            background:
-              'repeating-linear-gradient(135deg, rgba(128,128,128,.16) 0 18px, rgba(128,128,128,.08) 18px 36px)',
-            color: 'rgba(128,128,128,.9)',
-            font: '500 28px/1.2 system-ui, sans-serif',
-            textAlign: 'center',
-            padding: 16,
-          }}
-        >
-          {c.placeholder ?? (c.tipo === 'logo' ? 'Logo' : 'Imagem')}
-        </div>
+        <EspacoSemImagem
+          assetId={c.assetId}
+          texto={c.placeholder ?? (c.tipo === 'logo' ? 'Logo' : 'Imagem')}
+          faltou={c.tipo === 'logo' ? 'Logo não encontrado' : 'Foto não encontrada'}
+        />
       )}
-      {c.borda && c.borda.largura > 0 && (
+      {c.borda && c.borda.largura > 0 && !vazia && (
         <div
           style={{
             position: 'absolute',

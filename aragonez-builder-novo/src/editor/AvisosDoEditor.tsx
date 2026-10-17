@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { Fragment, useId, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CartaoDoBanco } from '@/app/AvisosDoBanco';
+import { useAvisoDoBanco } from '@/app/avisoDoBanco';
 import { carregarCatalogo, type Catalogo } from '@/dados/catalogo';
 import { AvisoFixo } from '@/ui/AvisoFixo';
 import { Botao } from '@/ui/Botao';
 import { Dialogo } from '@/ui/Dialogo';
+import { problemasDoKit } from '@/exportar/usosDosSlides';
+import { irAoSlide, temProblemaDoKit, textosDoKit } from './conferencia';
 import { editor, useEditor } from './estado';
 import { exportarBackupEBaixar } from '@/projetos/backupEmArquivo';
 import { avisar } from '@/ui/toast';
+import { useTelaPequena } from '@/ui/useTelaPequena';
 import {
   abrirVersaoSalva,
   ERRO_ARMAZENAMENTO_CHEIO,
@@ -15,6 +20,8 @@ import {
   salvarAgora,
   salvarComoCopia,
 } from './salvamento';
+import { useDocumento } from './useDocumento';
+import css from './Editor.module.css';
 
 async function exportarTudoAgora() {
   try {
@@ -49,14 +56,32 @@ export function AvisosDoEditor() {
   const [catalogo, setCatalogo] = useState<Catalogo | null>(null);
   const [escolhido, setEscolhido] = useState('');
 
+  // a cópia primeiro; se falhar, o aviso de conflito continua e nada some em silêncio
   const copiar = async () => {
-    const id = await salvarComoCopia();
-    if (id) navegar(`/editor/${id}`, { replace: true });
+    try {
+      const id = await salvarComoCopia();
+      if (id) navegar(`/editor/${id}`, { replace: true });
+    } catch (e) {
+      avisar('Não consegui salvar a sua como cópia: ' + (e instanceof Error ? e.message : String(e)), 'erro');
+    }
   };
+  const banco = useAvisoDoBanco();
+  const avisoDoKit = useAvisoDoKit();
 
-  return (
-    <>
-      {excluido && (
+  // por urgência: o armazenamento (com ele, nada é salvo), projeto excluído, conflito, erro ao salvar, salvo em outra
+  // aba, kit ausente e cores do kit
+  const itens: AvisoNaPilha[] = [];
+  if (banco)
+    itens.push({
+      chave: 'banco',
+      nome: banco === 'banco-atualizado' ? 'armazenamento atualizado em outra aba' : 'outra aba bloqueando',
+      el: <CartaoDoBanco aviso={banco} />,
+    });
+  if (excluido)
+    itens.push({
+      chave: 'excluido',
+      nome: 'projeto excluído',
+      el: (
         <AvisoFixo
           tipo="erro"
           titulo="Este projeto foi excluído em outra aba"
@@ -96,8 +121,13 @@ export function AvisosDoEditor() {
         >
           O salvamento automático parou para não recriar o projeto sem você querer.
         </AvisoFixo>
-      )}
-      {salvamento === 'conflito' && !excluido && (
+      ),
+    });
+  if (salvamento === 'conflito' && !excluido)
+    itens.push({
+      chave: 'conflito',
+      nome: 'conflito com outra aba',
+      el: (
         <AvisoFixo
           tipo="erro"
           titulo="Este projeto foi salvo em outra aba depois que você abriu"
@@ -118,8 +148,60 @@ export function AvisosDoEditor() {
         >
           Nada foi salvo por cima. Escolha o que fazer com as mudanças desta aba.
         </AvisoFixo>
-      )}
-      {outraAba && salvamento !== 'conflito' && (
+      ),
+    });
+  if (salvamento === 'erro' && erro === ERRO_ARMAZENAMENTO_CHEIO)
+    itens.push({
+      chave: 'erro-cheio',
+      nome: 'armazenamento cheio',
+      el: (
+        <AvisoFixo
+          tipo="erro"
+          titulo="O armazenamento deste navegador está cheio"
+          testid="aviso-erro-salvar"
+          acoes={
+            <>
+              <Botao tamanho="pequeno" icone="baixar" onClick={() => void exportarTudoAgora()}>
+                Exportar tudo
+              </Botao>
+              <Botao tamanho="pequeno" onClick={() => navegar('/editor')}>
+                Ver projetos
+              </Botao>
+              <Botao tamanho="pequeno" variante="primario" onClick={() => void salvarAgora()}>
+                Tentar de novo
+              </Botao>
+            </>
+          }
+        >
+          As últimas mudanças ainda não foram salvas. Faça um backup e exclua projetos que não usa mais para liberar
+          espaço.
+        </AvisoFixo>
+      ),
+    });
+  if (salvamento === 'erro' && erro !== ERRO_ARMAZENAMENTO_CHEIO)
+    itens.push({
+      chave: 'erro-salvar',
+      nome: 'erro ao salvar',
+      el: (
+        <AvisoFixo
+          tipo="erro"
+          titulo="Não consegui salvar"
+          testid="aviso-erro-salvar"
+          acoes={
+            <Botao tamanho="pequeno" variante="primario" onClick={() => void salvarAgora()}>
+              Tentar de novo
+            </Botao>
+          }
+        >
+          {erro}
+        </AvisoFixo>
+      ),
+    });
+  if (outraAba && salvamento !== 'conflito')
+    itens.push({
+      chave: 'outra-aba',
+      nome: 'salvo em outra aba',
+      el: (
         <AvisoFixo
           tipo="aviso"
           titulo="Este projeto foi salvo em outra aba"
@@ -145,8 +227,13 @@ export function AvisosDoEditor() {
         >
           Se você continuar editando aqui, vou perguntar antes de salvar por cima.
         </AvisoFixo>
-      )}
-      {!kit && (
+      ),
+    });
+  if (!kit)
+    itens.push({
+      chave: 'kit-ausente',
+      nome: 'kit ausente',
+      el: (
         <AvisoFixo
           tipo="aviso"
           titulo={`O Brand Kit deste projeto (${kitId}) não existe neste navegador`}
@@ -183,44 +270,13 @@ export function AvisosDoEditor() {
         >
           O preview usa o kit Neutro e a exportação está bloqueada até você escolher um kit.
         </AvisoFixo>
-      )}
-      {salvamento === 'erro' && erro === ERRO_ARMAZENAMENTO_CHEIO && (
-        <AvisoFixo
-          tipo="erro"
-          titulo="O armazenamento deste navegador está cheio"
-          testid="aviso-erro-salvar"
-          acoes={
-            <>
-              <Botao tamanho="pequeno" icone="baixar" onClick={() => void exportarTudoAgora()}>
-                Exportar tudo
-              </Botao>
-              <Botao tamanho="pequeno" onClick={() => navegar('/editor')}>
-                Ver projetos
-              </Botao>
-              <Botao tamanho="pequeno" variante="primario" onClick={() => void salvarAgora()}>
-                Tentar de novo
-              </Botao>
-            </>
-          }
-        >
-          As últimas mudanças ainda não foram salvas. Faça um backup e exclua projetos que não usa mais para liberar
-          espaço.
-        </AvisoFixo>
-      )}
-      {salvamento === 'erro' && erro !== ERRO_ARMAZENAMENTO_CHEIO && (
-        <AvisoFixo
-          tipo="erro"
-          titulo="Não consegui salvar"
-          testid="aviso-erro-salvar"
-          acoes={
-            <Botao tamanho="pequeno" variante="primario" onClick={() => void salvarAgora()}>
-              Tentar de novo
-            </Botao>
-          }
-        >
-          {erro}
-        </AvisoFixo>
-      )}
+      ),
+    });
+  if (avisoDoKit) itens.push({ chave: 'cores-do-kit', nome: 'cores do kit', el: avisoDoKit });
+
+  return (
+    <>
+      <PilhaDeAvisos itens={itens} />
       <Dialogo
         aberto={confirmarDescarte}
         titulo="Abrir a versão da outra aba?"
@@ -247,6 +303,82 @@ export function AvisosDoEditor() {
           “Salvar a minha como cópia”.
         </p>
       </Dialogo>
+    </>
+  );
+}
+
+/** Cores pedidas pelo layout que o kit não tem (saem em magenta) e {handle} sem handle no kit: aviso fixo ao abrir
+ *  ou trocar o kit. "Entendi" esconde até o kit mudar ou aparecer um problema novo. O problemasDoKit guarda o
+ *  resultado por camada: digitar refaz só a camada editada. */
+function useAvisoDoKit(): ReactNode {
+  const { efetivo, montados, kit, kitFaltando } = useDocumento();
+  const problemas = useMemo(() => problemasDoKit(efetivo, montados, kit), [efetivo, montados, kit]);
+  const textos = textosDoKit(problemas, kit.nome);
+  const chave = `${kit.id}|${textos.join('|')}`;
+  const [dispensado, setDispensado] = useState('');
+  // kit que não existe tem o próprio aviso (o preview usa o Neutro)
+  if (kitFaltando || !temProblemaDoKit(problemas) || dispensado === chave) return null;
+  const destinos = [...problemas.cores.map((c) => c.slides), ...(problemas.handle ? [problemas.handle] : [])];
+  return (
+    <AvisoFixo
+      tipo="aviso"
+      titulo={`O kit ${kit.nome} não tem tudo o que este layout usa`}
+      testid="aviso-cores-do-kit"
+      acoes={
+        <Botao tamanho="pequeno" variante="fantasma" onClick={() => setDispensado(chave)}>
+          Entendi
+        </Botao>
+      }
+    >
+      <ul>
+        {textos.map((t, i) => (
+          <li key={i}>
+            <button type="button" onClick={() => irAoSlide(destinos[i]!)}>
+              {t}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </AvisoFixo>
+  );
+}
+
+type AvisoNaPilha = { chave: string; nome: string; el: ReactNode };
+
+/** Avisos empilhados, já na ordem de urgência. No celular, só o mais urgente fica aberto e os outros cabem numa
+ *  linha que diz quais são ("+2 avisos: kit ausente, cores do kit") e abre e fecha a lista (senão eles empurram o
+ *  canvas para fora da tela). */
+function PilhaDeAvisos({ itens }: { itens: AvisoNaPilha[] }) {
+  const celular = useTelaPequena();
+  const [aberta, setAberta] = useState(false);
+  const idDosOutros = useId();
+  if (!itens.length) return null;
+  const [primeiro, ...outros] = itens;
+  const juntos = !celular || aberta;
+  return (
+    <>
+      {primeiro!.el}
+      {celular && outros.length > 0 && (
+        <button
+          type="button"
+          className={css.maisAvisos}
+          aria-expanded={aberta}
+          aria-controls={idDosOutros}
+          data-testid="mais-avisos"
+          onClick={() => setAberta((a) => !a)}
+        >
+          {aberta
+            ? 'Mostrar só o mais urgente'
+            : `+${outros.length} ${outros.length === 1 ? 'aviso' : 'avisos'}: ${outros.map((o) => o.nome).join(', ')}`}
+        </button>
+      )}
+      {outros.length > 0 && (
+        <div id={idDosOutros} className={css.outrosAvisos} hidden={!juntos}>
+          {outros.map((i) => (
+            <Fragment key={i.chave}>{i.el}</Fragment>
+          ))}
+        </div>
+      )}
     </>
   );
 }

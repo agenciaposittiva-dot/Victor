@@ -9,6 +9,12 @@ if (typeof window !== 'undefined') {
       disconnect() {}
     };
   if (!document.elementsFromPoint) document.elementsFromPoint = () => [];
+  if (!Element.prototype.scrollIntoView) Element.prototype.scrollIntoView = () => {};
+  if (!Element.prototype.setPointerCapture) {
+    Element.prototype.setPointerCapture = () => {};
+    Element.prototype.releasePointerCapture = () => {};
+    Element.prototype.hasPointerCapture = () => false;
+  }
   if (!window.matchMedia)
     window.matchMedia = (q: string) =>
       ({
@@ -37,6 +43,73 @@ if (typeof window !== 'undefined') {
         removeEventListener() {},
       }),
     });
+  // <dialog> modal mínimo: abrir marca "open" (o diálogo fica acessível), fechar tira e avisa com o evento close
+  if (typeof HTMLDialogElement !== 'undefined' && !HTMLDialogElement.prototype.showModal) {
+    HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    };
+    HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+      if (!this.hasAttribute('open')) return;
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    };
+  }
+  // imagens como no navegador (o jsdom não carrega nenhuma): ao receber um src, a imagem termina de carregar logo
+  // depois, dispara 'load' e passa a ter tamanho; src com "quebrado" dispara 'error' e fica sem tamanho
+  if (typeof HTMLImageElement !== 'undefined') {
+    type Estado = 'carregando' | 'pronta' | 'quebrada';
+    const estados = new WeakMap<HTMLImageElement, Estado>();
+    const carregar = (img: HTMLImageElement, src: string) => {
+      estados.set(img, 'carregando');
+      queueMicrotask(() => {
+        if (img.getAttribute('src') !== src) return; // trocou de src no meio
+        const quebrada = src.includes('quebrado');
+        estados.set(img, quebrada ? 'quebrada' : 'pronta');
+        img.dispatchEvent(new Event(quebrada ? 'error' : 'load'));
+      });
+    };
+    const proto = HTMLImageElement.prototype;
+    const definirAtributo = Element.prototype.setAttribute;
+    proto.setAttribute = function (this: HTMLImageElement, nome: string, valor: string) {
+      definirAtributo.call(this, nome, valor);
+      if (nome === 'src') carregar(this, String(valor));
+    };
+    const src = Object.getOwnPropertyDescriptor(proto, 'src')!;
+    Object.defineProperty(proto, 'src', {
+      configurable: true,
+      get(this: HTMLImageElement) {
+        return src.get!.call(this);
+      },
+      set(this: HTMLImageElement, v: string) {
+        src.set!.call(this, v);
+        carregar(this, this.getAttribute('src') ?? '');
+      },
+    });
+    const estado = (img: HTMLImageElement): Estado | undefined => estados.get(img);
+    Object.defineProperty(proto, 'complete', {
+      configurable: true,
+      get(this: HTMLImageElement) {
+        return estado(this) !== 'carregando';
+      },
+    });
+    for (const lado of ['naturalWidth', 'naturalHeight'] as const)
+      Object.defineProperty(proto, lado, {
+        configurable: true,
+        get(this: HTMLImageElement) {
+          return estado(this) === 'pronta' ? 100 : 0;
+        },
+      });
+    proto.decode = function (this: HTMLImageElement) {
+      const fim = () =>
+        estado(this) === 'pronta' ? Promise.resolve() : Promise.reject(new DOMException('quebrada', 'EncodingError'));
+      if (estado(this) !== 'carregando') return fim();
+      return new Promise<void>((ok, falha) => {
+        const depois = () => void fim().then(ok, falha);
+        this.addEventListener('load', depois, { once: true });
+        this.addEventListener('error', depois, { once: true });
+      });
+    };
+  }
   if (!globalThis.CSS?.escape)
     (globalThis as unknown as { CSS: { escape: (s: string) => string } }).CSS = {
       escape: (s: string) => s.replace(/["\\]/g, '\\$&'),

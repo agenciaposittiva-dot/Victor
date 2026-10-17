@@ -1,13 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { urlDoArquivo } from '@/dados/arquivos';
+import { garantirArquivos, urlDoArquivo } from '@/dados/arquivos';
 import { baixar, criarZip } from '@/exportar/arquivos';
-import { exportar, gerarArquivos } from '@/exportar/exportar';
+import {
+  chaveDaFalta,
+  conferirExportacao,
+  exportar,
+  gerarArquivos,
+  type Conferencia,
+  type ResultadoExportacao,
+} from '@/exportar/exportar';
 import { slug } from '@/exportar/nomes';
 import { Botao } from '@/ui/Botao';
 import { avisarFontes } from '@/ui/avisarFontes';
 import { Icone } from '@/ui/Icone';
 import { avisar } from '@/ui/toast';
+import { avisarFaltasNaCaptura, temLembrete, temProblema } from './conferencia';
+import { ConferenciaDeExportacao } from './ConferenciaDeExportacao';
 import { editor, projetoAtual, useEditor, type EstadoSalvamento } from './estado';
 import css from './Editor.module.css';
 
@@ -29,6 +38,7 @@ export function BarraSuperior() {
   const [exportando, setExportando] = useState('');
   const [paraCompartilhar, setParaCompartilhar] = useState<File[] | null>(null);
   const [nomeAoFocar, setNomeAoFocar] = useState('');
+  const [conferencia, setConferencia] = useState<Conferencia | null>(null);
   // os arquivos prontos para compartilhar ficam velhos quando o projeto muda: o botão some e a pessoa exporta de novo
   useEffect(
     () =>
@@ -38,14 +48,16 @@ export function BarraSuperior() {
     [],
   );
 
-  /** Exporta os slides em JPG 2×. No celular (navigator.canShare aceita arquivos), oferece depois "Salvar nas
-   *  Fotos / Compartilhar" num segundo toque (depois do await a permissão do primeiro toque já expirou); o ZIP
-   *  continua disponível. Nos outros, baixa o ZIP direto. */
-  const exportarSlides = async () => {
+  /** Exporta os slides em JPG 2×. Antes, espera as fotos e confere o que vai sair diferente (foto que falta, campo
+   *  de foto vazio, cor ou handle que o kit não tem): se houver algo, pergunta primeiro, nunca exporta calado.
+   *  No celular (navigator.canShare aceita arquivos), oferece depois "Salvar nas Fotos / Compartilhar" num segundo
+   *  toque (depois do await a permissão do primeiro toque já expirou); o ZIP continua disponível. Nos outros, baixa
+   *  o ZIP direto. */
+  const exportarSlides = async (confirmada?: Conferencia) => {
     const s = useEditor.getState();
     const projeto = projetoAtual(s);
     if (!projeto || !s.layout || !s.kit) return;
-    setExportando('Preparando…');
+    setExportando(confirmada ? 'Preparando…' : 'Conferindo as fotos…');
     setParaCompartilhar(null);
     try {
       const op = {
@@ -54,15 +66,28 @@ export function BarraSuperior() {
         projeto,
         escala: 2 as const,
         urlDoAsset: urlDoArquivo,
+        garantirArquivos,
         aoProgredir: (f: number, t: number) =>
           setExportando(f < t ? `Exportando ${f + 1} de ${t}…` : 'Montando o arquivo…'),
       };
+      // a conferência prepara tudo (fontes, fotos, kit) uma vez; exportar depois reaproveita a preparação
+      const c = confirmada ?? (await conferirExportacao(op));
+      if (!confirmada && (temProblema(c) || temLembrete(c))) {
+        setConferencia(c);
+        return;
+      }
+      const jaAvisadas = new Set(c.faltando.map(chaveDaFalta));
+      setConferencia(null);
+      // última barreira: o que só falhou na captura (não estava na conferência de antes) também é avisado
+      const avisarNovasFaltas = (r: ResultadoExportacao) =>
+        avisarFaltasNaCaptura(r.arquivosFaltando.filter((f) => !jaAvisadas.has(chaveDaFalta(f))));
       // compartilhar só em aparelho de toque (celular, tablet); no computador, "Exportar" baixa o ZIP direto
       const toque = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
       const podeCompartilhar = toque && typeof navigator !== 'undefined' && typeof navigator.canShare === 'function';
       if (podeCompartilhar) {
-        const r = await gerarArquivos({ ...op, formato: 'jpg', separados: true });
+        const r = await gerarArquivos({ ...op, formato: 'jpg', separados: true }, c.preparado);
         avisarFontes(r.fontesFaltando);
+        avisarNovasFaltas(r);
         const arquivos = r.arquivos.map((a) => new File([a.blob], a.nome, { type: 'image/jpeg' }));
         if (navigator.canShare({ files: arquivos })) {
           setParaCompartilhar(arquivos);
@@ -75,8 +100,9 @@ export function BarraSuperior() {
         avisar('ZIP pronto.', 'ok');
         return;
       }
-      const r = await exportar({ ...op, formato: 'zip' });
+      const r = await exportar({ ...op, formato: 'zip' }, c.preparado);
       avisarFontes(r.fontesFaltando);
+      avisarNovasFaltas(r);
       avisar(`${r.arquivos.map((a) => a.nome).join(', ')} pronto.`, 'ok');
     } catch (e) {
       avisar('Não consegui exportar: ' + (e instanceof Error ? e.message : String(e)), 'erro');
@@ -194,6 +220,14 @@ export function BarraSuperior() {
           {exportando || 'Exportar'}
         </Botao>
       </div>
+      {conferencia && (
+        <ConferenciaDeExportacao
+          conferencia={conferencia}
+          nomeDoKit={kit?.nome ?? ''}
+          aoVoltar={() => setConferencia(null)}
+          aoExportar={() => void exportarSlides(conferencia)}
+        />
+      )}
     </header>
   );
 }

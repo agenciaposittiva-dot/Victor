@@ -20,14 +20,18 @@ Sem as variáveis do Supabase, o app roda em **modo local**: sem login e com os 
 
 ## Comandos
 
-| Comando                           | O que faz                                                                    |
-| --------------------------------- | ---------------------------------------------------------------------------- |
-| `npm run dev`                     | Servidor de desenvolvimento                                                  |
-| `npm run build`                   | Checagem de tipos (TypeScript estrito) e build de produção em `dist/`        |
-| `npm run lint` · `npm run format` | ESLint e Prettier                                                            |
-| `npm test`                        | Testes de unidade (Vitest)                                                   |
-| `npm run test:e2e`                | Testes de ponta a ponta (Playwright; roda o build antes com `npm run build`) |
-| `npm run segredos`                | Procura chaves e senhas no código e no build (rodar antes de cada commit)    |
+| Comando                           | O que faz                                                                                                                                          |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                     | Servidor de desenvolvimento                                                                                                                        |
+| `npm run build`                   | Checagem de tipos (TypeScript estrito) e build de produção em `dist/`                                                                              |
+| `npm run lint` · `npm run format` | ESLint e Prettier                                                                                                                                  |
+| `npm test`                        | Testes de unidade (Vitest)                                                                                                                         |
+| `npm run test:e2e`                | Testes de ponta a ponta (Playwright; roda o build antes com `npm run build`)                                                                       |
+| `npm run segredos`                | Procura chaves e senhas no código e no build (rodar antes de cada commit)                                                                          |
+| `npm run verificar`               | Tipos, lint, formatação, testes de unidade e segredos, tudo de uma vez (rodar antes de cada commit)                                                |
+| `npm run capturas:editor`         | Faz o build e tira as capturas do editor (computador e celular) em `docs/amostras/editor/`, com os erros do console de cada uma em `capturas.json` |
+
+O roteiro para testar à mão no iPhone e no Safari do Mac está em `docs/TESTE-SAFARI.md`.
 
 ## Publicar no Netlify
 

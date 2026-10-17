@@ -191,189 +191,23 @@ aragonez-builder-novo/      (pasta própria; o resto do repositório não é toc
 
 ---
 
-## 5. Modelo de dados (refinado)
+## 5. Modelo de dados
 
-```ts
-// ——— Brand Kit ———
-type Fonte = {
-  familia: string;
-  peso?: number;
-  italico?: boolean;
-  origem: 'google' | 'local' | 'upload';
-  arquivoId?: string;
-};
-type Asset = {
-  id: string;
-  nome: string;
-  tipo: 'logo' | 'pattern' | 'textura' | 'selo' | 'foto' | 'fonte' | 'icone';
-  variacao?: 'clara' | 'escura' | 'icone';
-  url: string;
-  w?: number;
-  h?: number;
-};
-type BrandKit = {
-  id: string;
-  nome: string;
-  clienteId?: string;
-  donoId?: string;
-  cores: Record<string, string>; // primaria, secundaria, fundo, texto, destaque… (hex; aceita #rrggbbaa)
-  fontes: { titulo: Fonte; corpo: Fonte; destaque?: Fonte; etiqueta?: Fonte };
-  logos: Asset[];
-  assets: Asset[];
-  handle?: string;
-  tomDeVoz?: string;
-  layoutPadraoId?: string; // "Victor Aragonez — Carrossel Escuro" para o kit Victor
-  atualizadoEm: string;
-};
+**A fonte da verdade são os schemas Zod em `src/dominio/schemas/`** (`base.ts`, `camada.ts`, `layout.ts`, `brandkit.ts`, `projeto.ts`). Cada campo tem um comentário dizendo para que serve. Este resumo diz o que cada entidade guarda e por quê; não repete os campos, para não ficar duas cópias desatualizadas.
 
-// ——— Cliente (pastas e filtro) ———
-type Cliente = { id: string; nome: string; brandKitId?: string; cor?: string; criadoEm: string };
+- **Brand Kit.** Cores nomeadas (tokens como `{cores.primaria}`), fontes por papel (título, corpo, destaque, etiqueta), logos e assets, handle e tom de voz. Os layouts apontam para os tokens, e por isso trocar o kit re-veste o carrossel inteiro.
+- **Camada.** Tudo o que se desenha num slide: texto (com auto-ajuste e destaque), imagem e logo, forma (retângulo, elipse, linha, caminho, linha de luz e barra de progresso), ícone, grupo e componente. Posição e tamanho em pixels reais da base do formato. Camadas da faixa contínua podem ter âncora num slide ou esticar pela faixa toda.
+- **Layout.** O desenho reutilizável: formato, tipos de slide (cada um com fundo e camadas), componentes (blocos como o Header, editados num lugar só e usados em vários), a faixa contínua (fundo e camadas que atravessam os slides), margem segura e status (rascunho, publicado, arquivado).
+- **Projeto.** Um carrossel feito a partir de um layout e de um kit. Guarda só o conteúdo dos campos e a diferença em relação ao layout, por slide: overrides, camadas extras, ordem e fundo próprio; e o mesmo na faixa (overrides, extras e ordem). Guarda também as guias do editor e a legenda.
+- **Versões salvas, análise do JPG e conteúdo gerado pela IA.** Entram como schemas nas Fases 5 e 6.
 
-// ——— Layout ———
-type Formato = { w: number; h: number }; // 1080×1350 · 1080×1080 · 1080×1920
-type Fundo =
-  | { tipo: 'cor'; cor: string }
-  | { tipo: 'gradiente'; angulo: number; paradas: { cor: string; pos: number }[] }
-  | { tipo: 'imagem'; assetId?: string; url?: string; ajuste: 'cover' | 'contain'; foco?: Ponto; travada?: boolean }
-  | { tipo: 'brilhos'; base: string; brilhos: Brilho[] };
-type Brilho = { x: number; y: number; w: number; h: number; cor: string; intensidade: number; suavidade: number };
-type Sombra = { x: number; y: number; desfoque: number; cor: string };
+Decisões que valem para todas as fases:
 
-type CamadaBase = {
-  id: string;
-  tipo: 'texto' | 'imagem' | 'forma' | 'logo' | 'icone' | 'grupo' | 'componente';
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  rotacao?: number;
-  opacidade?: number;
-  oculta?: boolean;
-  travada?: boolean;
-  editavel?: boolean;
-  rotulo?: string;
-  nome?: string;
-  ancora?: { slide: number | 'ultimo' }; // só em camadas de faixa
-  estica?: boolean; // ocupa a faixa toda (camadas de faixa)
-};
-type CamadaTexto = CamadaBase & {
-  tipo: 'texto';
-  texto: string;
-  fonte?: string;
-  tamanho?: number;
-  peso?: number;
-  italico?: boolean;
-  cor?: string;
-  alinhamento?: 'left' | 'center' | 'right';
-  alinhamentoV?: 'top' | 'middle' | 'bottom';
-  entrelinha?: number;
-  espacamento?: number;
-  autoAjuste?: boolean;
-  tamanhoMin?: number;
-  maxCaracteres?: number;
-  caixaAlta?: boolean;
-  contorno?: { cor: string; largura: number };
-  sombra?: Sombra;
-  destaque?: { fonte?: string; peso?: number; italico?: boolean; cor?: string };
-};
-type CamadaImagem = CamadaBase & {
-  tipo: 'imagem' | 'logo';
-  assetId?: string;
-  url?: string;
-  placeholder?: string;
-  ajuste?: 'cover' | 'contain';
-  foco?: Ponto;
-  zoom?: number;
-  raio?: number;
-  filtros?: { brilho?: number; contraste?: number; saturacao?: number; pb?: boolean };
-  borda?: { cor: string; largura: number };
-  sombra?: Sombra;
-};
-type CamadaForma = CamadaBase & {
-  tipo: 'forma';
-  forma: 'retangulo' | 'elipse' | 'linha' | 'caminho' | 'linhaDeLuz';
-  preenchimento?: string | Gradiente;
-  borda?: { cor: string; largura: number };
-  raioBorda?: number;
-  caminho?: string;
-  parametros?: Record<string, number>;
-};
-type CamadaIcone = CamadaBase & { tipo: 'icone'; nome: string; cor?: string; traco?: number };
-type CamadaGrupo = CamadaBase & { tipo: 'grupo'; filhos: Camada[] };
-type CamadaComponente = CamadaBase & {
-  tipo: 'componente';
-  componenteId: string;
-  overrides?: Record<string /* id da camada interna */, Partial<Camada>>;
-};
-type Camada = CamadaTexto | CamadaImagem | CamadaForma | CamadaIcone | CamadaGrupo | CamadaComponente;
-
-type Componente = { id: string; nome: string; w: number; h: number; camadas: Camada[] }; // ex.: Header, Handle
-type TipoDeSlide = { id: string; nome: string; fundo: Fundo; camadas: Camada[]; repetivel?: boolean };
-type Layout = {
-  id: string;
-  nome: string;
-  categoria: string;
-  tags: string[];
-  brandKitId?: string;
-  formato: Formato;
-  continuo?: boolean;
-  faixa?: { fundo?: Fundo; camadas: Camada[] }; // só se continuo
-  componentes: Componente[];
-  tiposDeSlide: TipoDeSlide[];
-  margemSegura?: { x: number; y: number };
-  status: 'rascunho' | 'publicado';
-  donoId?: string;
-  origem?: 'seed' | 'editor' | 'jpg';
-  miniaturaUrl?: string;
-  versaoSchema: 1;
-  atualizadoEm: string;
-};
-
-// ——— Projeto ———
-type SlideDoProjeto = {
-  id: string;
-  tipoId: string;
-  conteudo: Record<string /* camadaId */, string | { assetId?: string; url?: string; foco?: Ponto; zoom?: number }>;
-  overrides?: Record<string /* camadaId */, Partial<Camada>>;
-  camadasExtras?: Camada[];
-};
-type Projeto = {
-  id: string;
-  nome: string;
-  clienteId?: string;
-  layoutId: string;
-  brandKitId: string;
-  formato: Formato;
-  slides: SlideDoProjeto[];
-  faixaOverrides?: Record<string, Partial<Camada>>;
-  legenda?: { texto: string; hashtags: string[]; cta: string };
-  miniaturaUrl?: string;
-  donoId?: string;
-  atualizadoEm: string;
-};
-type Versao = { id: string; projetoId: string; criadoEm: string; rotulo?: string; dados: Projeto };
-
-// ——— IA ———
-type LayoutAnalise = {
-  formato: Formato;
-  paleta: { hex: string; tokenSugerido: string }[];
-  fontes: { bloco: string; familiaGoogle: string; peso: number; italico: boolean }[];
-  blocos: (CamadaTexto | CamadaImagem | CamadaForma)[];
-  logo?: { x: number; y: number; w: number; h: number };
-  confianca: number;
-  observacoes?: string;
-};
-type ConteudoGerado = {
-  slides: { tipoId: string; campos: Record<string, string>; sugestaoFoto?: Record<string, string> }[];
-  legenda?: { texto: string; hashtags: string[]; cta: string };
-};
-```
-
-Notas:
-
-- **Precedência.** O que o projeto define vence o que o layout define. A ordem é: `override do projeto` > `conteúdo do projeto` > `camada do layout` > `token do Brand Kit`.
-- **Componentes.** O layout guarda a definição uma vez, e cada uso guarda só o `componenteId` e os overrides. Editar o componente atualiza todos os usos.
-- **Migração.** `versaoSchema` permite migrar layouts antigos. Importar um `.json` valida e migra.
+- **O projeto guarda só a diferença.** Abrir um projeto monta os slides a partir do layout e aplica o conteúdo e os ajustes. Por isso, melhorar o layout melhora os projetos que não mexeram naquela camada. A precedência é: ajuste do projeto > conteúdo do projeto > camada do layout > token do Brand Kit. Num ajuste, `null` apaga a propriedade do layout e `{ removida: true }` tira a camada só daquele slide.
+- **Fotos só por `assetId`.** O arquivo fica guardado (IndexedDB no modo local, Storage na Fase 6) e o documento guarda só o id. Endereços temporários (`blob:` e `data:`) nunca são salvos. Com `assetId`, o desenho nunca usa outra imagem no lugar: se o arquivo faltar, o editor mostra o aviso e a exportação pergunta antes.
+- **Versão única por gravação.** Cada gravação de projeto, layout ou kit ganha uma `versao` que não se repete, nem com duas abas salvando no mesmo milissegundo. Salvar compara a versão esperada com a gravada, na mesma transação, para detectar que outra aba salvou antes. `atualizadoEm` serve só para mostrar e ordenar.
+- **Migração.** `versaoSchema` diz o formato de cada registro salvo. Registros antigos passam pelas migrações de `src/dados/migracao.ts` ao abrir, e registros que não validam nunca somem: aparecem como "precisa de atualização", com o JSON bruto para exportar.
+- **Regra do destaque `*palavra*`.** Está no item 9 da seção 6.1, com os exemplos que não podem destacar.
 
 ### 5.1 Tabelas no Supabase (Postgres com RLS)
 
@@ -396,23 +230,23 @@ Notas:
 
 O esforço é estimado em sessões de trabalho meu, e cada fase fecha com build limpo, testes verdes, `grep` de segredos e um commit.
 
-| Fase   | Entrega                                  | Pronto quando                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Esforço  |
-| ------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| **0**  | Este plano                               | `docs/PLAN.md` aprovado por você                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | ✔        |
-| **1**  | Base                                     | Vite/TS/ESLint/Prettier/Vitest/Playwright configurados, tema da interface, navegação entre Dashboard, Biblioteca, Editor e Brand Kits (telas vazias com orientação), modo local detectado                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | P (≈0,5) |
-| **2**  | Motor de layout e exportação             | Schemas Zod; renderizador único (texto com destaque e auto-ajuste, imagem, forma, brilhos, linha de luz, componentes, faixa); comparação modern-screenshot × html-to-image; um layout de teste exportando JPG, PNG, PDF e ZIP; testes de exportação (diferença de pixels contra o preview) e de fatiamento                                                                                                                                                                                                                                                                                                                                                                       | M (≈1,5) |
-| **3**  | Editor completo                          | Tudo da seção 5.1 do pedido: zoom e pan, seleção múltipla, mover, redimensionar e girar, alinhar e distribuir, snapping, guias e régua, camadas, propriedades, texto inline, imagem com foco, zoom e filtros, faixa de slides, desfazer ilimitado, autosave, atalhos com painel "?", Modo Conteúdo × Modo Design, "Salvar como layout", modo faixa contínua. Mais os itens novos (seção 6.1): `camadasExtras` no slide do projeto, correção do gradiente das formas SVG, tokens `{slide}`/`{total}` com a forma "progresso", linha de luz por pontos, memoização e cache do auto-ajuste, faixa renderizada uma vez, progresso e aviso de fonte na exportação, `npm run amostras` | G (≈3)   |
-| **4a** | Brand Kits, biblioteca e layouts prontos | CRUD de kits com fontes por upload; biblioteca com busca, filtros, favoritos, rascunho/publicado e importar/exportar `.json`, com **A3** (filtro por objetivo e favoritos por cliente); layouts prontos **Victor Aragonez** (linha copiada do Figma, avatar e "Bolha IA") e **Feira Nova**, conferidos contra as referências com `npm run amostras`; trocar de kit re-veste tudo. **Paro para você conferir.**                                                                                                                                                                                                                                                                   | G (≈1,5) |
-| **4b** | Coleção genérica                         | Modelos originais nos estilos escolhidos (**Corp, Pop, Orgânico e Info**, refeitos do zero), nos 3 formatos, com os tipos de slide novos (**Serviços, Perguntas frequentes, Planos e preços, Case de sucesso, Contato e Paleta da marca**) e a **camada de gráfico** (barras, rosca, linha e anel de porcentagem a partir de números editáveis, em SVG sem filtros). **Paro para você conferir.**                                                                                                                                                                                                                                                                                | G (≈1,5) |
-| **5**  | IA e JPG → Layout                        | Functions `ai` e `analyze-layout` rodando no `netlify dev`; geração de carrossel preenchendo campos (com `maxCaracteres` e `*destaque*`); ações por campo; legenda com hashtags; `ImageProvider` vazio; rate limit; JPG → Layout com reparo, Modo Comparar, recorte de logo, agrupamento de tipos, criar kit a partir da análise, modo rápido                                                                                                                                                                                                                                                                                                                                    | G (≈2,5) |
-| **6**  | Contas, nuvem e admin                    | Login real e recuperação de senha, papéis, RLS testado (testes SQL e E2E com dois usuários), autosave na nuvem, versões, Storage com compressão, admin (usuários, publicação, uso de IA), modo local funcionando sem Supabase                                                                                                                                                                                                                                                                                                                                                                                                                                                    | M (≈1,5) |
-| **7**  | Polimento e deploy                       | E2E de login → criar → editar → exportar JPG; regressão visual dos seeds; onboarding de 3 passos; celular (ver, preencher no Modo Conteúdo, exportar); acessibilidade básica; README e documentação; `netlify.toml` com headers e cache; build de produção com `sourcemap: 'hidden'`                                                                                                                                                                                                                                                                                                                                                                                             | M (≈1)   |
+| Fase   | Entrega                                  | Pronto quando                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Esforço  |
+| ------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| **0**  | Este plano                               | `docs/PLAN.md` aprovado por você                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | ✔        |
+| **1**  | Base                                     | Vite/TS/ESLint/Prettier/Vitest/Playwright configurados, tema da interface, navegação entre Dashboard, Biblioteca, Editor e Brand Kits (telas vazias com orientação), modo local detectado                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | P (≈0,5) |
+| **2**  | Motor de layout e exportação             | Schemas Zod; renderizador único (texto com destaque e auto-ajuste, imagem, forma, brilhos, linha de luz, componentes, faixa); comparação modern-screenshot × html-to-image; um layout de teste exportando JPG, PNG, PDF e ZIP; testes de exportação (diferença de pixels contra o preview) e de fatiamento                                                                                                                                                                                                                                                                                                                                                                                             | M (≈1,5) |
+| **3**  | Editor completo                          | Tudo da seção 5.1 do `PROMPT-ARAGONEZ-BUILDER.md`: zoom e pan, seleção múltipla, mover, redimensionar e girar, alinhar e distribuir, snapping, guias e régua, camadas, propriedades, texto inline, imagem com foco, zoom e filtros, faixa de slides, desfazer ilimitado, autosave, atalhos com painel "?", Modo Conteúdo × Modo Design, "Salvar como layout", modo faixa contínua. Mais os itens novos (seção 6.1): `camadasExtras` no slide do projeto, correção do gradiente das formas SVG, tokens `{slide}`/`{total}` com a forma "progresso", linha de luz por pontos, memoização e cache do auto-ajuste, faixa renderizada uma vez, progresso e aviso de fonte na exportação, `npm run amostras` | G (≈3)   |
+| **4a** | Brand Kits, biblioteca e layouts prontos | CRUD de kits com fontes por upload; biblioteca com busca, filtros, favoritos, rascunho/publicado e importar/exportar `.json`, com **A3** (filtro por objetivo e favoritos por cliente); layouts prontos **Victor Aragonez** (linha copiada do Figma, avatar e "Bolha IA") e **Feira Nova**, conferidos contra as referências com `npm run amostras`; trocar de kit re-veste tudo, inclusive logo e textura: a camada logo do render (`render/…Logo`, já previsto na estrutura) ganha `variacao` e lê o logo do kit atual, os arquivos do kit ficam por `assetId` e o `KitTokens` leva `logos` e `assets` (item 6 da Fase 4a na seção 6.1). **Paro para você conferir.**                                | G (≈1,5) |
+| **4b** | Coleção genérica                         | Modelos originais nos estilos escolhidos (**Corp, Pop, Orgânico e Info**, refeitos do zero), nos 3 formatos, com os tipos de slide novos (**Serviços, Perguntas frequentes, Planos e preços, Case de sucesso, Contato e Paleta da marca**) e a **camada de gráfico** (barras, rosca, linha e anel de porcentagem a partir de números editáveis, em SVG sem filtros). **Paro para você conferir.**                                                                                                                                                                                                                                                                                                      | G (≈1,5) |
+| **5**  | IA e JPG → Layout                        | Functions `ai` e `analyze-layout` rodando no `netlify dev`; geração de carrossel preenchendo campos (com `maxCaracteres` e `*destaque*`); ações por campo; legenda com hashtags; `ImageProvider` vazio; rate limit; JPG → Layout com reparo, Modo Comparar, recorte de logo, agrupamento de tipos, criar kit a partir da análise, modo rápido                                                                                                                                                                                                                                                                                                                                                          | G (≈2,5) |
+| **6**  | Contas, nuvem e admin                    | Login real e recuperação de senha, papéis, RLS testado (testes SQL e E2E com dois usuários), autosave na nuvem, versões, Storage com compressão, admin (usuários, publicação, uso de IA), modo local funcionando sem Supabase                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | M (≈1,5) |
+| **7**  | Polimento e deploy                       | E2E de login → criar → editar → exportar JPG; regressão visual dos seeds; onboarding de 3 passos; celular (ver, preencher no Modo Conteúdo, exportar); acessibilidade básica; README e documentação; `netlify.toml` com headers e cache; build de produção com `sourcemap: 'hidden'`                                                                                                                                                                                                                                                                                                                                                                                                                   | M (≈1)   |
 
 Total: cerca de 12 sessões. As fases 3, 4 e 5 são as maiores. Se alguma fase não couber numa sessão, entrego sub-commits dentro dela e só fecho a fase quando o critério de aceite estiver cumprido.
 
 ### 6.1 Itens que entraram depois da aprovação
 
-**Fase 3 (além da seção 5.1 do pedido)**
+**Fase 3 (além da seção 5.1 do `PROMPT-ARAGONEZ-BUILDER.md`)**
 
 1. `camadasExtras` no slide do projeto: no Modo Design, elementos só daquele slide, sem mexer no layout. A montagem junta as extras depois das camadas do layout. No "Salvar como layout", as extras viram camadas do tipo de slide.
 2. Gradiente das formas SVG calculado como no CSS (centro, direção (sen θ, −cos θ), comprimento |w·sen θ| + |h·cos θ|) e ids com `useId()`. Teste de pixels: retângulo com `linear-gradient` × forma SVG a 0°, 45°, 90°, 135° e 180°.
@@ -422,7 +256,7 @@ Total: cerca de 12 sessões. As fases 3, 4 e 5 são as maiores. Se alguma fase n
 6. Progresso ("Exportando 3 de 20") e aviso de fonte que não carregou na exportação do editor.
 7. Linha de luz editável: pontos de controle por slide, arrastáveis no editor. Fica pronta a conversão de um caminho SVG em pontos, para a Fase 4 copiar a linha do Figma.
 8. `npm run amostras` de volta, para repetir a conferência visual a cada fase.
-9. Regra do destaque `*palavra*`, para não destacar por engano asteriscos de oferta e de conta: o asterisco de abertura não pode vir colado depois de letra ou número; logo depois dele e logo antes do de fechamento precisa haver um caractere que não seja espaço; o de fechamento não pode vir colado antes de letra ou número; e o destaque não atravessa quebra de linha. Nenhum destes destaca: "R$ 9,99* nas lojas participantes. _Válido até 20/10", "De R$ 12,99 por R$ 9,99_\n*Válido até 20/10", "5*5*5", "2 * 3 * 4", "Frete grátis * consulte regras *", "Leve 3 * pague 2 * só hoje" e "*promo*ção".
+9. Regra do destaque `*palavra*`, para não destacar por engano asteriscos de oferta e de conta: o asterisco de abertura não pode vir colado depois de letra ou número; logo depois dele e logo antes do de fechamento precisa haver um caractere que não seja espaço; o de fechamento não pode vir colado antes de letra ou número; e o destaque não atravessa quebra de linha. Nenhum destes destaca (os mesmos casos de `tests/unit/dominio.test.ts`): `R$ 9,99* nas lojas participantes. *Válido até 20/10`, `De R$ 12,99 por R$ 9,99*\n*Válido até 20/10`, `5*5*5`, `Rua das Flores, 12*`, `2 * 3 * 4`, `Frete grátis * consulte regras *`, `Leve 3 * pague 2 * só hoje` e `*promo*ção`.
 
 **Fase 4a (Brand Kits, biblioteca e layouts prontos)**
 
@@ -434,6 +268,21 @@ Total: cerca de 12 sessões. As fases 3, 4 e 5 são as maiores. Se alguma fase n
    - logo e textura do template antigo são provisórios: usar os oficiais que você vai enviar.
 4. **`npm run amostras` com comparação**: os layouts prontos ao lado das referências (Victor Aragonez × capturas do Figma; Feira Nova × os JPGs, quando chegarem).
 5. Editar um layout direto (sem passar por um projeto) e editar a definição de um componente (o Header, por exemplo), atualizando todos os usos.
+6. **Logos, texturas e padrões do Brand Kit no render** (hoje a camada `logo` é desenhada como imagem comum e nenhuma camada lê os assets do kit):
+   - a camada logo aponta para um papel do kit (ex.: principal, negativo, ícone), e o render pega o logo desse papel no kit atual;
+   - o mesmo para textura e padrão, no fundo e nas camadas;
+   - trocar o kit troca o logo e a textura em todos os slides, no editor e na exportação;
+   - o `arquivosDosSlides` passa a incluir esses arquivos do kit (na Fase 3 ele cobre só os `assetId` das camadas e dos fundos);
+   - kit sem o logo daquele papel mostra o marcador só no editor e entra no aviso antes de exportar;
+   - os arquivos do Brand Kit (logos, texturas, padrões) guardam `assetId`, como os projetos; `url` só para endereço externo, nunca `blob:` nem `data:` (a mesma regra do `semUrlsTemporarias`, aplicada ao salvar o kit);
+   - o `KitTokens` passa a levar `logos` e `assets`, para o render poder resolver;
+   - a camada logo ganha o campo `variacao` (clara, escura ou icone, a que o `Asset` do kit já tem) e mostra o logo dessa variação do kit atual; camada sem variação definida: o primeiro logo do kit; kit sem nenhum logo: o marcador no editor e o aviso antes de exportar;
+   - a referência ao kit (`doKit` na camada e no fundo) é pelo papel, nunca pelo id do asset (o mesmo layout é usado com vários kits, e o id de um asset pertence a um kit só): `tipo` ou `tipo:variacao`, por exemplo `logo:clara` em fundo escuro, `logo:escura` em fundo claro, `logo:icone`, `textura`. Sem a variação pedida, vale outro asset do mesmo tipo, com aviso no editor ("o kit não tem logo clara; usando a escura"). O id do asset só vale num layout feito para aquele kit;
+   - com a camada apontando para o kit, nunca usar a `url` ou a imagem do layout como reserva; com `doKit` definido e o kit sem esse asset, nunca cair para a `url` do layout (exportaria o logo de outra marca, ex.: o logo do Victor num post da Feira Nova): o resultado é "faltando", com o marcador no editor e o aviso antes de exportar ("O kit Feira Nova não tem logo clara"). A `url` do layout só vale em camada sem `doKit`;
+   - uma função só (`origemDaImagem`) resolve de onde vem cada imagem: foto enviada (`assetId`), asset do kit (`doKit`) ou `url` do layout; o render e o `arquivosDosSlides` usam a mesma;
+   - backup: o `aplicarBackup` troca também os `assetId` dentro de `kit.logos` e `kit.assets`, como nos projetos, sempre que a importação der id novo a um arquivo (hoje o arquivo importado mantém o próprio id, e por isso nada precisa ser trocado ainda), com teste;
+   - fonte enviada (`Fonte.arquivoId`): carregar do arquivo com `FontFace` e entrar no aviso de fonte faltando, igual às fontes do Google;
+   - testes: o mesmo projeto com dois kits diferentes exporta cada um com o próprio logo; kit sem o logo pedido dá o aviso e não usa a imagem do layout; subir um logo no kit, recarregar a página e o logo continua; trocar o kit troca o logo no editor e na exportação.
 
 **Fase 4b (coleção genérica)**
 

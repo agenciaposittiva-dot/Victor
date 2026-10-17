@@ -30,7 +30,7 @@ export function AvisoFixo({
       </span>
       <div className={css.texto}>
         <b>{titulo}</b>
-        {children && <span>{children}</span>}
+        {children && <div className={css.detalhe}>{children}</div>}
       </div>
       {acoes && <div className={css.acoes}>{acoes}</div>}
     </div>

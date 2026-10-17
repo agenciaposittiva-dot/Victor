@@ -10,7 +10,7 @@ import {
   type FormatoExportacao,
   type OpcoesExportacao,
 } from '@/exportar/exportar';
-import { fontesDosSlides } from '@/exportar/fontesUsadas';
+import { fontesDosSlides } from '@/exportar/usosDosSlides';
 import type { Motor } from '@/exportar/motor';
 import { fonteCarregada, garantirFontes, type UsoDeFonte } from '@/render/fontes';
 import { Escala, Faixa, JanelaDaFaixa, ProvedorRender } from '@/render/Slide';
@@ -20,7 +20,6 @@ import { Cabecalho } from '@/ui/Cabecalho';
 import { avisar } from '@/ui/toast';
 import { avisarFontes } from '@/ui/avisarFontes';
 import Gradientes from './Gradientes';
-import { registrarGanchosDeDados } from './ganchos';
 import css from './Laboratorio.module.css';
 
 type ConferenciaZip = {
@@ -113,7 +112,6 @@ export default function Laboratorio() {
 
   useEffect(() => {
     if (!params.has('teste')) return;
-    registrarGanchosDeDados();
     window.__lab = {
       fontes: () => usos.map((u) => ({ ...u, carregada: fonteCarregada(u) })),
       exportarPng: async (op) => {

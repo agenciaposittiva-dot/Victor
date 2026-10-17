@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AvisosDoBanco } from '@/app/AvisosDoBanco';
-import { arquivosDoDocumento, carregarArquivos } from '@/dados/arquivos';
+import { garantirArquivos } from '@/dados/arquivos';
 import { acharKit, acharLayout, carregarCatalogo } from '@/dados/catalogo';
 import type { Lido } from '@/dados/migracao';
 import { repo, versaoDe } from '@/dados/repositorio';
 import type { Projeto } from '@/dominio/schemas';
 import { baixar } from '@/exportar/arquivos';
-import { fontesDosSlides } from '@/exportar/fontesUsadas';
+import { arquivosDosSlides, fontesDosSlides } from '@/exportar/usosDosSlides';
 import { slug } from '@/exportar/nomes';
 import { garantirFontes } from '@/render/fontes';
 import { Botao } from '@/ui/Botao';
@@ -56,7 +55,6 @@ export default function Editor() {
         const versao = versaoDe(lido.valor);
         editor.carregar({ projeto: lido.valor, layout, kit, versao });
         registrarVersaoAberta(lido.valor.id, versao);
-        void carregarArquivos(arquivosDoDocumento(useEditor.getState().doc));
         setAbertura({ estado: 'pronto' });
       } catch (e) {
         if (vivo) setAbertura({ estado: 'erro', mensagem: e instanceof Error ? e.message : String(e) });
@@ -178,11 +176,19 @@ function AreaDoEditor() {
   useEffect(() => {
     garantirFontes(fontesDosSlides(efetivo, montados, kit)).catch(() => undefined);
   }, [efetivo, montados, kit]);
+  // fotos usadas no documento, a partir dos slides montados (o fundo do tipo entra mesmo quando o slide não tem um
+  // próprio): carrega sempre que o documento muda (slide novo, troca de tipo, desfazer); as já carregadas são puladas
+  const ids = useMemo(
+    () => [...new Set(arquivosDosSlides(efetivo, montados, kit).arquivos.map((a) => a.assetId))].sort().join('\n'),
+    [efetivo, montados, kit],
+  );
+  useEffect(() => {
+    if (ids) void garantirArquivos(ids.split('\n'));
+  }, [ids]);
   return (
     <div className={css.editor} data-testid="editor">
       <BarraSuperior />
       <div className={css.avisos}>
-        <AvisosDoBanco />
         <AvisosDoEditor />
       </div>
       <div className={css.corpo}>

@@ -1,5 +1,5 @@
-import { memo, useMemo, useState } from 'react';
-import { urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
+import { memo, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { arquivoFaltando, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
 import type { SlideMontado } from '@/dominio/montagem';
 import type { BrandKit, Layout } from '@/dominio/schemas';
 import { Escala, ProvedorRender, Slide } from '@/render/Slide';
@@ -18,6 +18,8 @@ export function FaixaDeSlides() {
   const { layout, montados, kit, efetivo } = useDocumento();
   const ativo = useEditor((s) => s.slideAtivo);
   const [menu, setMenu] = useState(false);
+  const caixaDoMenu = useRef<HTMLDivElement>(null);
+  const botaoDoMenu = useRef<HTMLButtonElement>(null);
   const [arrastando, setArrastando] = useState<number | null>(null);
   const [sobre, setSobre] = useState<number | null>(null);
   const n = montados.length;
@@ -32,6 +34,39 @@ export function FaixaDeSlides() {
     const de = arrastando;
     editor.editar('Mover slide', (d) => moverSlide(d.doc, de, para));
     editor.ativarSlide(para);
+  };
+  // menu "+ Slide": abre com o foco no primeiro tipo; fecha com Esc (o foco volta ao botão) e com clique fora
+  useEffect(() => {
+    if (!menu) return;
+    caixaDoMenu.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+    const fora = (e: PointerEvent) => {
+      if (!caixaDoMenu.current?.contains(e.target as Node)) setMenu(false);
+    };
+    document.addEventListener('pointerdown', fora);
+    return () => document.removeEventListener('pointerdown', fora);
+  }, [menu]);
+  const teclaNoMenu = (e: KeyboardEvent<HTMLDivElement>) => {
+    const itens = [...(e.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])];
+    const atual = itens.indexOf(document.activeElement as HTMLElement);
+    const ir = (i: number) => itens[(i + itens.length) % itens.length]?.focus();
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      setMenu(false);
+      botaoDoMenu.current?.focus();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      ir(atual + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      ir(atual - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      ir(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      ir(itens.length - 1);
+    } else if (e.key === 'Tab') setMenu(false);
   };
   const adicionar = (tipoId: string) => {
     setMenu(false);
@@ -87,8 +122,9 @@ export function FaixaDeSlides() {
         ))}
       </ol>
       <div className={css.acoesSlides}>
-        <div className={css.menuWrap}>
+        <div className={css.menuWrap} ref={caixaDoMenu}>
           <Botao
+            ref={botaoDoMenu}
             tamanho="pequeno"
             icone="mais"
             onClick={() => setMenu((m) => !m)}
@@ -98,7 +134,7 @@ export function FaixaDeSlides() {
             Slide
           </Botao>
           {menu && (
-            <div className={css.menu} role="menu" aria-label="Tipo do slide novo">
+            <div className={css.menu} role="menu" aria-label="Tipo do slide novo" onKeyDown={teclaNoMenu}>
               {layout.tiposDeSlide.map((t) => (
                 <button key={t.id} type="button" role="menuitem" onClick={() => adicionar(t.id)}>
                   {t.nome}
@@ -176,7 +212,7 @@ const MiniaturaDoSlide = memo(function MiniaturaDoSlide({
   const url = useMemo(() => (id: string) => urlDoArquivo(id), [versao]); // eslint-disable-line react-hooks/exhaustive-deps
   const { w, h } = layout.formato;
   return (
-    <ProvedorRender layout={layout} kit={kit} urlDoAsset={url}>
+    <ProvedorRender layout={layout} kit={kit} urlDoAsset={url} arquivoFaltando={arquivoFaltando}>
       <Escala escala={ALTURA_MINI / h} w={w} h={h}>
         <Slide slide={slide} w={w} h={h} total={total} />
       </Escala>

@@ -12,16 +12,20 @@ export function ProvedorRender({
   layout,
   kit,
   urlDoAsset,
+  modo = 'editor',
+  arquivoFaltando,
   children,
 }: {
   layout: Layout;
   kit: KitTokens;
   urlDoAsset?: ContextoRender['urlDoAsset'];
+  modo?: ContextoRender['modo'];
+  arquivoFaltando?: ContextoRender['arquivoFaltando'];
   children?: ReactNode;
 }) {
   const valor = useMemo(
-    () => ({ kit, formato: layout.formato, componentes: layout.componentes, urlDoAsset }),
-    [kit, layout.formato, layout.componentes, urlDoAsset],
+    () => ({ kit, formato: layout.formato, componentes: layout.componentes, urlDoAsset, modo, arquivoFaltando }),
+    [kit, layout.formato, layout.componentes, urlDoAsset, modo, arquivoFaltando],
   );
   return <CtxRender.Provider value={valor}>{children}</CtxRender.Provider>;
 }

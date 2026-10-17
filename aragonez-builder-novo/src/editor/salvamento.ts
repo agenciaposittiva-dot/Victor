@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { regravarArquivosAbertos } from '@/dados/arquivos';
 import { acharKit, acharLayout, carregarCatalogo } from '@/dados/catalogo';
+import { arquivosDoRegistro } from '@/dados/limpeza';
 import { ConflitoDeVersao, ID_DA_ABA, novoId, ouvirBanco, repo, versaoDe } from '@/dados/repositorio';
 import type { Projeto } from '@/dominio/schemas';
 import { editor, projetoAtual, useEditor } from './estado';
@@ -106,6 +108,8 @@ export async function salvarAoSair(): Promise<{ copia?: string }> {
   // excluído em outra aba ou conflito em aberto: a versão desta aba vira cópia (nada se perde nem é recriado)
   if (s.excluidoEmOutraAba || s.salvamento === 'conflito') {
     const c = copiaDe(p, s.excluidoEmOutraAba ? 'recuperado' : 'cópia não salva');
+    // as fotos que só o projeto excluído usava saíram junto: as que ainda estão abertas aqui voltam para o banco
+    if (s.excluidoEmOutraAba) await regravarArquivosAbertos(arquivosDoRegistro(c));
     await repo.atual.salvarProjeto(c);
     return { copia: c.nome };
   }
@@ -211,6 +215,8 @@ export async function salvarComoCopia(sufixo = 'cópia'): Promise<string | null>
   const p = projetoAtual(s);
   if (!p || !s.layout) return null;
   const copia: Projeto = { ...p, id: novoId('p'), nome: `${p.nome} (${sufixo})` };
+  // projeto excluído em outra aba: as fotos que só ele usava saíram junto; as abertas aqui voltam para o banco
+  if (s.excluidoEmOutraAba) await regravarArquivosAbertos(arquivosDoRegistro(copia));
   const versao = await repo.atual.salvarProjeto(copia);
   versoes.set(copia.id, versao);
   editor.carregar({ projeto: { ...copia, versao }, layout: s.layout, kit: s.kit, versao, modo: s.modo });

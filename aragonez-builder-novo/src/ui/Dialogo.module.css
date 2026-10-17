@@ -6,6 +6,7 @@
   color: var(--texto);
   box-shadow: var(--sombra);
   max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
 }
 .dialogo::backdrop {
   background: rgba(5, 4, 3, 0.72);
@@ -38,6 +39,7 @@
   padding: 10px 20px 18px;
   overflow: auto;
   max-height: calc(100vh - 200px);
+  max-height: calc(100dvh - 200px);
 }
 .rodape {
   display: flex;

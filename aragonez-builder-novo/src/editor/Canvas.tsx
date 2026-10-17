@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEvent as PE } from 'react';
-import { urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
+import { arquivoFaltando, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
 import type { Camada } from '@/dominio/schemas';
 import { Faixa, ProvedorRender, Slide } from '@/render/Slide';
 import { Icone } from '@/ui/Icone';
@@ -40,7 +40,7 @@ export function Canvas() {
   const slideMostrado = ctx.continuo ? null : (montados[ativo] ?? null);
   const desenho = useMemo(
     () => (
-      <ProvedorRender layout={efetivo} kit={kit} urlDoAsset={urlDoAsset}>
+      <ProvedorRender layout={efetivo} kit={kit} urlDoAsset={urlDoAsset} arquivoFaltando={arquivoFaltando}>
         {ctx.continuo ? (
           <Faixa layout={efetivo} slides={montados} />
         ) : (
@@ -92,6 +92,8 @@ export function Canvas() {
   }, [tam]);
 
   // roda do mouse: rolar; com Ctrl/⌘ (ou pinça no trackpad), zoom no ponto do ponteiro
+  // ponteiros apertados agora (dedos, mouse, caneta), com o tipo: a pinça de toque é tratada por eles
+  const ponteiros = useRef(new Map<number, { x: number; y: number; tipo: string }>());
   useEffect(() => {
     const el = area.current;
     if (!el) return;
@@ -104,16 +106,20 @@ export function Canvas() {
         vista.definir({ x: v.x - (e.shiftKey ? e.deltaY : e.deltaX), y: v.y - (e.shiftKey ? 0 : e.deltaY) });
       }
     };
-    // Safari: a pinça no trackpad do Mac (e no iPhone) chega como gesture*, com e.scale; sem preventDefault a
-    // página inteira amplia
+    // Safari: a pinça chega como gesture*, com e.scale; sem preventDefault a página inteira amplia. No trackpad do
+    // Mac só existem esses eventos, e o zoom vem deles. No iPhone e no iPad a mesma pinça também chega como dois
+    // ponteiros de toque, que já fazem o zoom (aoMover): ali o gesture* só impede o zoom da página, senão o zoom
+    // sairia em dobro.
     type Gesto = Event & { scale: number; clientX: number; clientY: number };
     let escalaAnterior = 1;
+    const comToque = () => [...ponteiros.current.values()].some((p) => p.tipo === 'touch');
     const gestoInicio = (e: Event) => {
       e.preventDefault();
       escalaAnterior = 1;
     };
     const gestoMuda = (e: Event) => {
       e.preventDefault();
+      if (comToque()) return;
       const g = e as Gesto;
       const r = el.getBoundingClientRect();
       vista.zoomEm(
@@ -169,8 +175,16 @@ export function Canvas() {
   const espaco = useRef(false);
   useEffect(() => {
     const baixo = (e: KeyboardEvent) => {
-      if (e.code !== 'Space' || (e.target as HTMLElement).closest('input, textarea, select, [contenteditable]')) return;
-      // fora de campo: a página não rola e o botão focado não é acionado
+      if (e.code !== 'Space') return;
+      // só com o foco no canvas ou em lugar nenhum (body): em botões, links, campos, rádios, menus e diálogos o
+      // espaço faz o que sempre faz (Tab até Exportar e espaço exporta)
+      const alvo = e.target as HTMLElement;
+      const interativo = alvo.closest(
+        'button, a, input, textarea, select, [contenteditable], [role="button"], [role="radio"], [role="menuitem"], [role="tab"], dialog',
+      );
+      const noCanvas = alvo === document.body || alvo === document.documentElement || !!area.current?.contains(alvo);
+      if (interativo || !noCanvas) return;
+      // a página não rola enquanto o espaço vira "mover a vista"
       e.preventDefault();
       espaco.current = true;
     };
@@ -189,7 +203,6 @@ export function Canvas() {
       document.removeEventListener('visibilitychange', aoEsconder);
     };
   }, []);
-  const ponteiros = useRef(new Map<number, { x: number; y: number }>());
   const arraste = useRef<{ x: number; y: number; vx: number; vy: number; moveu: boolean; alvo: Alvo | null } | null>(
     null,
   );
@@ -197,7 +210,7 @@ export function Canvas() {
 
   const aoApertar = (e: PE<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('[data-controle]')) return;
-    ponteiros.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    ponteiros.current.set(e.pointerId, { x: e.clientX, y: e.clientY, tipo: e.pointerType });
     area.current?.setPointerCapture(e.pointerId);
     if (ponteiros.current.size === 2) {
       const [a, b] = [...ponteiros.current.values()];
@@ -210,7 +223,8 @@ export function Canvas() {
     arraste.current = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, moveu: false, alvo };
   };
   const aoMover = (e: PE<HTMLDivElement>) => {
-    if (ponteiros.current.has(e.pointerId)) ponteiros.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const p = ponteiros.current.get(e.pointerId);
+    if (p) ponteiros.current.set(e.pointerId, { ...p, x: e.clientX, y: e.clientY });
     if (pinca.current && ponteiros.current.size === 2) {
       const [a, b] = [...ponteiros.current.values()];
       const dist = Math.hypot(a!.x - b!.x, a!.y - b!.y);

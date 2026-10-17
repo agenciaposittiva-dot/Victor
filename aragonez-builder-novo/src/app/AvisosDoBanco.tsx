@@ -1,16 +1,9 @@
-import { useEffect, useState } from 'react';
-import { ouvirBanco } from '@/dados/repositorio';
 import { AvisoFixo } from '@/ui/AvisoFixo';
 import { Botao } from '@/ui/Botao';
+import { useAvisoDoBanco, type AvisoDoBancoAtivo } from './avisoDoBanco';
 
-/** Avisos fixos do armazenamento local: o banco foi atualizado em outra aba (esta precisa recarregar) ou outra aba
- *  está impedindo a atualização (fechar as outras abas). Ficam na tela até a pessoa agir. */
-export function AvisosDoBanco() {
-  const [aviso, setAviso] = useState<'banco-atualizado' | 'banco-bloqueado' | null>(null);
-  useEffect(
-    () => ouvirBanco((a) => (a.tipo === 'banco-atualizado' || a.tipo === 'banco-bloqueado') && setAviso(a.tipo)),
-    [],
-  );
+/** O cartão de um aviso do banco (o editor põe na pilha de avisos, pela urgência). */
+export function CartaoDoBanco({ aviso }: { aviso: AvisoDoBancoAtivo }) {
   if (aviso === 'banco-atualizado')
     return (
       <AvisoFixo
@@ -42,4 +35,10 @@ export function AvisosDoBanco() {
       </AvisoFixo>
     );
   return null;
+}
+
+/** Avisos fixos do armazenamento local: o banco foi atualizado em outra aba (esta precisa recarregar) ou outra aba
+ *  está impedindo a atualização (fechar as outras abas). Ficam na tela até a pessoa agir. */
+export function AvisosDoBanco() {
+  return <CartaoDoBanco aviso={useAvisoDoBanco()} />;
 }

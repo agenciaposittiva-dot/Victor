@@ -15,7 +15,10 @@ import {
 import { ImagemIlegivel, prepararImagem } from '@/dados/imagens';
 import { repo } from '@/dados/repositorio';
 import { lerKitSalvo } from '@/dados/migracao';
+import { garantirArquivos, regravarArquivosAbertos } from '@/dados/arquivos';
+import { excluirProjetoEArquivos } from '@/dados/limpeza';
 import {
+  concluida,
   ConflitoDeVersao,
   ouvirBanco,
   RepositorioLocal,
@@ -412,6 +415,163 @@ describe('prepararImagem (fora do navegador)', () => {
       expect((await prepararImagem(svg)).blob).toBe(svg);
     } finally {
       vi.unstubAllGlobals();
+    }
+  });
+});
+
+describe.each(repos)('arquivos que sobram ao excluir projeto (%s)', (_nome, criar) => {
+  it('dois projetos com a mesma foto: excluir um mantém a foto; excluir o outro apaga', async () => {
+    const r = criar();
+    const foto = await r.salvarArquivo(new Blob(['foto'], { type: 'image/png' }));
+    const so = await r.salvarArquivo(new Blob(['só do A'], { type: 'image/png' }));
+    const a = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'A');
+    a.slides[0]!.conteudo.foto = { assetId: foto };
+    a.slides[1]!.overrides = { selo: { fundoExtra: { tipo: 'imagem', assetId: so } } };
+    const b = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'B');
+    b.slides[0]!.camadasExtras = [{ id: 'x', tipo: 'imagem', x: 0, y: 0, w: 10, h: 10, assetId: foto }];
+    await r.salvarProjeto(a);
+    await r.salvarProjeto(b);
+
+    expect(await excluirProjetoEArquivos(r, a.id)).toEqual({ arquivosApagados: 1 });
+    expect(await r.lerArquivo(foto)).toBeDefined(); // o B usa
+    expect(await r.lerArquivo(so)).toBeUndefined(); // só o A usava
+
+    expect(await excluirProjetoEArquivos(r, b.id)).toEqual({ arquivosApagados: 1 });
+    expect(await r.lerArquivo(foto)).toBeUndefined();
+  });
+
+  it('kit com fonte enviada (arquivoId) que nenhum projeto usa: excluir um projeto não apaga a fonte', async () => {
+    const r = criar();
+    const fonte = await r.salvarArquivo(new Blob(['woff2'], { type: 'font/woff2' }), 'marca.woff2');
+    await r.salvarKit({
+      ...KIT_TESTE,
+      id: 'kit-fonte',
+      nome: 'Com fonte',
+      fontes: { ...KIT_TESTE.fontes, titulo: { familia: 'Marca', origem: 'upload', arquivoId: fonte } },
+    });
+    const p = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'Sem a fonte');
+    await r.salvarProjeto(p);
+    expect(await excluirProjetoEArquivos(r, p.id)).toEqual({ arquivosApagados: 0 });
+    expect(await r.lerArquivo(fonte)).toBeDefined();
+    // a fonte é usada pelo kit também quando um projeto a cita (o JSON inteiro conta, não uma lista de lugares)
+    const q = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'Cita a fonte');
+    (q as unknown as { extra: unknown }).extra = { qualquer: [{ arquivoId: fonte }] };
+    await r.gravarBruto('projetos', q as unknown as Record<string, unknown> & { id: string });
+    expect(await excluirProjetoEArquivos(r, q.id)).toEqual({ arquivosApagados: 0 });
+    expect(await r.lerArquivo(fonte)).toBeDefined();
+  });
+
+  it('arquivo usado por um layout, por um kit ou por um projeto que não valida fica', async () => {
+    const r = criar();
+    const [noLayout, noKit, noQuebrado] = await Promise.all(
+      ['l', 'k', 'q'].map((t) => r.salvarArquivo(new Blob([t], { type: 'image/png' }))),
+    );
+    const p = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'Vai sair');
+    p.slides[0]!.fundo = { tipo: 'imagem', assetId: noLayout!, ajuste: 'cover' };
+    p.faixaExtras = [{ id: 'e', tipo: 'imagem', x: 0, y: 0, w: 10, h: 10, assetId: noKit! }];
+    p.slides[1]!.conteudo.foto = { assetId: noQuebrado! };
+    await r.salvarProjeto(p);
+    const layout = structuredClone(LAYOUT_TESTE);
+    layout.id = 'com-arquivo';
+    layout.tiposDeSlide[0]!.fundo = { tipo: 'imagem', assetId: noLayout!, ajuste: 'cover' };
+    await r.salvarLayout(layout);
+    await r.gravarBruto('kits', { id: 'kit-arq', fontes: { titulo: { familia: 'X', arquivoId: noKit } } });
+    await r.gravarBruto('projetos', {
+      id: 'quebrado',
+      nome: 'Quebrado',
+      slides: [{ conteudo: { f: { assetId: noQuebrado } } }],
+    });
+    expect(await excluirProjetoEArquivos(r, p.id)).toEqual({ arquivosApagados: 0 });
+    for (const id of [noLayout, noKit, noQuebrado]) expect(await r.lerArquivo(id!)).toBeDefined();
+  });
+});
+
+describe('transação do IndexedDB (concluida)', () => {
+  type TxFalsa = Parameters<typeof concluida>[0];
+  const falsa = (): TxFalsa => ({ oncomplete: null, onerror: null, onabort: null, error: null });
+
+  it('armazenamento cheio: rejeita com o QuotaExceededError do pedido, não com null (tx.error ainda vazio)', async () => {
+    const tx = falsa();
+    const fim = concluida(tx);
+    const cheio = new DOMException('cheio', 'QuotaExceededError');
+    tx.onerror!.call(tx as IDBTransaction, { target: { error: cheio } } as unknown as Event);
+    tx.onabort!.call(tx as IDBTransaction, new Event('abort'));
+    await expect(fim).rejects.toBe(cheio);
+  });
+
+  it('o erro do pedido sozinho não rejeita: só o abort encerra (e com tx.error, ele vale)', async () => {
+    const tx = falsa();
+    const fim = concluida(tx);
+    let terminou = false;
+    void fim.catch(() => undefined).finally(() => (terminou = true));
+    tx.onerror!.call(tx as IDBTransaction, { target: { error: null } } as unknown as Event);
+    await Promise.resolve();
+    expect(terminou).toBe(false);
+    const erroDaTx = new DOMException('cancelada', 'QuotaExceededError');
+    (tx as { error: DOMException | null }).error = erroDaTx;
+    tx.onabort!.call(tx as IDBTransaction, new Event('abort'));
+    await expect(fim).rejects.toBe(erroDaTx);
+  });
+
+  it('oncomplete resolve', async () => {
+    const tx = falsa();
+    const fim = concluida(tx);
+    tx.oncomplete!.call(tx as IDBTransaction, new Event('complete'));
+    await expect(fim).resolves.toBeUndefined();
+  });
+});
+
+describe('aviso entre abas só depois de gravar', () => {
+  it('o "salvo" vai para as outras abas depois que a gravação termina; se a gravação falha, nada é avisado', async () => {
+    let terminar: () => void = () => {};
+    let falhar: (e: unknown) => void = () => {};
+    class Lento extends RepositorioMemoria {
+      override gravarBruto(l: Parameters<RepositorioMemoria['gravarBruto']>[0], v: Record<string, unknown>) {
+        return new Promise<void>((ok, erro) => {
+          terminar = () => void super.gravarBruto(l, v as never).then(ok);
+          falhar = erro;
+        });
+      }
+    }
+    const enviados: unknown[] = [];
+    const espia = vi.spyOn(BroadcastChannel.prototype, 'postMessage').mockImplementation((m) => void enviados.push(m));
+    try {
+      const r = new Lento();
+      const p = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'Aviso');
+      const salvando = r.salvarProjeto(p);
+      await new Promise((ok) => setTimeout(ok, 0));
+      expect(enviados).toEqual([]); // ainda gravando
+      terminar();
+      await salvando;
+      expect(enviados).toMatchObject([{ tipo: 'salvo', loja: 'projetos', id: p.id }]);
+
+      enviados.length = 0;
+      const falha = r.salvarProjeto({ ...p, nome: 'Não cabe' });
+      await new Promise((ok) => setTimeout(ok, 0));
+      falhar(new DOMException('cheio', 'QuotaExceededError'));
+      await expect(falha).rejects.toMatchObject({ name: 'QuotaExceededError' });
+      expect(enviados).toEqual([]);
+    } finally {
+      espia.mockRestore();
+    }
+  });
+});
+
+describe('recuperar projeto excluído em outra aba', () => {
+  it('as fotos ainda abertas nesta página voltam para o banco', async () => {
+    const r = new RepositorioMemoria();
+    const antes = repo.atual;
+    repo.atual = r;
+    try {
+      const id = await r.salvarArquivo(new Blob(['foto aberta'], { type: 'image/png' }));
+      expect(await garantirArquivos([id])).toEqual([]); // aberta nesta página
+      await r.excluirArquivos([id]); // a outra aba excluiu o projeto e a foto saiu junto
+      expect(await r.lerArquivo(id)).toBeUndefined();
+      expect(await regravarArquivosAbertos([id, 'arq-nunca-aberto'])).toBe(1);
+      const volta = await r.lerArquivo(id);
+      expect([volta?.type, await volta?.text()]).toEqual(['image/png', 'foto aberta']);
+    } finally {
+      repo.atual = antes;
     }
   });
 });

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { acharKit, acharLayout, type Catalogo } from '@/dados/catalogo';
 import { novoId, repo } from '@/dados/repositorio';
+import { excluirProjetoEArquivos } from '@/dados/limpeza';
 import type { Projeto } from '@/dominio/schemas';
 import { baixar } from '@/exportar/arquivos';
 import { slug } from '@/exportar/nomes';
@@ -75,7 +76,8 @@ export function Projetos({
   const excluir = () =>
     tentar('excluir o projeto', async () => {
       if (!excluindo) return;
-      await repo.atual.excluirProjeto(excluindo.id);
+      // os arquivos que só este projeto usava saem junto
+      await excluirProjetoEArquivos(repo.atual, excluindo.id);
       removerDaLista(excluindo.id);
       setExcluindo(null);
       avisar('Projeto excluído.', 'ok');

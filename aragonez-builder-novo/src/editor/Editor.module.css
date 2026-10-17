@@ -489,3 +489,80 @@
     min-height: 44px;
   }
 }
+
+/* conferência antes de exportar */
+.conferenciaTexto {
+  margin-bottom: 10px;
+  color: var(--suave);
+}
+.conferenciaLista {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  /* no celular, a lista rola e os botões do diálogo ficam sempre à vista */
+  max-height: min(46vh, 360px);
+  max-height: min(46dvh, 360px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.conferenciaLista button {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--linha-2);
+  border-radius: var(--raio);
+  background: var(--superficie-2);
+  color: var(--texto);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.conferenciaLista button:hover,
+.conferenciaLista button:focus-visible {
+  border-color: var(--laranja-borda);
+}
+.conferenciaLista button > :first-child {
+  flex: none;
+  color: var(--aviso);
+}
+.conferenciaNota {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--suave);
+}
+.conferenciaLista .lembrete button > :first-child {
+  color: var(--suave);
+}
+.conferenciaSubtitulo {
+  margin: 14px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--suave);
+}
+.fotoFaltando {
+  color: var(--erro);
+  font-weight: 600;
+}
+/* celular: os outros avisos (além do mais urgente) cabem numa linha que abre a lista */
+.maisAvisos {
+  justify-self: start;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--linha-2);
+  border-radius: 999px;
+  background: var(--superficie-2);
+  color: var(--texto-2);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.outrosAvisos {
+  display: grid;
+  gap: 8px;
+}
+.outrosAvisos[hidden] {
+  display: none;
+}

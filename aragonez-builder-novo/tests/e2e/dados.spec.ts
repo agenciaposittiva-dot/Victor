@@ -21,6 +21,8 @@ type Dados = {
 type Janela = { __dados: Dados };
 
 async function abrir(page: Page) {
+  // os ganchos são ferramenta de desenvolvimento: só existem com ?teste e a chave aragonez:dev (item T1)
+  await page.addInitScript(() => localStorage.setItem('aragonez:dev', '1'));
   await page.goto('/laboratorio?teste=1');
   await page.waitForFunction(() => !!(window as unknown as { __dados?: Dados }).__dados);
 }

@@ -1,8 +1,11 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { Icone } from './Icone';
 import css from './Dialogo.module.css';
 
-/** Diálogo modal (elemento <dialog> nativo: foco preso dentro, Esc fecha, fundo escurecido). */
+/** Diálogo modal (elemento <dialog> nativo: foco preso dentro, Esc fecha, fundo escurecido). O showModal() foca o
+ *  primeiro elemento focável (o X do cabeçalho) e o autoFocus do React não resolve (o React não põe o atributo no
+ *  HTML, e o showModal roda depois): quem precisa de outro foco passa focoInicial (ou marca o botão com
+ *  data-foco-inicial), focado logo depois do showModal, no mesmo efeito. */
 export function Dialogo({
   aberto,
   titulo,
@@ -11,6 +14,7 @@ export function Dialogo({
   acoes,
   largura = 560,
   fecharComEsc = true,
+  focoInicial,
 }: {
   aberto: boolean;
   titulo: string;
@@ -20,14 +24,19 @@ export function Dialogo({
   largura?: number;
   /** false: decisões obrigatórias (ex.: conflito) não fecham com Esc. */
   fecharComEsc?: boolean;
+  /** elemento que recebe o foco ao abrir (ex.: "Voltar e corrigir", para Enter não confirmar). */
+  focoInicial?: RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (aberto && !d.open) d.showModal?.();
+    if (aberto && !d.open) {
+      d.showModal?.();
+      (focoInicial?.current ?? d.querySelector<HTMLElement>('[data-foco-inicial]'))?.focus();
+    }
     if (!aberto && d.open) d.close();
-  }, [aberto]);
+  }, [aberto, focoInicial]);
   if (!aberto) return null;
   return (
     <dialog

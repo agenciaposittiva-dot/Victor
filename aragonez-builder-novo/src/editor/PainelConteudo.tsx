@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import { enviarFoto, ImagemIlegivel, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
+import { arquivoFaltando, enviarFoto, ImagemIlegivel, urlDoArquivo, useVersaoArquivos } from '@/dados/arquivos';
 import { semDestaque } from '@/dominio/destaque';
 import type { Camada, CamadaImagem, CamadaTexto } from '@/dominio/schemas';
 import { Botao } from '@/ui/Botao';
 import { Icone } from '@/ui/Icone';
 import { avisar } from '@/ui/toast';
+import { idDoCampo } from './conferencia';
 import { editor, useEditor } from './estado';
 import { acharCamada, type Dono } from './operacoes';
 import css from './Editor.module.css';
@@ -96,8 +97,6 @@ function CampoDoSlide({ campo, selecionado }: { campo: Campo; selecionado: boole
   );
 }
 
-const idDoCampo = (dono: Dono, id: string) => `campo-${dono}-${id}`;
-
 function CampoTexto({ dono, c, selecionado }: { dono: Dono; c: CamadaTexto; selecionado: boolean }) {
   const qtd = semDestaque(c.texto).length;
   const passou = c.maxCaracteres !== undefined && qtd > c.maxCaracteres;
@@ -146,7 +145,9 @@ function CampoImagem({ dono, c, selecionado }: { dono: Dono; c: CamadaImagem; se
   useVersaoArquivos();
   const entrada = useRef<HTMLInputElement>(null);
   const [enviando, setEnviando] = useState(false);
-  const url = (c.assetId ? urlDoArquivo(c.assetId) : undefined) || c.url;
+  // como no render: com assetId, nunca a url do layout no lugar
+  const url = c.assetId ? urlDoArquivo(c.assetId) : c.url;
+  const naoAchou = !!c.assetId && arquivoFaltando(c.assetId);
   const alterar = (rot: string, f: (x: CamadaImagem) => void, chave?: string) =>
     editor.editar(
       rot,
@@ -188,7 +189,9 @@ function CampoImagem({ dono, c, selecionado }: { dono: Dono; c: CamadaImagem; se
         {url ? (
           <img src={url} alt="" style={{ objectPosition: `${foco.x * 100}% ${foco.y * 100}%` }} />
         ) : (
-          <span className={css.semFoto}>{c.placeholder ?? 'Sem foto'}</span>
+          <span className={[css.semFoto, naoAchou ? css.fotoFaltando : ''].join(' ')}>
+            {naoAchou ? 'Foto não encontrada' : c.assetId ? '' : (c.placeholder ?? 'Sem foto')}
+          </span>
         )}
       </div>
       <div className={css.linhaBotoes}>

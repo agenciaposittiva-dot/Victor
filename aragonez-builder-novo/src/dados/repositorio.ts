@@ -19,6 +19,8 @@ export interface Repositorio {
   salvarKit(k: BrandKit, opcoes?: { esperado?: string }): Promise<string>;
   salvarArquivo(blob: Blob, nome?: string): Promise<string>;
   lerArquivo(id: string): Promise<Blob | undefined>;
+  /** apaga vários arquivos numa gravação só (confirmada no fim da transação). */
+  excluirArquivos(ids: string[]): Promise<void>;
   /** acesso bruto, para o backup (Exportar tudo / Importar). */
   brutos(loja: Loja): Promise<Registro[]>;
   gravarBruto(loja: Loja, r: Registro): Promise<void>;
@@ -126,7 +128,8 @@ abstract class Base implements Repositorio {
   abstract gravarBruto(loja: Loja, r: Registro): Promise<void>;
   /** grava só se a versão salva for a esperada (na mesma transação); devolve false se não for. */
   protected abstract gravarSe(loja: Loja, r: Registro, esperado: string | undefined): Promise<boolean>;
-  protected abstract apagar(loja: Loja, id: string): Promise<void>;
+  /** apaga os ids numa transação só. */
+  protected abstract apagar(loja: Loja, ...ids: string[]): Promise<void>;
 
   private async salvar(loja: Loja, valor: Registro, esperado?: string): Promise<string> {
     const atualizadoEm = agora();
@@ -189,6 +192,9 @@ abstract class Base implements Repositorio {
     const a = (await this.ler('arquivos', id)) as unknown as Arquivo | undefined;
     return a?.blob;
   }
+  async excluirArquivos(ids: string[]) {
+    if (ids.length) await this.apagar('arquivos', ...ids);
+  }
 }
 
 /** Em memória: testes e navegadores sem IndexedDB. */
@@ -215,8 +221,8 @@ export class RepositorioMemoria extends Base {
     this.loja(l).set(v.id, structuredClone(v));
     return true;
   }
-  protected async apagar(l: Loja, id: string) {
-    this.loja(l).delete(id);
+  protected async apagar(l: Loja, ...ids: string[]) {
+    ids.forEach((id) => this.loja(l).delete(id));
   }
 }
 
@@ -229,13 +235,17 @@ const pedido = <T>(r: IDBRequest<T>) =>
     r.onerror = () => falha(r.error);
   });
 
-/** Gravação só conta como feita quando a transação termina (oncomplete). Armazenamento cheio costuma aparecer
- *  como transação abortada: rejeita com o erro original do IndexedDB (name QuotaExceededError), sem embrulhar. */
-const concluida = (tx: IDBTransaction) =>
+/** Gravação só conta como feita quando a transação termina (oncomplete). Rejeita só no onabort: o erro de um pedido
+ *  sobe até a transação (onerror) antes do abort, quando tx.error ainda pode ser null; por isso o erro do pedido fica
+ *  guardado. Armazenamento cheio rejeita com o erro original do IndexedDB (name QuotaExceededError), nunca null. */
+export const concluida = (tx: Pick<IDBTransaction, 'oncomplete' | 'onerror' | 'onabort' | 'error'>) =>
   new Promise<void>((ok, falha) => {
+    let erroDoPedido: DOMException | null = null;
     tx.oncomplete = () => ok();
-    tx.onerror = () => falha(tx.error);
-    tx.onabort = () => falha(tx.error ?? new DOMException('Transação cancelada', 'AbortError'));
+    tx.onerror = (e: Event) => {
+      erroDoPedido ??= (e.target as IDBRequest | null)?.error ?? null;
+    };
+    tx.onabort = () => falha(tx.error ?? erroDoPedido ?? new DOMException('Transação cancelada', 'AbortError'));
   });
 
 /** IndexedDB do navegador (modo local). */
@@ -295,9 +305,9 @@ export class RepositorioLocal extends Base {
     await fim;
     return gravou;
   }
-  protected async apagar(l: Loja, id: string) {
+  protected async apagar(l: Loja, ...ids: string[]) {
     const { loja, fim } = await this.escrita(l);
-    loja.delete(id);
+    ids.forEach((id) => loja.delete(id));
     await fim;
   }
 }
