@@ -1,0 +1,134 @@
+[
+  {
+    "arquivo": "computador-01-editor-continuo.jpg",
+    "aparelho": "computador",
+    "descricao": "Editor no Modo Conteúdo com o layout contínuo de teste (faixa desenhada uma vez só).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-02-campo-selecionado.jpg",
+    "aparelho": "computador",
+    "descricao": "Campo \"Título\" focado no painel: a camada fica marcada no canvas.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-03-edicao-no-canvas.jpg",
+    "aparelho": "computador",
+    "descricao": "Computador: dois cliques no título abrem a edição direto no canvas. Celular: o toque duplo leva ao campo do painel (com o canvas fixo no topo).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-04-foto-enviada.jpg",
+    "aparelho": "computador",
+    "descricao": "Foto enviada pelo campo \"Foto\" (reduzida e guardada só pelo assetId), com zoom e enquadramento.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-05-layout-nao-continuo.jpg",
+    "aparelho": "computador",
+    "descricao": "Layout comum (sem faixa contínua): o canvas mostra só o slide ativo e a faixa de slides, as miniaturas.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-06-aviso-conflito.jpg",
+    "aparelho": "computador",
+    "descricao": "Outra aba salvou o projeto antes: aviso fixo com as três escolhas (nada é salvo por cima).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-07-aviso-kit-ausente.jpg",
+    "aparelho": "computador",
+    "descricao": "Projeto com um Brand Kit que não existe neste navegador: aviso fixo e exportação bloqueada.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-08-aviso-armazenamento-cheio.jpg",
+    "aparelho": "computador",
+    "descricao": "Armazenamento do navegador cheio (QuotaExceededError): aviso fixo com Exportar tudo e Tentar de novo.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-09-lista-de-projetos.jpg",
+    "aparelho": "computador",
+    "descricao": "Lista de projetos com miniaturas reais e o quadro de backup do modo local.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "computador-10-novo-projeto.jpg",
+    "aparelho": "computador",
+    "descricao": "Diálogo \"Novo projeto\": layout, Brand Kit e nome.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-01-editor-continuo.jpg",
+    "aparelho": "celular",
+    "descricao": "Editor no Modo Conteúdo com o layout contínuo de teste (faixa desenhada uma vez só).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-02-campo-selecionado.jpg",
+    "aparelho": "celular",
+    "descricao": "Campo \"Título\" focado no painel: a camada fica marcada no canvas.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-03-edicao-no-canvas.jpg",
+    "aparelho": "celular",
+    "descricao": "Computador: dois cliques no título abrem a edição direto no canvas. Celular: o toque duplo leva ao campo do painel (com o canvas fixo no topo).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-04-foto-enviada.jpg",
+    "aparelho": "celular",
+    "descricao": "Foto enviada pelo campo \"Foto\" (reduzida e guardada só pelo assetId), com zoom e enquadramento.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-05-layout-nao-continuo.jpg",
+    "aparelho": "celular",
+    "descricao": "Layout comum (sem faixa contínua): o canvas mostra só o slide ativo e a faixa de slides, as miniaturas.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-06-aviso-conflito.jpg",
+    "aparelho": "celular",
+    "descricao": "Outra aba salvou o projeto antes: aviso fixo com as três escolhas (nada é salvo por cima).",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-07-aviso-kit-ausente.jpg",
+    "aparelho": "celular",
+    "descricao": "Projeto com um Brand Kit que não existe neste navegador: aviso fixo e exportação bloqueada.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-08-aviso-armazenamento-cheio.jpg",
+    "aparelho": "celular",
+    "descricao": "Armazenamento do navegador cheio (QuotaExceededError): aviso fixo com Exportar tudo e Tentar de novo.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-09-lista-de-projetos.jpg",
+    "aparelho": "celular",
+    "descricao": "Lista de projetos com miniaturas reais e o quadro de backup do modo local.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-10-novo-projeto.jpg",
+    "aparelho": "celular",
+    "descricao": "Diálogo \"Novo projeto\": layout, Brand Kit e nome.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-11-celular-campos.jpg",
+    "aparelho": "celular",
+    "descricao": "Celular rolado até os campos: o painel fica embaixo do slide.",
+    "errosDoConsole": []
+  },
+  {
+    "arquivo": "celular-12-celular-dois-avisos.jpg",
+    "aparelho": "celular",
+    "descricao": "Celular com dois avisos (salvo em outra aba e kit ausente): só o mais urgente fica aberto e a linha \"+1 aviso\" diz qual é o outro.",
+    "errosDoConsole": []
+  }
+]
