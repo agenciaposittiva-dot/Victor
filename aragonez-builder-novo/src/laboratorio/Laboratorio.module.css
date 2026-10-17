@@ -1,0 +1,63 @@
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  padding: 16px;
+  border-radius: var(--raio-lg);
+  border: 1px solid var(--linha);
+  background: var(--superficie);
+  margin-bottom: 20px;
+}
+.campo {
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--suave);
+}
+.campo select {
+  background: var(--preto-2);
+  border: 1px solid var(--linha-2);
+  border-radius: var(--raio-sm);
+  padding: 9px 10px;
+  color: var(--texto);
+}
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+.palco {
+  border-radius: var(--raio-lg);
+  border: 1px solid var(--linha);
+  background: #050403;
+  padding: 16px;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.miniaturas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.mini {
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--suave);
+}
+.mini > div {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+.status {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.real {
+  display: grid;
+  gap: 24px;
+}

@@ -25,6 +25,9 @@ export default function Editor() {
             <Botao variante="secundario" icone="painel" onClick={() => navegar('/')}>
               Ver projetos
             </Botao>
+            <Botao variante="fantasma" icone="exportar" onClick={() => navegar('/laboratorio')}>
+              Testar a exportação
+            </Botao>
           </>
         }
       />
