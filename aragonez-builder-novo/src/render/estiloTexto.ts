@@ -12,7 +12,12 @@ export type TextoResolvido = {
 };
 
 /** Estilos do texto com os tokens resolvidos (o mesmo cálculo serve para desenhar e para medir). */
-export function resolverTextoCamada(c: CamadaTexto, kit: KitTokens, tamanho: number): TextoResolvido {
+export function resolverTextoCamada(
+  c: CamadaTexto,
+  kit: KitTokens,
+  tamanho: number,
+  num?: { slide: number; total: number },
+): TextoResolvido {
   const fonte = resolverFonte(c.fonte, kit);
   const peso = c.peso ?? fonte.peso ?? 400;
   const italico = c.italico ?? fonte.italico ?? false;
@@ -51,5 +56,5 @@ export function resolverTextoCamada(c: CamadaTexto, kit: KitTokens, tamanho: num
       peso: c.destaque.peso ?? (fd ? (fd.peso ?? 400) : peso),
       italico: c.destaque.italico ?? italico,
     });
-  return { trechos: parseDestaque(resolverTexto(c.texto, kit)), base, destaque, usos };
+  return { trechos: parseDestaque(resolverTexto(c.texto, kit, num)), base, destaque, usos };
 }

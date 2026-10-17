@@ -1,6 +1,6 @@
 import { createElement, type ReactElement } from 'react';
 import { fatias } from '@/dominio/faixa';
-import { montarSlides, type SlideMontado } from '@/dominio/montagem';
+import { montarSlides, type AjustesDaFaixa, type SlideMontado } from '@/dominio/montagem';
 import type { Layout, Projeto } from '@/dominio/schemas';
 import type { KitTokens } from '@/dominio/tokens';
 import type { ContextoRender } from '@/render/contexto';
@@ -17,7 +17,8 @@ export type FormatoExportacao = 'jpg' | 'png' | 'pdf' | 'zip';
 export type OpcoesExportacao = {
   layout: Layout;
   kit: KitTokens;
-  projeto?: Pick<Projeto, 'nome' | 'slides' | 'faixaOverrides'>;
+  /** conteúdo, ajustes e extras do projeto (slides e faixa). */
+  projeto?: Pick<Projeto, 'nome' | 'slides'> & AjustesDaFaixa;
   /** quais slides (padrão: todos). */
   indices?: number[];
   escala?: 1 | 2;
@@ -49,7 +50,7 @@ export async function prepararFontes(
   op: OpcoesExportacao,
   slides: SlideMontado[],
 ): Promise<{ usos: UsoDeFonte[]; faltando: UsoDeFonte[] }> {
-  const usos = fontesDosSlides(op.layout, slides, op.kit, op.projeto?.faixaOverrides);
+  const usos = fontesDosSlides(op.layout, slides, op.kit, op.projeto);
   await garantirFontes(usos);
   return { usos, faltando: fontesNaoCarregadas(usos) };
 }
@@ -86,7 +87,7 @@ export async function* capturarSlides(
   if (layout.continuo && op.estrategia === 'faixa') {
     // diagnóstico: captura a faixa com fundo transparente e recorta; cada slide recebe a própria cor de base no JPG
     const { no, desmontar } = await renderizarFora(
-      comProvedor(op, createElement(Faixa, { layout, slides, faixaOverrides: op.projeto?.faixaOverrides })),
+      comProvedor(op, createElement(Faixa, { layout, slides, ajustes: op.projeto })),
       slides.length * w,
       h,
     );
@@ -110,8 +111,8 @@ export async function* capturarSlides(
   for (const i of indices) {
     const s = slides[i]!;
     const el = layout.continuo
-      ? createElement(JanelaDaFaixa, { layout, slides, indice: i, faixaOverrides: op.projeto?.faixaOverrides })
-      : createElement(Slide, { slide: s, w, h });
+      ? createElement(JanelaDaFaixa, { layout, slides, indice: i, ajustes: op.projeto })
+      : createElement(Slide, { slide: s, w, h, total: slides.length });
     const { no, desmontar } = await renderizarFora(comProvedor(op, el), w, h);
     let canvas: HTMLCanvasElement;
     try {

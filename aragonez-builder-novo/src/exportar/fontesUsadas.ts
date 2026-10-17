@@ -1,5 +1,5 @@
 import { expandirComponente } from '@/dominio/componentes';
-import { camadasDaFaixa, type SlideMontado } from '@/dominio/montagem';
+import { camadasDaFaixa, type AjustesDaFaixa, type SlideMontado } from '@/dominio/montagem';
 import type { Camada, Layout } from '@/dominio/schemas';
 import type { KitTokens } from '@/dominio/tokens';
 import { resolverTextoCamada } from '@/render/estiloTexto';
@@ -11,7 +11,7 @@ export function fontesDosSlides(
   layout: Layout,
   slides: SlideMontado[],
   kit: KitTokens,
-  faixaOverrides?: Record<string, Record<string, unknown>>,
+  ajustesDaFaixa?: AjustesDaFaixa,
 ): UsoDeFonte[] {
   const usos: UsoDeFonte[] = [];
   const andar = (cs: Camada[], abertos: string[] = []) =>
@@ -25,7 +25,7 @@ export function fontesDosSlides(
       }
     });
   slides.forEach((s) => andar(s.camadas));
-  andar(camadasDaFaixa(layout, slides.length, faixaOverrides));
+  andar(camadasDaFaixa(layout, slides.length, ajustesDaFaixa));
   const unicos = new Map(usos.map((u) => [`${u.familia}|${u.peso ?? 400}|${u.italico ? 1 : 0}`, u]));
   return [...unicos.values()];
 }

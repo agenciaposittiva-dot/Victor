@@ -79,18 +79,32 @@ export const CamadaImagem = z.object({
   sombra: Sombra.optional(),
 });
 
+/** Ponto de controle da linha de luz, preso a um slide: x em px a partir da borda esquerda do slide e y em px a
+ *  partir do topo da camada. 'ultimo' acompanha o último slide quando o carrossel cresce ou encolhe. */
+export const PontoDaLinha = z.object({
+  slide: z.union([z.number().int().min(0), z.literal('ultimo')]),
+  x: z.number(),
+  y: z.number(),
+});
+export type PontoDaLinha = z.infer<typeof PontoDaLinha>;
+
 export const CamadaForma = z.object({
   ...base,
   tipo: z.literal('forma'),
-  forma: z.enum(['retangulo', 'elipse', 'linha', 'caminho', 'linhaDeLuz']),
+  /** progresso: barra cuja parte preenchida acompanha slide ÷ total (fundo = borda.cor, parte cheia = preenchimento). */
+  forma: z.enum(['retangulo', 'elipse', 'linha', 'caminho', 'linhaDeLuz', 'progresso']),
   preenchimento: Preenchimento.optional(),
   borda: Borda.optional(),
   raioBorda: z.number().min(0).optional(),
   sombra: Sombra.optional(),
   /** caminho SVG (forma 'caminho'), em coordenadas da própria caixa. */
   caminho: z.string().optional(),
-  /** parâmetros da forma procedural (linhaDeLuz: amplitude, ondas, semente, espessura). */
+  /** parâmetros da forma procedural (linhaDeLuz: semente, espessura, inicioX, fimX, yMin, yMax). */
   parametros: z.record(z.string(), z.number()).optional(),
+  /** linhaDeLuz: pontos de controle por slide. Quando existem, a linha passa por eles (em vez da semente). */
+  pontos: z.array(PontoDaLinha).optional(),
+  /** progresso: cor do trilho (parte vazia). */
+  trilho: Cor.optional(),
 });
 
 export const CamadaIcone = z.object({

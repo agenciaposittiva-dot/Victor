@@ -19,6 +19,7 @@ import { Botao } from '@/ui/Botao';
 import { Cabecalho } from '@/ui/Cabecalho';
 import { avisar } from '@/ui/toast';
 import { avisarFontes } from '@/ui/avisarFontes';
+import Gradientes from './Gradientes';
 import css from './Laboratorio.module.css';
 
 type ConferenciaZip = {
@@ -144,6 +145,8 @@ export default function Laboratorio() {
       setOcupado('');
     }
   };
+
+  if (params.has('gradientes')) return <Gradientes />;
 
   if (real) {
     // modo de conferência: cada slide em tamanho real, como referência para o teste de pixels

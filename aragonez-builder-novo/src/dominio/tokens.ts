@@ -45,9 +45,12 @@ export function resolverFonte(ref: string | undefined, kit: KitTokens): Pick<Fon
   return { familia: f.familia, peso: f.peso, italico: f.italico };
 }
 
-/** Troca {handle} e {nome} pelos valores do kit dentro de um texto. */
-export function resolverTexto(texto: string, kit: KitTokens): string {
-  return texto.replace(/\{handle\}/g, kit.handle ?? '').replace(/\{nome\}/g, kit.nome ?? '');
+/** Troca {handle} e {nome} pelos valores do kit e {slide}/{total} pela posição do slide ("2/7" se atualiza
+ *  sozinho ao adicionar, remover ou reordenar slides). Sem numeração, {slide} e {total} ficam como estão. */
+export function resolverTexto(texto: string, kit: KitTokens, num?: { slide: number; total: number }): string {
+  let r = texto.replace(/\{handle\}/g, kit.handle ?? '').replace(/\{nome\}/g, kit.nome ?? '');
+  if (num) r = r.replace(/\{slide\}/g, String(num.slide)).replace(/\{total\}/g, String(num.total));
+  return r;
 }
 
 /** Preenchimento em CSS: cor sólida ou linear-gradient com as cores resolvidas. */

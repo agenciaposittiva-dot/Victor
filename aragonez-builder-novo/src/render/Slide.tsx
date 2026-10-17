@@ -1,10 +1,10 @@
-import { useMemo, type CSSProperties, type ReactNode } from 'react';
+import { memo, useMemo, type CSSProperties, type ReactNode } from 'react';
 import { slidesVisiveis } from '@/dominio/faixa';
-import { camadasDaFaixa, type SlideMontado } from '@/dominio/montagem';
+import { camadasDaFaixa, type AjustesDaFaixa, type SlideMontado } from '@/dominio/montagem';
 import type { Layout } from '@/dominio/schemas';
 import type { KitTokens } from '@/dominio/tokens';
 import { Camadas } from './Camadas';
-import { CtxRender, type ContextoRender } from './contexto';
+import { CtxNumeracao, CtxRender, type ContextoRender } from './contexto';
 import { Fundo } from './Fundo';
 
 /** Raiz de render: fornece kit, formato e componentes para as camadas. */
@@ -19,15 +19,34 @@ export function ProvedorRender({
   urlDoAsset?: ContextoRender['urlDoAsset'];
   children?: ReactNode;
 }) {
-  return (
-    <CtxRender.Provider value={{ kit, formato: layout.formato, componentes: layout.componentes, urlDoAsset }}>
-      {children}
-    </CtxRender.Provider>
+  const valor = useMemo(
+    () => ({ kit, formato: layout.formato, componentes: layout.componentes, urlDoAsset }),
+    [kit, layout.formato, layout.componentes, urlDoAsset],
   );
+  return <CtxRender.Provider value={valor}>{children}</CtxRender.Provider>;
 }
 
-/** Um slide em pixels reais (base do formato). O mesmo componente serve para preview, miniatura e exportação. */
-export function Slide({ slide, w, h, estilo }: { slide: SlideMontado; w: number; h: number; estilo?: CSSProperties }) {
+/** Numeração do slide para os tokens {slide} e {total} e para a forma "progresso". */
+function Numeracao({ indice, total, children }: { indice: number; total: number; children: ReactNode }) {
+  const valor = useMemo(() => ({ indice, total }), [indice, total]);
+  return <CtxNumeracao.Provider value={valor}>{children}</CtxNumeracao.Provider>;
+}
+
+/** Um slide em pixels reais (base do formato). O mesmo componente serve para preview, miniatura e exportação.
+ *  "total" é a quantidade de slides do projeto (para {total} e para a barra de progresso). */
+export const Slide = memo(function Slide({
+  slide,
+  w,
+  h,
+  total = 1,
+  estilo,
+}: {
+  slide: SlideMontado;
+  w: number;
+  h: number;
+  total?: number;
+  estilo?: CSSProperties;
+}) {
   return (
     <div
       data-slide={slide.indice}
@@ -35,30 +54,33 @@ export function Slide({ slide, w, h, estilo }: { slide: SlideMontado; w: number;
       style={{ position: 'relative', width: w, height: h, overflow: 'hidden', ...estilo }}
     >
       <Fundo fundo={slide.fundo} w={w} h={h} />
-      <Camadas camadas={slide.camadas} />
+      <Numeracao indice={slide.indice} total={total}>
+        <Camadas camadas={slide.camadas} />
+      </Numeracao>
     </div>
   );
-}
+});
 
 /** Carrossel contínuo: os slides lado a lado numa faixa de N × w. As camadas de cada slide podem passar
  *  da divisa (não há corte entre slides) e as camadas da faixa atravessam tudo.
- *  "visiveis" limita quais slides são desenhados (a faixa e suas camadas continuam com a largura total). */
-export function Faixa({
+ *  "visiveis" limita quais slides são desenhados (a faixa e suas camadas continuam com a largura total).
+ *  "ajustes" são os ajustes e extras do projeto na faixa (o editor passa o layout já com a faixa aplicada). */
+export const Faixa = memo(function Faixa({
   layout,
   slides,
-  faixaOverrides,
+  ajustes,
   visiveis,
 }: {
   layout: Layout;
   slides: SlideMontado[];
-  faixaOverrides?: Record<string, Record<string, unknown>>;
+  ajustes?: AjustesDaFaixa;
   visiveis?: number[];
 }) {
   const { w, h } = layout.formato;
   const n = slides.length;
-  const daFaixa = camadasDaFaixa(layout, n, faixaOverrides);
-  const abaixo = daFaixa.filter((c) => !c.acima);
-  const acima = daFaixa.filter((c) => c.acima);
+  const daFaixa = useMemo(() => camadasDaFaixa(layout, n, ajustes), [layout, n, ajustes]);
+  const abaixo = useMemo(() => daFaixa.filter((c) => !c.acima), [daFaixa]);
+  const acima = useMemo(() => daFaixa.filter((c) => c.acima), [daFaixa]);
   const desenhar = visiveis ? slides.filter((s) => visiveis.includes(s.indice)) : slides;
   return (
     <div data-faixa={n} style={{ position: 'relative', width: n * w, height: h, overflow: 'hidden' }}>
@@ -71,7 +93,9 @@ export function Faixa({
           <Fundo fundo={s.fundo} w={w} h={h} />
         </div>
       ))}
-      <Camadas camadas={abaixo} />
+      <Numeracao indice={-1} total={n}>
+        <Camadas camadas={abaixo} />
+      </Numeracao>
       {desenhar.map((s) => (
         <div
           key={'c' + s.indice}
@@ -79,13 +103,17 @@ export function Faixa({
           data-tipo={s.tipo.id}
           style={{ position: 'absolute', left: s.indice * w, top: 0, width: w, height: h }}
         >
-          <Camadas camadas={s.camadas} />
+          <Numeracao indice={s.indice} total={n}>
+            <Camadas camadas={s.camadas} />
+          </Numeracao>
         </div>
       ))}
-      <Camadas camadas={acima} />
+      <Numeracao indice={-1} total={n}>
+        <Camadas camadas={acima} />
+      </Numeracao>
     </div>
   );
-}
+});
 
 /** Janela de um slide dentro da faixa contínua: é assim que o slide sai no arquivo (mesmo recorte, sem sobra).
  *  Desenha só os slides cujas camadas cruzam a janela (em geral ele e os vizinhos) mais as camadas da faixa:
@@ -94,12 +122,12 @@ export function JanelaDaFaixa({
   layout,
   slides,
   indice,
-  faixaOverrides,
+  ajustes,
 }: {
   layout: Layout;
   slides: SlideMontado[];
   indice: number;
-  faixaOverrides?: Record<string, Record<string, unknown>>;
+  ajustes?: AjustesDaFaixa;
 }) {
   const { w, h } = layout.formato;
   const visiveis = useMemo(
@@ -114,7 +142,7 @@ export function JanelaDaFaixa({
   return (
     <div data-janela={indice} style={{ position: 'relative', width: w, height: h, overflow: 'hidden' }}>
       <div style={{ position: 'absolute', left: -indice * w, top: 0 }}>
-        <Faixa layout={layout} slides={slides} faixaOverrides={faixaOverrides} visiveis={visiveis} />
+        <Faixa layout={layout} slides={slides} ajustes={ajustes} visiveis={visiveis} />
       </div>
     </div>
   );

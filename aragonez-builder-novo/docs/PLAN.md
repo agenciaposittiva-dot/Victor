@@ -438,7 +438,7 @@ Total: cerca de 12 sessões. As fases 3, 4 e 5 são as maiores. Se alguma fase n
 **Fase 4b (coleção genérica)**
 
 1. **Direção visual**: os estilos **Corp, Pop, Orgânico e Info** do app antigo, refeitos do zero e só como referência (sem reaproveitar código). Brutal, foto, luxo, revista, soft e tech ficam para depois.
-2. **Tipos de slide novos**: Serviços, Perguntas frequentes, Planos e preços, Case de sucesso, Contato e **Paleta da marca** (lê as cores do Brand Kit e monta os blocos com nome e hex sozinho; trocar o kit atualiza o slide).
+2. **Tipos de slide novos**: Serviços, Perguntas frequentes, Planos e preços, Case de sucesso, Contato e **Paleta da marca** (lê as cores do Brand Kit e monta os blocos com nome e hex sozinho; trocar o kit atualiza o slide). Para isso, tokens de texto com o nome e o hex de cada cor do kit (ex.: `{hex.primaria}`), no mesmo esquema de `{slide}`/`{total}`.
 3. **Camada de gráfico** (estilo Info): barras, rosca, linha e anel de porcentagem, gerados a partir de números editáveis no editor, em SVG e sem filtros, para exportar igual ao preview.
 4. **Modelos com direção das referências de terceiros** (sem reproduzir nenhuma arte): foto escura com título grande, papel rasgado revelando o texto, pílula "Arraste para o lado" e slide só de texto em fundo preto. Papel rasgado: a borda é um asset PNG com transparência ou uma forma SVG (tipo caminho), nunca máscara CSS.
 5. **Carrossel educativo**: etiqueta pequena, lista numerada em cartões, barra de progresso (forma "progresso" e `{slide}/{total}`) e CTA "Comenta X".

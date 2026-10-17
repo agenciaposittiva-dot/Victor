@@ -92,6 +92,16 @@ const entrada: LayoutEntrada = {
           ],
         },
         parametros: { espessura: 3, semente: 11 },
+        // pontos de controle (como se arrastados no editor): a linha passa pela faixa livre embaixo do subtítulo da
+        // capa e entre a caixa e o selo dos slides de conteúdo, sem cortar a lista
+        pontos: [
+          { slide: 0, x: 830, y: 1150 },
+          { slide: 1, x: 120, y: 1205 },
+          { slide: 1, x: 520, y: 1110 },
+          { slide: 1, x: 940, y: 1048 },
+          { slide: 'ultimo', x: 260, y: 1010 },
+          { slide: 'ultimo', x: 620, y: 1090 },
+        ],
       },
     ],
   },
@@ -387,7 +397,7 @@ export function projetoTeste(n = 3): Pick<Projeto, 'nome' | 'slides' | 'faixaOve
       const overrides: Record<string, Record<string, unknown>> = tipoId === 'conteudo'
         ? { num: { texto: String(i + 1).padStart(2, '0') } }
         : {};
-      return { id: `s${i + 1}`, tipoId, conteudo: {}, overrides };
+      return { id: `s${i + 1}`, tipoId, conteudo: {}, overrides, camadasExtras: [] };
     }),
     faixaOverrides: {},
   };

@@ -1,11 +1,12 @@
-import { memo, useContext, useMemo, type CSSProperties, type ReactNode } from 'react';
+import { memo, useContext, useId, useMemo, type CSSProperties, type ReactNode } from 'react';
 import { expandirComponente } from '@/dominio/componentes';
 import { caminhoLinhaDeLuz } from '@/dominio/faixa';
 import type { Camada, CamadaForma, CamadaImagem, CamadaTexto, Gradiente } from '@/dominio/schemas';
 import { resolverCor, resolverPreenchimento, type KitTokens } from '@/dominio/tokens';
-import { CtxComponentesAbertos, useRender } from './contexto';
+import { CtxComponentesAbertos, CtxNumeracao, useRender, type Numeracao } from './contexto';
 import { resolverTextoCamada } from './estiloTexto';
 import { useVersaoFontes } from './fontes';
+import { vetorDoGradiente } from './gradiente';
 import { ICONES_SLIDE } from './icones';
 import { tamanhoQueCabe } from './medida';
 
@@ -26,11 +27,26 @@ function caixa(c: Camada, extra?: CSSProperties): CSSProperties {
 const sombraCss = (s: CamadaForma['sombra'], kit: KitTokens) =>
   s ? `${s.x}px ${s.y}px ${s.desfoque}px ${resolverCor(s.cor, kit)}` : undefined;
 
+/** Número do slide para {slide}: o próprio slide; nas camadas da faixa, o slide da âncora (ou o primeiro). */
+function numeroDoSlide(c: Camada, n: Numeracao): number {
+  if (n.indice >= 0) return n.indice + 1;
+  if (c.ancora) return c.ancora.slide === 'ultimo' ? n.total : Math.min(c.ancora.slide, n.total - 1) + 1;
+  return 1;
+}
+
 function Texto({ c }: { c: CamadaTexto }) {
   const { kit } = useRender();
   const versao = useVersaoFontes();
+  const numeracao = useContext(CtxNumeracao);
   const max = c.tamanho ?? 48;
-  const res = useMemo(() => resolverTextoCamada(c, kit, max), [c, kit, max]);
+  // só textos com {slide}/{total} dependem da posição: os outros não recalculam ao reordenar slides
+  const usaNumero = /\{(slide|total)\}/.test(c.texto);
+  const slideNum = usaNumero ? numeroDoSlide(c, numeracao) : 0;
+  const total = usaNumero ? numeracao.total : 0;
+  const res = useMemo(
+    () => resolverTextoCamada(c, kit, max, usaNumero ? { slide: slideNum, total } : undefined),
+    [c, kit, max, usaNumero, slideNum, total],
+  );
   const tamanho = useMemo(
     () =>
       c.autoAjuste
@@ -145,19 +161,15 @@ function Imagem({ c }: { c: CamadaImagem }) {
   );
 }
 
-let contadorGradiente = 0;
-function GradienteSvg({ id, g, kit, w }: { id: string; g: Gradiente; kit: KitTokens; w: number }) {
-  // gradiente horizontal ao longo da caixa (a linha de luz muda de cor de um slide para o outro)
-  const rad = ((g.angulo - 90) * Math.PI) / 180;
+/** id único e válido em url(#…): o useId do React traz caracteres como ":" e "«»", que são removidos. */
+function useIdSvg(prefixo: string) {
+  return prefixo + useId().replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+function GradienteSvg({ id, g, kit, w, h }: { id: string; g: Gradiente; kit: KitTokens; w: number; h: number }) {
+  const v = vetorDoGradiente(g.angulo, w, h);
   return (
-    <linearGradient
-      id={id}
-      gradientUnits="userSpaceOnUse"
-      x1={0}
-      y1={0}
-      x2={w * Math.cos(rad) || w}
-      y2={w * Math.sin(rad)}
-    >
+    <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={v.x1} y1={v.y1} x2={v.x2} y2={v.y2}>
       {g.paradas.map((p, i) => (
         <stop key={i} offset={p.pos} stopColor={resolverCor(p.cor, kit)} />
       ))}
@@ -165,9 +177,41 @@ function GradienteSvg({ id, g, kit, w }: { id: string; g: Gradiente; kit: KitTok
   );
 }
 
+/** Barra de progresso: a parte cheia acompanha slide ÷ total (deitada, ou de cima para baixo se for mais alta). */
+function Progresso({ c }: { c: CamadaForma }) {
+  const { kit } = useRender();
+  const n = useContext(CtxNumeracao);
+  const fracao = n.indice >= 0 && n.total > 0 ? (n.indice + 1) / n.total : 1;
+  const deitada = c.w >= c.h;
+  const raio = c.raioBorda ?? Math.min(c.w, c.h) / 2;
+  return (
+    <div
+      data-camada={c.id}
+      style={caixa(c, {
+        overflow: 'hidden',
+        borderRadius: raio,
+        background: resolverCor(c.trilho, kit) ?? 'rgba(128,128,128,.25)',
+      })}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: deitada ? c.w * fracao : '100%',
+          height: deitada ? '100%' : c.h * fracao,
+          borderRadius: raio,
+          background: resolverPreenchimento(c.preenchimento, kit) ?? '#ffffff',
+        }}
+      />
+    </div>
+  );
+}
+
 function Forma({ c }: { c: CamadaForma }) {
   const { kit, formato } = useRender();
-  const idGrad = useMemo(() => `ab-g${++contadorGradiente}`, []);
+  const idGrad = useIdSvg('ab-g');
+  if (c.forma === 'progresso') return <Progresso c={c} />;
   if (c.forma === 'retangulo' || c.forma === 'elipse') {
     return (
       <div
@@ -212,6 +256,7 @@ function Forma({ c }: { c: CamadaForma }) {
       yMax: p.yMax,
       semente: p.semente,
       pontosPorSlide: p.pontosPorSlide,
+      pontos: c.pontos,
     });
     const traco = grad ? `url(#${idGrad})` : (corSolida ?? '#ff5a1f');
     const esp = p.espessura ?? 3;
@@ -219,7 +264,7 @@ function Forma({ c }: { c: CamadaForma }) {
     return (
       <svg
         data-camada={c.id}
-        style={caixa(c, { overflow: 'visible' })}
+        style={caixa(c, { overflow: 'visible', pointerEvents: 'none' })}
         width={c.w}
         height={c.h}
         viewBox={`0 0 ${c.w} ${c.h}`}
@@ -227,10 +272,18 @@ function Forma({ c }: { c: CamadaForma }) {
       >
         {grad && (
           <defs>
-            <GradienteSvg id={idGrad} g={grad} kit={kit} w={c.w} />
+            <GradienteSvg id={idGrad} g={grad} kit={kit} w={c.w} h={c.h} />
           </defs>
         )}
-        <path d={d} stroke={traco} strokeWidth={esp * 12} strokeOpacity={0.05} strokeLinecap="round" />
+        {/* só o traço recebe clique no editor (a caixa da linha cobre a faixa inteira) */}
+        <path
+          d={d}
+          stroke={traco}
+          strokeWidth={esp * 12}
+          strokeOpacity={0.05}
+          strokeLinecap="round"
+          style={{ pointerEvents: 'visibleStroke' }}
+        />
         <path d={d} stroke={traco} strokeWidth={esp * 5} strokeOpacity={0.12} strokeLinecap="round" />
         <path d={d} stroke={traco} strokeWidth={esp * 2.2} strokeOpacity={0.3} strokeLinecap="round" />
         <path d={d} stroke={traco} strokeWidth={esp} strokeLinecap="round" />
@@ -240,17 +293,18 @@ function Forma({ c }: { c: CamadaForma }) {
   return (
     <svg
       data-camada={c.id}
-      style={caixa(c, { overflow: 'visible' })}
+      style={caixa(c, { overflow: 'visible', pointerEvents: 'none' })}
       width={c.w}
       height={c.h}
       viewBox={`0 0 ${c.w} ${c.h}`}
     >
       {grad && (
         <defs>
-          <GradienteSvg id={idGrad} g={grad} kit={kit} w={c.w} />
+          <GradienteSvg id={idGrad} g={grad} kit={kit} w={c.w} h={c.h} />
         </defs>
       )}
       <path
+        style={{ pointerEvents: 'visiblePainted' }}
         d={c.caminho ?? ''}
         fill={grad ? `url(#${idGrad})` : (corSolida ?? 'none')}
         stroke={c.borda ? resolverCor(c.borda.cor, kit) : undefined}
@@ -288,7 +342,7 @@ function CamadaComponenteView({ c }: { c: Extract<Camada, { tipo: 'componente' }
   );
 }
 
-function CamadaView({ c }: { c: Camada }): ReactNode {
+const CamadaView = memo(function CamadaView({ c }: { c: Camada }): ReactNode {
   const { kit } = useRender();
   if (c.oculta) return null;
   switch (c.tipo) {
@@ -323,7 +377,7 @@ function CamadaView({ c }: { c: Camada }): ReactNode {
     case 'componente':
       return <CamadaComponenteView c={c} />;
   }
-}
+});
 
 /** Desenha uma lista de camadas na ordem (a primeira fica por baixo). */
 export const Camadas = memo(function Camadas({ camadas }: { camadas: Camada[] }) {

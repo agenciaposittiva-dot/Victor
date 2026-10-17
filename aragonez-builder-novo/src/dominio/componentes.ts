@@ -1,17 +1,33 @@
 import type { Camada, CamadaComponente, Componente } from './schemas';
 
-/** Aplica ajustes (por id) numa árvore de camadas, inclusive dentro de grupos. */
+/** Aplica ajustes (por id) numa árvore de camadas, inclusive dentro de grupos.
+ *  - valor null apaga a propriedade (ex.: { sombra: null } tira a sombra que o layout tinha);
+ *  - { removida: true } tira a camada;
+ *  - um ajuste com "filhos" troca os filhos do grupo pela lista pronta (não desce de novo neles). */
 export function aplicarOverrides(
   camadas: Camada[],
   overrides: Record<string, Record<string, unknown>> | undefined,
 ): Camada[] {
   if (!overrides || !Object.keys(overrides).length) return camadas;
-  return camadas.map((c) => {
+  const r: Camada[] = [];
+  for (const c of camadas) {
     const o = overrides[c.id];
-    let nova = (o ? { ...c, ...o, id: c.id, tipo: c.tipo } : c) as Camada;
-    if (nova.tipo === 'grupo') nova = { ...nova, filhos: aplicarOverrides(nova.filhos, overrides) };
-    return nova;
-  });
+    if (o?.removida) continue;
+    let nova = c;
+    if (o) {
+      const m: Record<string, unknown> = { ...c };
+      for (const [k, v] of Object.entries(o)) {
+        if (k === 'id' || k === 'tipo' || k === 'removida') continue;
+        if (v === null) delete m[k];
+        else m[k] = v;
+      }
+      nova = m as Camada;
+    }
+    if (nova.tipo === 'grupo' && !(o && 'filhos' in o))
+      nova = { ...nova, filhos: aplicarOverrides(nova.filhos, overrides) };
+    r.push(nova);
+  }
+  return r;
 }
 
 export type ComponenteExpandido = {

@@ -8,6 +8,9 @@ export const MOTOR_PADRAO: Motor = 'modern-screenshot';
 
 const quadro = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
 
+/** Cada render fora da tela tem um prefixo próprio no useId: os ids dos gradientes SVG não colidem com os da tela. */
+let rendersFora = 0;
+
 /** Espera todas as imagens do nó carregarem e decodificarem (sem isso a imagem sai em branco no arquivo). */
 export async function esperarImagens(no: HTMLElement): Promise<void> {
   const imgs = [...no.querySelectorAll('img')];
@@ -33,7 +36,7 @@ export async function renderizarFora(
   host.setAttribute('aria-hidden', 'true');
   host.style.cssText = `position:fixed;left:${-(w + 200)}px;top:0;width:${w}px;height:${h}px;pointer-events:none;z-index:-1;`;
   document.body.appendChild(host);
-  const raiz = createRoot(host);
+  const raiz = createRoot(host, { identifierPrefix: `exp${++rendersFora}-` });
   flushSync(() => raiz.render(el));
   await esperarImagens(host);
   await document.fonts.ready;

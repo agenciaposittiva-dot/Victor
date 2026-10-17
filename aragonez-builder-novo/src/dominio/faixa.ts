@@ -1,4 +1,4 @@
-import type { Camada } from './schemas';
+import type { Camada, PontoDaLinha } from './schemas';
 
 /** Carrossel contínuo: os slides ficam lado a lado numa faixa de N × largura. */
 export const larguraFaixa = (n: number, w: number) => n * w;
@@ -42,18 +42,21 @@ export type ParamsLinha = {
   yMax?: number;
   semente?: number;
   pontosPorSlide?: number;
+  /** pontos de controle por slide; quando existem, a linha passa por eles (a semente é ignorada). */
+  pontos?: PontoDaLinha[];
 };
 
-/** Caminho SVG da "linha de luz" que atravessa os slides. Começa no slide 1, ondula e termina no último,
- *  recalculado para qualquer quantidade de slides. Coordenadas na faixa inteira (0..N×w). */
-export function caminhoLinhaDeLuz(n: number, w: number, h: number, p: ParamsLinha = {}): string {
+type P = [number, number];
+
+/** Pontos sorteados pela semente, em coordenadas da faixa (0..N×w). */
+function pontosSorteados(n: number, w: number, h: number, p: ParamsLinha): P[] {
   const inicio = p.inicioX ?? w * 0.8;
   const fim = p.fimX ?? (n - 1) * w + w * 0.07;
   const yMin = p.yMin ?? h * 0.17;
   const yMax = p.yMax ?? h * 0.82;
   const rnd = aleatorio(p.semente ?? 7);
   const qtd = Math.max(3, Math.round((n - 1) * (p.pontosPorSlide ?? 2)) + 1);
-  const pts: [number, number][] = [];
+  const pts: P[] = [];
   for (let i = 0; i < qtd; i++) {
     const t = i / (qtd - 1);
     const x = inicio + (fim - inicio) * t;
@@ -62,7 +65,38 @@ export function caminhoLinhaDeLuz(n: number, w: number, h: number, p: ParamsLinh
     pts.push([x, yMin + (yMax - yMin) * onda]);
   }
   pts[0] = [inicio, yMin];
-  // Catmull-Rom → Bézier cúbica (curva suave passando por todos os pontos)
+  return pts;
+}
+
+/** Os pontos sorteados como pontos de controle por slide (o editor converte a linha sorteada em pontos
+ *  arrastáveis com isto). Pontos no último slide viram 'ultimo', para acompanhar o fim do carrossel. */
+export function pontosDaSemente(n: number, w: number, h: number, p: ParamsLinha = {}): PontoDaLinha[] {
+  // sem arredondar: a linha convertida fica idêntica à sorteada
+  return pontosSorteados(n, w, h, p).map(([x, y]) => pontoNaFaixaParaSlide(x, y, n, w, false));
+}
+
+/** Converte uma posição na faixa (x de 0 a N×w) em ponto preso ao slide em que ela cai (arredondado a 0,1 px). */
+export function pontoNaFaixaParaSlide(x: number, y: number, n: number, w: number, arredondar = true): PontoDaLinha {
+  const i = Math.max(0, Math.min(n - 1, Math.floor(x / w)));
+  const r = (v: number) => (arredondar ? Math.round(v * 10) / 10 : v);
+  return { slide: i === n - 1 ? 'ultimo' : i, x: r(x - i * w), y: r(y) };
+}
+
+/** Posições na faixa dos pontos de controle para N slides, em ordem da esquerda para a direita.
+ *  Pontos de slides que não existem mais saem. Se há pontos 'ultimo', o último slide mostra só eles (os pontos
+ *  numerados daquele slide em diante saem), para o fim da linha não se embaralhar quando o carrossel encolhe. */
+export function pontosNaFaixa(pontos: PontoDaLinha[], n: number, w: number): P[] {
+  const temUltimo = pontos.some((p) => p.slide === 'ultimo');
+  const limite = temUltimo ? n - 1 : n;
+  return pontos
+    .filter((p) => p.slide === 'ultimo' || p.slide < limite)
+    .map((p): P => [(p.slide === 'ultimo' ? n - 1 : p.slide) * w + p.x, p.y])
+    .sort((a, b) => a[0] - b[0]);
+}
+
+/** Curva suave (Catmull-Rom convertida em Bézier cúbica) que passa por todos os pontos. */
+export function caminhoPorPontos(pts: P[]): string {
+  if (!pts.length) return '';
   const r = (v: number) => Math.round(v * 10) / 10;
   let d = `M${r(pts[0]![0])} ${r(pts[0]![1])}`;
   for (let i = 0; i < pts.length - 1; i++) {
@@ -75,6 +109,17 @@ export function caminhoLinhaDeLuz(n: number, w: number, h: number, p: ParamsLinh
     d += ` C${r(c1[0]!)} ${r(c1[1]!)} ${r(c2[0]!)} ${r(c2[1]!)} ${r(p2[0])} ${r(p2[1])}`;
   }
   return d;
+}
+
+/** Pontos por onde a linha passa, na faixa: os de controle (se houver) ou os sorteados pela semente. */
+export function pontosDaLinha(n: number, w: number, h: number, p: ParamsLinha = {}): P[] {
+  return p.pontos?.length ? pontosNaFaixa(p.pontos, n, w) : pontosSorteados(n, w, h, p);
+}
+
+/** Caminho SVG da "linha de luz" que atravessa os slides. Começa no slide 1, ondula e termina no último,
+ *  recalculado para qualquer quantidade de slides. Coordenadas na faixa inteira (0..N×w). */
+export function caminhoLinhaDeLuz(n: number, w: number, h: number, p: ParamsLinha = {}): string {
+  return caminhoPorPontos(pontosDaLinha(n, w, h, p));
 }
 
 /** Margem fixa para antisserrilhado e brilhos de borda. */
