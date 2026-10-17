@@ -2,19 +2,19 @@
 
 Plataforma web para criar, editar e exportar carrosséis e posts para redes sociais. Usuários: Grupo Posittiva (agência) e a marca pessoal de Victor Aragonez. Projeto novo, sem nada da versão antiga. A interface é toda em português do Brasil.
 
-> Status: **aguardando aprovação**. Nenhum código da aplicação foi escrito ainda.
+> Status: **aprovado**. O projeto fica na pasta própria `aragonez-builder-novo/` do repositório `agenciaposittiva-dot/Victor`; execução por fases.
 
 ---
 
 ## 0. Decisões que preciso de você
 
-1. **Onde o projeto vai morar.**
-   - Esta sessão só tem acesso ao repositório `agenciaposittiva-dot/Victor`, branch `claude/festive-rubin-r3h449`. Esse repositório já tem git e guarda arquivos da versão antiga.
-   - Proposta: criar o projeto novo na pasta isolada `builder/`, com `package.json`, `netlify.toml` e testes próprios. Os arquivos antigos ficam como estão e não são abertos.
-   - No Netlify, isso exige configurar **Base directory = `builder`**.
-   - Se preferir um repositório só para o projeto (o "git init" do pedido), crie o repositório vazio e me passe o nome. Eu movo a pasta com o histórico de commits (`git subtree split`).
+1. **Onde o projeto mora.**
+   - O projeto novo fica numa **pasta própria no repositório `agenciaposittiva-dot/Victor`**, com `package.json`, `netlify.toml` e `README.md` próprios. Nada do app que já existe no repositório é alterado.
+   - O app das etapas V1–V4 **não** está neste repositório: ele fica em `agenciaposittiva-dot/aragonezbuilder` (PR #4).
+   - O nome `aragonez-builder/` já é usado aqui por uma versão antiga do builder. Por isso, a pasta nova se chama **`aragonez-builder-novo/`** até você escolher o nome final.
+   - No Netlify, o site do projeto novo usa **Base directory = `aragonez-builder-novo`**.
 2. **Pasta `referencias/` não existe.** Procurei nos dois repositórios e em todas as branches. Veja a seção 2 e o arquivo `docs/PENDENCIAS.md`.
-3. **Aprovação do plano.** Com o seu ok, começo a Fase 1.
+3. **Aprovação do plano.** Ok dado: execução em andamento.
 
 ---
 
@@ -156,7 +156,7 @@ cliente: normaliza para base 1080 · recorta o logo da imagem ORIGINAL pela bbox
 ## 4. Estrutura de pastas
 
 ```
-builder/
+aragonez-builder-novo/      (pasta própria; o resto do repositório não é tocado)
 ├─ docs/                     PLAN.md · PENDENCIAS.md · COMO-CRIAR-LAYOUT.md · SUPABASE.md
 ├─ referencias/              victor-aragonez/ · feira-nova/ (gabaritos para testes e JPG→Layout)
 ├─ public/                   fontes/ (woff2) · seeds/ (assets dos layouts iniciais)
@@ -339,12 +339,12 @@ Total: cerca de 12 sessões. As fases 3, 4 e 5 são as maiores. Se alguma fase n
 
 ## 8. O que você precisa fazer manualmente
 
-1. **Decidir onde o projeto mora** (seção 0) e aprovar este plano.
+1. **Confirmar o nome da pasta** do projeto novo (hoje `aragonez-builder-novo/`, porque `aragonez-builder/` já existe com uma versão antiga).
 2. **Enviar `referencias/feira-nova/`.** Preciso dos JPGs da Capa, dos Ingredientes e do Passo a passo. Se possível, também do logo Feira Nova em PNG transparente e da textura verde do fundo.
 3. **Kit Victor Aragonez.** Envie a foto do avatar usada no Header (ou autorize exportar do Figma) e o balão 3D "Bolha IA", se quiser usá-lo como asset.
 4. **Supabase.** Criar o projeto, rodar as migrações de `supabase/migrations` (passo a passo no README) e criar o seu usuário admin.
 5. **Netlify.**
-   - Ligar o site ao repositório, com Base directory `builder` se ficar neste repositório.
+   - Ligar um site novo ao repositório `agenciaposittiva-dot/Victor` com **Base directory = `aragonez-builder-novo`** (o build vem no `netlify.toml` dessa pasta).
    - Cadastrar as variáveis: `ANTHROPIC_API_KEY`, `AI_MODEL` (opcional), `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` (esta só nas functions).
    - O **Netlify Drop não publica functions**, então não serve para este projeto.
 6. **(Depois) Chave do Freepik** ou de outro serviço de imagem, para ligar o `ImageProvider`.

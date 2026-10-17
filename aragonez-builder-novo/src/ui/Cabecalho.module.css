@@ -1,0 +1,24 @@
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.titulo {
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  margin-top: 8px;
+}
+.texto {
+  margin-top: 10px;
+  color: var(--suave);
+  max-width: 64ch;
+}
+.acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

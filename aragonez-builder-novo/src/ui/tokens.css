@@ -1,0 +1,35 @@
+/* Tokens da interface (identidade Aragonez: preto quente e laranja). Os layouts usam os tokens do Brand Kit,
+   não estes: aqui é só a casca da plataforma. */
+:root {
+  color-scheme: dark;
+  --preto: #0a0806;
+  --preto-2: #0f0b08;
+  --superficie: #16110d;
+  --superficie-2: #1e1712;
+  --superficie-3: #271e17;
+  --linha: #2e241c;
+  --linha-2: #3f3126;
+  --texto: #f6f0ea;
+  --texto-2: #d6cbc0;
+  --suave: #a39486;
+  --suave-2: #74675c;
+  --laranja: #ff5a1f;
+  --laranja-2: #ff7a45;
+  --laranja-suave: rgba(255, 90, 31, 0.14);
+  --laranja-borda: rgba(255, 90, 31, 0.45);
+  --vermelho: #d62828;
+  --ok: #4ade80;
+  --aviso: #fbbf24;
+  --erro: #f87171;
+  --gradiente: linear-gradient(135deg, #ff7a45 0%, #ff5a1f 45%, #d62828 100%);
+  --fonte: 'Space Grotesk Variable', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fonte-serif: 'Instrument Serif', Georgia, serif;
+  --fonte-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+  --raio-sm: 10px;
+  --raio: 14px;
+  --raio-lg: 20px;
+  --sombra: 0 24px 60px -28px rgba(0, 0, 0, 0.85);
+  --sombra-laranja: 0 14px 34px -14px rgba(255, 90, 31, 0.65);
+  --transicao: 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --menu-largura: 232px;
+}

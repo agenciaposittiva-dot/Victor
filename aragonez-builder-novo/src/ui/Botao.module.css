@@ -1,0 +1,64 @@
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--raio-sm);
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background var(--transicao),
+    border-color var(--transicao),
+    transform var(--transicao),
+    box-shadow var(--transicao),
+    color var(--transicao);
+}
+.botao:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.primario {
+  background: var(--gradiente);
+  color: #fff;
+  box-shadow: var(--sombra-laranja);
+}
+.primario:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px -14px rgba(255, 90, 31, 0.8);
+}
+.secundario {
+  background: var(--superficie-2);
+  border-color: var(--linha-2);
+  color: var(--texto);
+}
+.secundario:not(:disabled):hover {
+  border-color: var(--laranja-borda);
+  background: var(--superficie-3);
+}
+.fantasma {
+  background: transparent;
+  color: var(--texto-2);
+}
+.fantasma:not(:disabled):hover {
+  background: var(--superficie-2);
+  color: var(--texto);
+}
+.perigo {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: var(--erro);
+}
+.pequeno {
+  padding: 7px 11px;
+  font-size: 13px;
+}
+.grande {
+  padding: 13px 22px;
+  font-size: 15px;
+}
