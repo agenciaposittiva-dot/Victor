@@ -23,6 +23,7 @@ export const KIT_TESTE: BrandKit = {
   assets: [],
   handle: '@victoraragonez.dsg',
   tomDeVoz: 'Papo reto, direto e com humor seco.',
+  versaoSchema: 1,
 };
 
 const W = 1080;

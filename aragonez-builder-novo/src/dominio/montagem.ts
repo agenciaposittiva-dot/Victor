@@ -1,5 +1,6 @@
 import { aplicarOverrides } from './componentes';
 import { posicaoNaFaixa } from './faixa';
+import { garantirIdsUnicos, idsDaArvore } from './ids';
 import type { Camada, Fundo, Layout, Projeto, SlideDoProjeto, TipoDeSlide, ValorCampo } from './schemas';
 
 /** Slide pronto para desenhar: tipo, fundo e camadas já com o conteúdo e os ajustes do projeto.
@@ -52,8 +53,16 @@ export function ordenarCamadas(camadas: Camada[], ordem: string[] | undefined): 
 export function montarSlide(layout: Layout, slide: SlideParaMontar, indice = 0): SlideMontado {
   const tipo = tipoDoLayout(layout, slide.tipoId);
   const doLayout = aplicarOverrides(comConteudo(tipo.camadas, slide.conteudo ?? {}), slide.overrides);
-  const camadas = ordenarCamadas([...doLayout, ...(slide.camadasExtras ?? [])], slide.ordem);
+  const camadas = ordenarCamadas([...doLayout, ...extrasSemColisao(doLayout, slide.camadasExtras)], slide.ordem);
   return { indice, tipo, fundo: slide.fundo ?? tipo.fundo, camadas };
+}
+
+/** Extra com o mesmo id de uma camada do layout (ex.: o layout ganhou essa camada depois) ganha um id novo e
+ *  estável (selo → selo-2): assim os ajustes e o conteúdo da camada do layout não atingem a extra, e editor,
+ *  miniaturas e exportação veem as mesmas camadas. O próximo salvamento grava o id novo. */
+function extrasSemColisao(doLayout: Camada[], extras: Camada[] | undefined): Camada[] {
+  if (!extras?.length) return [];
+  return garantirIdsUnicos(extras, idsDaArvore(doLayout));
 }
 
 /** Cache por (layout, slide do projeto): o mesmo objeto devolve o mesmo slide montado, então as camadas mantêm
@@ -82,7 +91,7 @@ export type AjustesDaFaixa = Partial<Pick<Projeto, 'faixaOverrides' | 'faixaExtr
 export function faixaDoProjeto(layout: Layout, ajustes?: AjustesDaFaixa): Camada[] {
   if (!layout.continuo) return [];
   const base = aplicarOverrides(layout.faixa?.camadas ?? [], ajustes?.faixaOverrides);
-  return ordenarCamadas([...base, ...(ajustes?.faixaExtras ?? [])], ajustes?.faixaOrdem);
+  return ordenarCamadas([...base, ...extrasSemColisao(base, ajustes?.faixaExtras)], ajustes?.faixaOrdem);
 }
 
 /** Camadas da faixa contínua já posicionadas para N slides (âncoras e "estica" resolvidos). */

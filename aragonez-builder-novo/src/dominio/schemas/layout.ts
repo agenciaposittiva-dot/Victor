@@ -66,7 +66,8 @@ export const Layout = z
     componentes: z.array(Componente).default([]),
     tiposDeSlide: z.array(TipoDeSlide).min(1, 'O layout precisa de pelo menos um tipo de slide'),
     margemSegura: z.object({ x: z.number().min(0), y: z.number().min(0) }).optional(),
-    status: z.enum(['rascunho', 'publicado']).default('rascunho'),
+    /** arquivado: some da biblioteca, mas os projetos que usam continuam abrindo. */
+    status: z.enum(['rascunho', 'publicado', 'arquivado']).default('rascunho'),
     origem: z.enum(['seed', 'editor', 'jpg', 'importado']).optional(),
     donoId: z.string().optional(),
     miniaturaUrl: z.string().optional(),

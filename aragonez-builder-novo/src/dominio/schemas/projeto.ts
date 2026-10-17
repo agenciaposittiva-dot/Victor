@@ -49,6 +49,8 @@ export const Projeto = z.object({
   legenda: z.object({ texto: z.string(), hashtags: z.array(z.string()), cta: z.string() }).optional(),
   miniaturaUrl: z.string().optional(),
   donoId: z.string().optional(),
+  /** versão do formato salvo: projetos antigos passam pelas migrações de src/dados/migracao.ts ao abrir. */
+  versaoSchema: z.literal(1).default(1),
   atualizadoEm: z.string().optional(),
 });
 export type Projeto = z.infer<typeof Projeto>;

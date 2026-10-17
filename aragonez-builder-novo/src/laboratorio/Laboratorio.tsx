@@ -20,6 +20,7 @@ import { Cabecalho } from '@/ui/Cabecalho';
 import { avisar } from '@/ui/toast';
 import { avisarFontes } from '@/ui/avisarFontes';
 import Gradientes from './Gradientes';
+import { registrarGanchosDeDados } from './ganchos';
 import css from './Laboratorio.module.css';
 
 type ConferenciaZip = {
@@ -112,6 +113,7 @@ export default function Laboratorio() {
 
   useEffect(() => {
     if (!params.has('teste')) return;
+    registrarGanchosDeDados();
     window.__lab = {
       fontes: () => usos.map((u) => ({ ...u, carregada: fonteCarregada(u) })),
       exportarPng: async (op) => {

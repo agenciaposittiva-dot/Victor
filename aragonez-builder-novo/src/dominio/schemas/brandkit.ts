@@ -37,6 +37,8 @@ export const BrandKit = z.object({
   handle: z.string().optional(),
   tomDeVoz: z.string().optional(),
   layoutPadraoId: z.string().optional(),
+  /** versão do formato salvo (migrações em src/dados/migracao.ts, como projetos e layouts). */
+  versaoSchema: z.literal(1).default(1),
   atualizadoEm: z.string().optional(),
 });
 export type BrandKit = z.infer<typeof BrandKit>;
