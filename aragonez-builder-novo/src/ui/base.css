@@ -88,3 +88,12 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+/* iPhone: campo com fonte menor que 16 px faz o Safari ampliar a página ao focar. Em aparelho de toque (ou tela
+   estreita), todo campo usa 16 px (a caixa de texto do canvas não aparece no toque: edita-se pelo painel). */
+@media (pointer: coarse), (max-width: 860px) {
+  input:not([type='range']):not([type='checkbox']):not([type='radio']),
+  textarea:not([data-canvas]),
+  select {
+    font-size: 16px !important;
+  }
+}

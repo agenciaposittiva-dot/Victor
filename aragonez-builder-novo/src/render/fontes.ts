@@ -55,7 +55,16 @@ const avisar = () => {
 
 /** Carrega as famílias usadas e espera os arquivos de cada peso/estilo ficarem prontos para desenhar. */
 export async function garantirFontes(usos: UsoDeFonte[]): Promise<void> {
-  if (typeof document === 'undefined') return;
+  // nunca rejeita: fonte que não carregou aparece em fontesNaoCarregadas (o app avisa); sem document.fonts, pula
+  try {
+    await carregarFontes(usos);
+  } catch (e) {
+    console.warn('Fontes não carregaram:', e);
+  }
+}
+
+async function carregarFontes(usos: UsoDeFonte[]): Promise<void> {
+  if (typeof document === 'undefined' || !document.fonts) return;
   const familias = [...new Set(usos.map((u) => u.familia))];
   await Promise.all(
     familias.map((f) => {

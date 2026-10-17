@@ -90,7 +90,8 @@ function Texto({ c }: { c: CamadaTexto }) {
 
 function Imagem({ c }: { c: CamadaImagem }) {
   const { kit, urlDoAsset } = useRender();
-  const url = c.url || (c.assetId ? urlDoAsset?.(c.assetId) : undefined);
+  // a foto enviada (assetId) vale antes da url do layout
+  const url = (c.assetId ? urlDoAsset?.(c.assetId) : undefined) || c.url;
   const foco = c.foco ?? { x: 0.5, y: 0.5 };
   const pos = `${foco.x * 100}% ${foco.y * 100}%`;
   const f = c.filtros;

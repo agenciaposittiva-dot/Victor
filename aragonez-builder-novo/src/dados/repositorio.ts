@@ -7,15 +7,16 @@ import { lerKitSalvo, lerLayoutSalvo, lerProjetoSalvo, type Lido } from './migra
 export interface Repositorio {
   listarProjetos(): Promise<Lido<Projeto>[]>;
   lerProjeto(id: string): Promise<Lido<Projeto> | undefined>;
-  /** grava e devolve o novo atualizadoEm. Com "esperado", recusa (ConflitoDeVersao) se outra aba salvou antes. */
+  /** grava e devolve a versão nova (marca única da gravação). Com "esperado" (a versão aberta), recusa
+   *  (ConflitoDeVersao) se outra aba salvou antes. */
   salvarProjeto(p: Projeto, opcoes?: { esperado?: string }): Promise<string>;
   excluirProjeto(id: string): Promise<void>;
   listarLayouts(): Promise<Lido<Layout>[]>;
   lerLayout(id: string): Promise<Lido<Layout> | undefined>;
-  salvarLayout(l: Layout): Promise<string>;
+  salvarLayout(l: Layout, opcoes?: { esperado?: string }): Promise<string>;
   excluirLayout(id: string): Promise<void>;
   listarKits(): Promise<Lido<BrandKit>[]>;
-  salvarKit(k: BrandKit): Promise<string>;
+  salvarKit(k: BrandKit, opcoes?: { esperado?: string }): Promise<string>;
   salvarArquivo(blob: Blob, nome?: string): Promise<string>;
   lerArquivo(id: string): Promise<Blob | undefined>;
   /** acesso bruto, para o backup (Exportar tudo / Importar). */
@@ -25,7 +26,7 @@ export interface Repositorio {
 
 export type Loja = 'projetos' | 'layouts' | 'kits' | 'arquivos';
 export const LOJAS: Loja[] = ['projetos', 'layouts', 'kits', 'arquivos'];
-export type Registro = { id: string; [k: string]: unknown };
+export type Registro = { id: string; versao?: string; atualizadoEm?: string; [k: string]: unknown };
 export type Arquivo = { id: string; nome?: string; tipo: string; blob: Blob; criadoEm: string };
 
 /** Outra aba salvou o mesmo registro depois que este foi aberto. */
@@ -50,7 +51,8 @@ export const ID_DA_ABA = novoId('aba');
 /** Avisos entre abas e do banco: "salvo" (outra aba salvou um registro), "banco-atualizado" (o banco mudou de
  *  versão em outra aba: recarregar) e "banco-bloqueado" (outra aba impede a atualização do banco). */
 export type AvisoDoBanco =
-  | { tipo: 'salvo'; loja: Loja; id: string; atualizadoEm: string; aba: string }
+  | { tipo: 'salvo'; loja: Loja; id: string; atualizadoEm: string; versao: string; aba: string }
+  | { tipo: 'excluido'; loja: Loja; id: string; aba: string }
   | { tipo: 'banco-atualizado' }
   | { tipo: 'banco-bloqueado' };
 const ouvintes = new Set<(a: AvisoDoBanco) => void>();
@@ -94,6 +96,8 @@ export async function pedirPersistencia(): Promise<boolean | undefined> {
   }
 }
 
+let contadorDeGravacoes = 0;
+
 /** Data nova e sempre crescente (dois salvamentos no mesmo milissegundo não ficam com a mesma data). */
 let ultimaData = '';
 function agora(): string {
@@ -102,32 +106,42 @@ function agora(): string {
   return (ultimaData = d);
 }
 
+/** Versão gravada de um registro (os gravados antes do campo "versao" usam o atualizadoEm). */
+export const versaoDe = (r: Record<string, unknown> | { versao?: string; atualizadoEm?: string } | undefined) =>
+  (typeof r?.versao === 'string' ? r.versao : typeof r?.atualizadoEm === 'string' ? r.atualizadoEm : undefined) as
+    string | undefined;
+
+/** Mais recente primeiro; na mesma data, desempata pela versão (contador crescente da aba). */
 const porData = <T>(a: Lido<T>, b: Lido<T>) => {
-  const da = a.ok ? ((a.valor as { atualizadoEm?: string }).atualizadoEm ?? '') : '';
-  const db = b.ok ? ((b.valor as { atualizadoEm?: string }).atualizadoEm ?? '') : '';
-  return db.localeCompare(da);
+  const chave = (x: Lido<T>) => {
+    const v = x.ok ? (x.valor as { atualizadoEm?: string; versao?: string }) : {};
+    return `${v.atualizadoEm ?? ''}|${v.versao ?? ''}`;
+  };
+  return chave(b).localeCompare(chave(a));
 };
 
 abstract class Base implements Repositorio {
   abstract brutos(loja: Loja): Promise<Registro[]>;
   protected abstract ler(loja: Loja, id: string): Promise<Registro | undefined>;
   abstract gravarBruto(loja: Loja, r: Registro): Promise<void>;
-  /** grava só se o atualizadoEm salvo for o esperado (na mesma transação); devolve false se não for. */
+  /** grava só se a versão salva for a esperada (na mesma transação); devolve false se não for. */
   protected abstract gravarSe(loja: Loja, r: Registro, esperado: string | undefined): Promise<boolean>;
   protected abstract apagar(loja: Loja, id: string): Promise<void>;
 
   private async salvar(loja: Loja, valor: Registro, esperado?: string): Promise<string> {
     const atualizadoEm = agora();
-    const r = { ...valor, atualizadoEm };
+    // marca única e crescente: data, contador desta aba e a aba (duas abas no mesmo milissegundo nunca empatam)
+    const versao = `${atualizadoEm}~${String(++contadorDeGravacoes).padStart(8, '0')}~${ID_DA_ABA}`;
+    const r = { ...valor, atualizadoEm, versao };
     if (esperado !== undefined) {
       if (!(await this.gravarSe(loja, r, esperado))) {
         const salvo = await this.ler(loja, valor.id);
-        throw new ConflitoDeVersao(valor.id, salvo?.atualizadoEm as string | undefined);
+        throw new ConflitoDeVersao(valor.id, versaoDe(salvo));
       }
     } else await this.gravarBruto(loja, r);
     void pedirPersistencia();
-    avisarOutrasAbas({ tipo: 'salvo', loja, id: valor.id, atualizadoEm, aba: ID_DA_ABA });
-    return atualizadoEm;
+    avisarOutrasAbas({ tipo: 'salvo', loja, id: valor.id, atualizadoEm, versao, aba: ID_DA_ABA });
+    return versao;
   }
 
   async listarProjetos() {
@@ -140,8 +154,9 @@ abstract class Base implements Repositorio {
   salvarProjeto(p: Projeto, opcoes?: { esperado?: string }) {
     return this.salvar('projetos', p as unknown as Registro, opcoes?.esperado);
   }
-  excluirProjeto(id: string) {
-    return this.apagar('projetos', id);
+  async excluirProjeto(id: string) {
+    await this.apagar('projetos', id);
+    avisarOutrasAbas({ tipo: 'excluido', loja: 'projetos', id, aba: ID_DA_ABA });
   }
   async listarLayouts() {
     return (await this.brutos('layouts')).map(lerLayoutSalvo).sort(porData);
@@ -150,17 +165,18 @@ abstract class Base implements Repositorio {
     const r = await this.ler('layouts', id);
     return r ? lerLayoutSalvo(r) : undefined;
   }
-  salvarLayout(l: Layout) {
-    return this.salvar('layouts', l as unknown as Registro);
+  salvarLayout(l: Layout, opcoes?: { esperado?: string }) {
+    return this.salvar('layouts', l as unknown as Registro, opcoes?.esperado);
   }
-  excluirLayout(id: string) {
-    return this.apagar('layouts', id);
+  async excluirLayout(id: string) {
+    await this.apagar('layouts', id);
+    avisarOutrasAbas({ tipo: 'excluido', loja: 'layouts', id, aba: ID_DA_ABA });
   }
   async listarKits() {
     return (await this.brutos('kits')).map(lerKitSalvo);
   }
-  salvarKit(k: BrandKit) {
-    return this.salvar('kits', k as unknown as Registro);
+  salvarKit(k: BrandKit, opcoes?: { esperado?: string }) {
+    return this.salvar('kits', k as unknown as Registro, opcoes?.esperado);
   }
   async salvarArquivo(blob: Blob, nome?: string) {
     const id = novoId('arq');
@@ -195,7 +211,7 @@ export class RepositorioMemoria extends Base {
   }
   protected async gravarSe(l: Loja, v: Registro, esperado: string | undefined) {
     const atual = this.loja(l).get(v.id);
-    if (atual && atual.atualizadoEm !== esperado) return false;
+    if (atual && versaoDe(atual) !== esperado) return false;
     this.loja(l).set(v.id, structuredClone(v));
     return true;
   }
@@ -211,6 +227,15 @@ const pedido = <T>(r: IDBRequest<T>) =>
   new Promise<T>((ok, falha) => {
     r.onsuccess = () => ok(r.result);
     r.onerror = () => falha(r.error);
+  });
+
+/** Gravação só conta como feita quando a transação termina (oncomplete). Armazenamento cheio costuma aparecer
+ *  como transação abortada: rejeita com o erro original do IndexedDB (name QuotaExceededError), sem embrulhar. */
+const concluida = (tx: IDBTransaction) =>
+  new Promise<void>((ok, falha) => {
+    tx.oncomplete = () => ok();
+    tx.onerror = () => falha(tx.error);
+    tx.onabort = () => falha(tx.error ?? new DOMException('Transação cancelada', 'AbortError'));
   });
 
 /** IndexedDB do navegador (modo local). */
@@ -241,6 +266,10 @@ export class RepositorioLocal extends Base {
   private async transacao(l: Loja, modo: IDBTransactionMode) {
     return (await this.banco).transaction(l, modo).objectStore(l);
   }
+  private async escrita(l: Loja) {
+    const tx = (await this.banco).transaction(l, 'readwrite');
+    return { loja: tx.objectStore(l), fim: concluida(tx) };
+  }
   async brutos(l: Loja) {
     return pedido((await this.transacao(l, 'readonly')).getAll()) as Promise<Registro[]>;
   }
@@ -248,25 +277,28 @@ export class RepositorioLocal extends Base {
     return pedido((await this.transacao(l, 'readonly')).get(id)) as Promise<Registro | undefined>;
   }
   async gravarBruto(l: Loja, v: Registro) {
-    await pedido((await this.transacao(l, 'readwrite')).put(v));
+    const { loja, fim } = await this.escrita(l);
+    loja.put(v);
+    await fim;
   }
   protected async gravarSe(l: Loja, v: Registro, esperado: string | undefined) {
-    const loja = await this.transacao(l, 'readwrite');
+    const { loja, fim } = await this.escrita(l);
     // leitura e gravação na mesma transação: outra aba não consegue gravar no meio
-    return new Promise<boolean>((ok, falha) => {
-      const g = loja.get(v.id);
-      g.onerror = () => falha(g.error);
-      g.onsuccess = () => {
-        const atual = g.result as Registro | undefined;
-        if (atual && atual.atualizadoEm !== esperado) return ok(false);
-        const p = loja.put(v);
-        p.onerror = () => falha(p.error);
-        p.onsuccess = () => ok(true);
-      };
-    });
+    let gravou = false;
+    const g = loja.get(v.id);
+    g.onsuccess = () => {
+      const atual = g.result as Registro | undefined;
+      if (atual && versaoDe(atual) !== esperado) return;
+      loja.put(v);
+      gravou = true;
+    };
+    await fim;
+    return gravou;
   }
   protected async apagar(l: Loja, id: string) {
-    await pedido((await this.transacao(l, 'readwrite')).delete(id));
+    const { loja, fim } = await this.escrita(l);
+    loja.delete(id);
+    await fim;
   }
 }
 
@@ -279,5 +311,20 @@ function criarRepositorio(): Repositorio {
   return new RepositorioMemoria();
 }
 
-/** Repositório em uso no app (trocável nos testes). */
-export const repo: { atual: Repositorio } = { atual: criarRepositorio() };
+/** Repositório em uso no app (trocável nos testes e, na Fase 6, no login/logout). Quem guarda dados lidos dele
+ *  (ex.: a lista de projetos) zera ao trocar, para nunca mostrar os dados de outra conta. */
+let atual: Repositorio = criarRepositorio();
+const aoTrocar = new Set<() => void>();
+export const repo = {
+  get atual(): Repositorio {
+    return atual;
+  },
+  set atual(r: Repositorio) {
+    atual = r;
+    aoTrocar.forEach((f) => f());
+  },
+};
+export function aoTrocarRepositorio(f: () => void): () => void {
+  aoTrocar.add(f);
+  return () => aoTrocar.delete(f);
+}

@@ -1,7 +1,7 @@
-import { garantirIdsUnicos } from './ids';
+import { garantirIdsUnicos, semUrlsTemporarias } from './ids';
 import { faixaDoProjeto, montarSlide, tipoDoLayout } from './montagem';
 
-export { copiarComIdsNovos, garantirIdsUnicos, idLivre, idsDaArvore } from './ids';
+export { copiarComIdsNovos, garantirIdsUnicos, idLivre, idsDaArvore, semUrlsTemporarias, urlTemporaria } from './ids';
 import {
   Layout,
   type Camada,
@@ -89,11 +89,21 @@ function diferencaDaCamada(l: Camada, e: Camada, out: Saida, comConteudo: boolea
       const valor: Record<string, unknown> = {};
       let mudou = false;
       for (const k of CONTEUDO_IMAGEM) {
-        // o conteúdo só sabe definir valores: tirar um valor que o layout tinha continua sendo ajuste (null)
+        // o conteúdo só sabe definir valores: tirar um valor que o layout tinha continua sendo ajuste (null)...
         if (er[k] === undefined) continue;
         ignorar.add(k);
         valor[k] = er[k];
         if (!igual(lr[k], er[k])) mudou = true;
+      }
+      // ...menos a foto: o conteúdo com assetId já tira a url do layout (e com url, o assetId). A foto fica num
+      // lugar só, sem um ajuste { url: null } ao lado.
+      if (er.assetId !== undefined && er.url === undefined && lr.url !== undefined) {
+        ignorar.add('url');
+        mudou = true;
+      }
+      if (er.url !== undefined && er.assetId === undefined && lr.assetId !== undefined) {
+        ignorar.add('assetId');
+        mudou = true;
       }
       if (mudou) out.conteudo[e.id] = valor as ValorCampo;
     }
@@ -131,7 +141,7 @@ function diferencaDaLista(doLayout: Camada[], editadas: Camada[], out: Saida, co
 /** Slide do editor → slide do projeto (só o que difere do tipo de slide do layout). */
 export function diferencaDoSlide(tipo: TipoDeSlide, s: SlideEditavel): SlideDoProjeto {
   const out: Saida = { conteudo: {}, overrides: {} };
-  const { extras, ordem } = diferencaDaLista(tipo.camadas, garantirIdsUnicos(s.camadas), out, true);
+  const { extras, ordem } = diferencaDaLista(tipo.camadas, semUrlsTemporarias(garantirIdsUnicos(s.camadas)), out, true);
   return {
     id: s.id,
     tipoId: s.tipoId,
@@ -150,7 +160,12 @@ export function diferencaDaFaixa(
 ): Pick<Projeto, 'faixaOverrides' | 'faixaExtras'> & Partial<Pick<Projeto, 'faixaOrdem'>> {
   if (!layout.continuo) return { faixaOverrides: {}, faixaExtras: [] };
   const out: Saida = { conteudo: {}, overrides: {} };
-  const { extras, ordem } = diferencaDaLista(layout.faixa?.camadas ?? [], garantirIdsUnicos(faixa), out, false);
+  const { extras, ordem } = diferencaDaLista(
+    layout.faixa?.camadas ?? [],
+    semUrlsTemporarias(garantirIdsUnicos(faixa)),
+    out,
+    false,
+  );
   return { faixaOverrides: out.overrides, faixaExtras: extras, ...(ordem && { faixaOrdem: ordem }) };
 }
 

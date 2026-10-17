@@ -51,6 +51,9 @@ export const Projeto = z.object({
   donoId: z.string().optional(),
   /** versão do formato salvo: projetos antigos passam pelas migrações de src/dados/migracao.ts ao abrir. */
   versaoSchema: z.literal(1).default(1),
+  /** marca única de cada gravação (para detectar que outra aba salvou antes); atualizadoEm é só para mostrar e
+   *  ordenar (duas abas podem salvar no mesmo milissegundo). */
+  versao: z.string().optional(),
   atualizadoEm: z.string().optional(),
 });
 export type Projeto = z.infer<typeof Projeto>;

@@ -1,0 +1,229 @@
+.projetos {
+  display: grid;
+  gap: 18px;
+}
+.barra {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.busca {
+  flex: 1 1 260px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: var(--raio-sm);
+  border: 1px solid var(--linha-2);
+  background: var(--superficie);
+  color: var(--suave);
+}
+.busca input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 10px 0;
+  outline: none;
+}
+.grade {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.cartao {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--raio-lg);
+  border: 1px solid var(--linha);
+  background: linear-gradient(180deg, var(--superficie), var(--preto-2));
+  transition:
+    border-color var(--transicao),
+    transform var(--transicao);
+}
+.cartao:hover {
+  border-color: var(--laranja-borda);
+}
+.quebrado {
+  border-style: dashed;
+  border-color: rgba(251, 191, 36, 0.5);
+}
+.mini {
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--preto);
+  aspect-ratio: 4 / 5;
+}
+.mini > * {
+  max-width: 100%;
+}
+.miniVazia {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  color: var(--aviso);
+  background: repeating-linear-gradient(135deg, var(--superficie-2) 0 14px, var(--superficie) 14px 28px);
+  border-radius: var(--raio);
+}
+.info {
+  display: grid;
+  gap: 2px;
+  padding: 0 4px;
+  min-width: 0;
+}
+.info small {
+  color: var(--suave);
+  font-size: 12px;
+}
+.erros {
+  font-family: var(--fonte-mono);
+  font-size: 11px !important;
+  overflow-wrap: anywhere;
+}
+.nome {
+  color: var(--texto);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.acoesCartao {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+.semResultado {
+  color: var(--suave);
+  padding: 20px 4px;
+}
+.campo {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--suave);
+}
+.campo input,
+.campo select,
+.conflitos select {
+  background: var(--preto-2);
+  border: 1px solid var(--linha-2);
+  border-radius: var(--raio-sm);
+  padding: 10px 12px;
+  color: var(--texto);
+}
+.novo {
+  display: grid;
+  gap: 16px;
+}
+.escolha {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.escolha legend {
+  font-size: 13px;
+  color: var(--suave);
+  margin-bottom: 6px;
+}
+.layouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.layout {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding: 10px;
+  border-radius: var(--raio);
+  border: 1px solid var(--linha-2);
+  background: var(--preto-2);
+  cursor: pointer;
+  text-align: center;
+}
+.layout input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.layout span {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+}
+.layout small {
+  color: var(--suave);
+  font-size: 11.5px;
+}
+.layout:has(input:focus-visible) {
+  outline: 2px solid var(--laranja);
+}
+.escolhido {
+  border-color: var(--laranja);
+  box-shadow: 0 0 0 1px var(--laranja) inset;
+}
+.conflitos {
+  display: grid;
+  gap: 12px;
+}
+.conflitos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.conflitos li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: var(--raio-sm);
+  border: 1px solid var(--linha);
+  background: var(--preto-2);
+}
+.conflitos li div {
+  display: grid;
+  gap: 2px;
+}
+.conflitos small {
+  color: var(--suave);
+  font-size: 12px;
+}
+.lote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--suave);
+}
+.verTodos {
+  justify-self: start;
+  color: var(--laranja-2);
+  font-weight: 600;
+  text-decoration: none;
+}
+.verTodos:hover {
+  text-decoration: underline;
+}
+.quandoVisivel {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}

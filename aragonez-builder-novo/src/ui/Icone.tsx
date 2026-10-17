@@ -17,6 +17,21 @@ const CAMINHOS = {
     'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z',
   exportar: 'M12 4v11M7 10l5 5 5-5M5 20h14',
   ajuda: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17v.01',
+  alerta: 'M12 4 2.5 20h19zM12 10v4.5M12 17.5v.01',
+  voltar: 'M15 5l-7 7 7 7',
+  avancar: 'M9 5l7 7-7 7',
+  desfazer: 'M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3',
+  refazer: 'M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3',
+  copiar: 'M8 8h11v11H8zM5 16V5h11',
+  lixeira: 'M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  lapis: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
+  menos: 'M5 12h14',
+  ajustar: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
+  enviar: 'M12 20V9M7 14l5-5 5 5M5 4h14',
+  baixar: 'M12 4v11M7 10l5 5 5-5M5 20h14',
+  pastas: 'M3 7h6l2 2h10v10H3z',
+  texto: 'M5 6h14M12 6v13M9 19h6',
+  arrastar: 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
 } as const;
 
 export type NomeIcone = keyof typeof CAMINHOS;

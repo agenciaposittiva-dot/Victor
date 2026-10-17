@@ -72,6 +72,8 @@ export const Layout = z
     donoId: z.string().optional(),
     miniaturaUrl: z.string().optional(),
     versaoSchema: z.literal(1).default(1),
+    /** marca única de cada gravação (conflito entre abas); atualizadoEm é só para mostrar e ordenar. */
+    versao: z.string().optional(),
     atualizadoEm: z.string().optional(),
   })
   .superRefine((l, ctx) => {

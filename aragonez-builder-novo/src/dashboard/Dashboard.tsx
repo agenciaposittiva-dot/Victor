@@ -1,7 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Botao } from '@/ui/Botao';
+import { Link } from 'react-router-dom';
+import { Projetos } from '@/projetos/Projetos';
 import { Cabecalho } from '@/ui/Cabecalho';
-import { Vazio } from '@/ui/Vazio';
 import css from './Dashboard.module.css';
 
 const PASSOS = [
@@ -16,23 +15,12 @@ const PASSOS = [
 ];
 
 export default function Dashboard() {
-  const navegar = useNavigate();
   return (
     <>
       <Cabecalho
         etiqueta="// Dashboard"
         titulo="O que vamos *criar* hoje?"
-        texto="Seus projetos recentes, organizados por cliente. Comece por um layout pronto ou transforme uma arte em JPG num layout editável."
-        acoes={
-          <>
-            <Botao variante="secundario" icone="imagem" onClick={() => navegar('/biblioteca')}>
-              JPG → Layout
-            </Botao>
-            <Botao variante="primario" icone="mais" onClick={() => navegar('/biblioteca')}>
-              Novo projeto
-            </Botao>
-          </>
-        }
+        texto="Seus projetos recentes. Comece por um layout pronto ou crie do zero no Modo Design."
       />
       <section className={css.passos} aria-label="Primeiros passos">
         {PASSOS.map((p) => (
@@ -43,15 +31,13 @@ export default function Dashboard() {
           </Link>
         ))}
       </section>
-      <Vazio
-        icone="painel"
-        titulo="Nenhum projeto ainda"
-        texto="Quando você criar um carrossel ou post, ele aparece aqui com a miniatura, separado por cliente. Dá para duplicar, renomear, buscar e excluir."
-        acoes={
-          <Botao variante="primario" icone="mais" onClick={() => navegar('/biblioteca')}>
-            Escolher um layout
-          </Botao>
-        }
+      <Projetos
+        limite={8}
+        vazio={{
+          titulo: 'Nenhum projeto ainda',
+          texto:
+            'Quando você criar um carrossel ou post, ele aparece aqui com a miniatura. Dá para renomear, duplicar, buscar e excluir.',
+        }}
       />
     </>
   );

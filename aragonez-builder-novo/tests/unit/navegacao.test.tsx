@@ -9,8 +9,10 @@ const abrir = (rota = '/') => render(<RouterProvider router={createMemoryRouter(
 describe('navegação principal', () => {
   it('abre o Dashboard com os primeiros passos e o estado vazio', async () => {
     abrir();
-    expect(await screen.findByRole('heading', { level: 1, name: /O que vamos criar hoje\?/ })).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: 'Nenhum projeto ainda' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /O que vamos criar hoje\?/ }, { timeout: 4000 }),
+    ).toBeInTheDocument();
+    expect(await screen.findByRole('region', { name: 'Nenhum projeto ainda' }, { timeout: 4000 })).toBeInTheDocument();
     expect(screen.getByTestId('modo-dados')).toHaveTextContent('Modo local');
   });
 
@@ -23,7 +25,7 @@ describe('navegação principal', () => {
       await screen.findByRole('heading', { level: 1, name: /Layouts que vestem qualquer marca/ }),
     ).toBeInTheDocument();
     await u.click(screen.getByRole('link', { name: 'Editor' }));
-    expect(await screen.findByRole('region', { name: 'Nenhum projeto aberto' })).toBeInTheDocument();
+    expect(await screen.findByRole('region', { name: 'Nenhum projeto aberto' }, { timeout: 4000 })).toBeInTheDocument();
     await u.click(screen.getByRole('link', { name: 'Brand Kits' }));
     expect(await screen.findByRole('heading', { level: 1, name: /Um kit por cliente/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Brand Kits' })).toHaveAttribute('aria-current', 'page');

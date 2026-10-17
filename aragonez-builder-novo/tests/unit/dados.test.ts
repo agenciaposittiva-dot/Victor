@@ -22,6 +22,7 @@ import {
   RepositorioMemoria,
   type AvisoDoBanco,
   type Repositorio,
+  versaoDe,
   zerarPedidoDePersistencia,
 } from '@/dados/repositorio';
 import { LAYOUT_EM_BRANCO } from '@/seeds/basicos';
@@ -98,6 +99,62 @@ describe.each(repos)('repositório (%s)', (_nome, criar) => {
     await r.salvarProjeto({ ...p, nome: 'Minha versão' });
     const depois = await r.lerProjeto(p.id);
     expect(depois?.ok && depois.valor.nome).toBe('Minha versão');
+  });
+});
+
+describe('versão única de cada gravação', () => {
+  it.each(repos)(
+    'duas abas no mesmo milissegundo com a mesma versão esperada: a segunda dá ConflitoDeVersao (%s)',
+    async (_n, criar) => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-10-17T12:00:00.000Z'));
+      try {
+        const r = criar();
+        const p = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'Mesmo instante');
+        const aberta = await r.salvarProjeto(p);
+        // as duas abas abriram a mesma versão e salvam "no mesmo milissegundo"
+        await r.salvarProjeto({ ...p, nome: 'Aba 1' }, { esperado: aberta });
+        await expect(r.salvarProjeto({ ...p, nome: 'Aba 2' }, { esperado: aberta })).rejects.toBeInstanceOf(
+          ConflitoDeVersao,
+        );
+        const lido = await r.lerProjeto(p.id);
+        expect(lido?.ok && lido.valor.nome).toBe('Aba 1');
+      } finally {
+        vi.useRealTimers();
+      }
+    },
+  );
+  it.each(repos)(
+    'projeto, layout e kit: salvar, ler (passando pelo Zod) e salvar de novo com a versão lida não dá conflito (%s)',
+    async (_n, criar) => {
+      const r = criar();
+      const p = criarProjeto(LAYOUT_TESTE, KIT_TESTE, 'P');
+      await r.salvarProjeto(p);
+      const lp = (await r.lerProjeto(p.id))!;
+      expect(lp.ok && lp.valor.versao).toBeTruthy();
+      await r.salvarProjeto(lp.ok ? lp.valor : p, { esperado: versaoDe(lp.ok ? lp.valor : undefined) });
+      await r.salvarLayout({ ...LAYOUT_TESTE, id: 'l1' });
+      const ll = (await r.lerLayout('l1'))!;
+      expect(ll.ok && ll.valor.versao).toBeTruthy();
+      await r.salvarLayout(ll.ok ? ll.valor : LAYOUT_TESTE, { esperado: versaoDe(ll.ok ? ll.valor : undefined) });
+      await r.salvarKit({ ...KIT_TESTE, id: 'k1' });
+      const lk = (await r.listarKits()).find((k) => k.ok && k.valor.id === 'k1')!;
+      expect(lk.ok && lk.valor.versao).toBeTruthy();
+      await expect(
+        r.salvarKit(lk.ok ? lk.valor : KIT_TESTE, { esperado: versaoDe(lk.ok ? lk.valor : undefined) }),
+      ).resolves.toBeTruthy();
+    },
+  );
+  it('a ordem da lista não depende de os salvamentos caírem em milissegundos diferentes', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-17T12:00:00.000Z'));
+    try {
+      const r = new RepositorioMemoria();
+      for (const n of ['1', '2', '3']) await r.salvarProjeto(criarProjeto(LAYOUT_TESTE, KIT_TESTE, n));
+      expect((await r.listarProjetos()).map((x) => x.ok && x.valor.nome)).toEqual(['3', '2', '1']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

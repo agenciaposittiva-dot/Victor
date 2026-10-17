@@ -17,7 +17,7 @@ export function Fundo({ fundo, w, h }: { fundo: TFundo; w: number; h: number }) 
     case 'gradiente':
       return <div data-fundo style={{ ...base, background: resolverPreenchimento(fundo, kit) }} />;
     case 'imagem': {
-      const url = fundo.url || (fundo.assetId ? urlDoAsset?.(fundo.assetId) : undefined);
+      const url = (fundo.assetId ? urlDoAsset?.(fundo.assetId) : undefined) || fundo.url;
       const foco = fundo.foco ?? { x: 0.5, y: 0.5 };
       return (
         <div data-fundo style={{ ...base, background: resolverCor(fundo.cor, kit) ?? '#111111' }}>

@@ -1,0 +1,49 @@
+.dialogo {
+  padding: 0;
+  border: 1px solid var(--linha-2);
+  border-radius: var(--raio-lg);
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: var(--sombra);
+  max-height: calc(100vh - 32px);
+}
+.dialogo::backdrop {
+  background: rgba(5, 4, 3, 0.72);
+  backdrop-filter: blur(3px);
+}
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 6px;
+}
+.topo h2 {
+  font-size: 19px;
+  font-weight: 600;
+}
+.fechar {
+  border: 0;
+  background: transparent;
+  color: var(--suave);
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.fechar:hover {
+  background: var(--superficie-2);
+  color: var(--texto);
+}
+.corpo {
+  padding: 10px 20px 18px;
+  overflow: auto;
+  max-height: calc(100vh - 200px);
+}
+.rodape {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--linha);
+}

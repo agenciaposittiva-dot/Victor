@@ -1,25 +1,33 @@
 import { aplicarOverrides } from './componentes';
 import { posicaoNaFaixa } from './faixa';
 import { garantirIdsUnicos, idsDaArvore } from './ids';
-import type { Camada, Fundo, Layout, Projeto, SlideDoProjeto, TipoDeSlide, ValorCampo } from './schemas';
+import type { Camada, CamadaImagem, Fundo, Layout, Projeto, SlideDoProjeto, TipoDeSlide, ValorCampo } from './schemas';
 
 /** Slide pronto para desenhar: tipo, fundo e camadas já com o conteúdo e os ajustes do projeto.
  *  Precedência: ajuste do projeto > conteúdo do projeto > camada do layout > token do Brand Kit (resolvido no render). */
 export type SlideMontado = { indice: number; tipo: TipoDeSlide; fundo: Fundo; camadas: Camada[] };
 
-/** Coloca o valor de um campo editável dentro da camada (texto ou imagem). */
+/** Coloca o valor de um campo editável dentro da camada (texto ou imagem). Na imagem, o assetId (foto enviada)
+ *  vale antes da url do layout: o render procura primeiro o assetId. */
 export function aplicarConteudo(c: Camada, valor: ValorCampo | undefined): Camada {
   if (valor === undefined) return c;
   if (c.tipo === 'texto') return typeof valor === 'string' ? { ...c, texto: valor } : c;
   if (c.tipo === 'imagem' || c.tipo === 'logo') {
-    if (typeof valor === 'string') return { ...c, url: valor };
-    return {
+    if (typeof valor === 'string') {
+      const { assetId: _a, ...semAsset } = c;
+      return { ...semAsset, url: valor };
+    }
+    const r: CamadaImagem = {
       ...c,
       ...(valor.url !== undefined && { url: valor.url }),
       ...(valor.assetId !== undefined && { assetId: valor.assetId }),
       ...(valor.foco && { foco: valor.foco }),
       ...(valor.zoom && { zoom: valor.zoom }),
     };
+    // a foto fica num lugar só: a foto enviada (assetId) tira a url do layout, e uma url tira o assetId do layout
+    if (valor.assetId !== undefined && valor.url === undefined) delete r.url;
+    if (valor.url !== undefined && valor.assetId === undefined) delete r.assetId;
+    return r;
   }
   return c;
 }

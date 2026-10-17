@@ -34,6 +34,7 @@ const entrada: LayoutEntrada = {
   nome: 'Teste de exportação (contínuo)',
   categoria: 'Teste',
   tags: ['teste', 'continuo'],
+  brandKitId: 'kit-teste',
   formato: { w: W, h: H },
   continuo: true,
   componentes: [
@@ -126,6 +127,8 @@ const entrada: LayoutEntrada = {
           zoom: 1.15,
           filtros: { contraste: 1.1, saturacao: 1.2 },
           borda: { cor: '{cores.primaria}/60', largura: 3 },
+          editavel: true,
+          rotulo: 'Foto',
         },
         {
           id: 'etiqueta',

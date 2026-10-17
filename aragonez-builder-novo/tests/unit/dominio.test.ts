@@ -282,6 +282,7 @@ describe('componentes e montagem', () => {
     ]);
     expect(camadasDaFaixa(LAYOUT_TESTE, 5)[0]).toMatchObject({ x: 0, w: 5 * 1080 });
     expect(camposEditaveis(LAYOUT_TESTE.tiposDeSlide[0]!).map((c) => c.id)).toEqual([
+      'foto',
       'etiqueta',
       'titulo',
       'subtitulo',

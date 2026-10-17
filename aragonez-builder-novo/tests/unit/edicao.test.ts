@@ -10,7 +10,7 @@ import {
   type DocumentoEditavel,
 } from '@/dominio/edicao';
 import { faixaDoProjeto, montarSlides } from '@/dominio/montagem';
-import { Layout, Projeto, validar, type Camada, type CamadaTexto } from '@/dominio/schemas';
+import { Layout, Projeto, validar, type Camada, type CamadaImagem, type CamadaTexto } from '@/dominio/schemas';
 import { LAYOUT_TESTE, projetoTeste } from '@/seeds/teste';
 
 const projetoBase = (): Projeto =>
@@ -163,18 +163,19 @@ describe('editor ↔ projeto (materializar e salvar a diferença)', () => {
     expect((r.overrides.g!.filhos as Camada[]).map((c) => c.id)).toEqual(['a', 'b']);
   });
 
-  it('imagem editável: trocar a foto vai para o conteúdo; fundo trocado só no slide', () => {
+  it('imagem editável: trocar a foto vai para o conteúdo; mudança de design numa camada fixa vira ajuste; fundo só no slide', () => {
+    // a foto do layout de teste é um campo editável: a foto nova e o zoom vão para o conteúdo
     const d = editar((d) => {
-      Object.assign(camada(d, 0, 'foto'), { editavel: true });
+      Object.assign(camada(d, 0, 'foto'), { url: '/fotos/outra.jpg', zoom: 2 });
+      Object.assign(camada(d, 0, 'sublinhado'), { preenchimento: '#00FF00', w: 200 });
       d.slides[0]!.fundo = { tipo: 'cor', cor: '#222222' };
     });
-    const p0 = idaEVolta(d);
-    expect(p0.slides[0]!.overrides.foto).toEqual({ editavel: true });
-    expect(p0.slides[0]!.fundo).toEqual({ tipo: 'cor', cor: '#222222' });
-    const d2 = editar((d) => Object.assign(camada(d, 0, 'foto'), { url: 'blob:outra', zoom: 2 }));
-    const p = idaEVolta(d2);
-    // a foto do layout de teste não é editável: vai para o ajuste
-    expect(p.slides[0]!.overrides.foto).toEqual({ url: 'blob:outra', zoom: 2 });
+    const p = idaEVolta(d);
+    expect(p.slides[0]!.conteudo.foto).toEqual({ url: '/fotos/outra.jpg', foco: { x: 0.6, y: 0.4 }, zoom: 2 });
+    expect(p.slides[0]!.overrides.foto).toBeUndefined();
+    // o sublinhado não é editável: mudança de design é ajuste
+    expect(p.slides[0]!.overrides.sublinhado).toEqual({ preenchimento: '#00FF00', w: 200 });
+    expect(p.slides[0]!.fundo).toEqual({ tipo: 'cor', cor: '#222222' });
   });
 
   it('faixa: pontos da linha, camada nova atravessando e ordem', () => {
@@ -409,6 +410,32 @@ describe('garantias do editor ↔ projeto', () => {
     expect(salvo.slides[0]!.camadasExtras.map((c) => c.id)).toEqual(['carimbo-2']);
     const deNovo = paraProjeto(salvo, layout2, materializar(layout2, salvo));
     expect(deNovo).toEqual(salvo);
+  });
+
+  it('fotos só como assetId: endereço temporário (blob:) ou foto embutida (data:) nunca é salvo', () => {
+    const doc = structuredClone(materializar(LAYOUT_TESTE, limpo()));
+    Object.assign(
+      doc.slides[0]!.camadas.find((c) => c.id === 'foto')!,
+      { url: 'blob:http://x/1', assetId: 'arq-1' },
+    );
+    doc.slides[1]!.camadas.push({
+      id: 'img',
+      tipo: 'imagem',
+      x: 0,
+      y: 0,
+      w: 10,
+      h: 10,
+      url: 'data:image/png;base64,AAAA',
+    });
+    const salvo = paraProjeto(limpo(), LAYOUT_TESTE, doc);
+    expect(JSON.stringify(salvo)).not.toMatch(/blob:|data:image/);
+    // a foto é um campo editável: a foto enviada fica num lugar só, o conteúdo, sem ajuste { url: null } ao lado
+    expect(salvo.slides[0]!.conteudo.foto).toEqual({ assetId: 'arq-1', foco: { x: 0.6, y: 0.4 }, zoom: 1.15 });
+    expect(salvo.slides[0]!.overrides.foto).toBeUndefined();
+    // ida e volta: reabrir dá a camada com o assetId e sem a url do layout
+    const foto = materializar(LAYOUT_TESTE, salvo).slides[0]!.camadas.find((c) => c.id === 'foto') as CamadaImagem;
+    expect(foto.assetId).toBe('arq-1');
+    expect(foto.url).toBeUndefined();
   });
 
   it('Salvar como layout: reabrir o projeto no layout novo dá o mesmo desenho, slide a slide', () => {

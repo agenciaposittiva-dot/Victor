@@ -4,6 +4,7 @@ import { ambiente } from '@/dados/ambiente';
 import { Botao } from '@/ui/Botao';
 import { Icone, type NomeIcone } from '@/ui/Icone';
 import { Toasts } from '@/ui/Toasts';
+import { AvisosDoBanco } from './AvisosDoBanco';
 import css from './Shell.module.css';
 
 const ITENS: { para: string; rotulo: string; icone: NomeIcone }[] = [
@@ -69,6 +70,7 @@ export function Shell() {
           <span style={{ width: 36 }} />
         </header>
         <main className={css.principal} id="conteudo">
+          <AvisosDoBanco />
           <Outlet />
         </main>
       </div>
