@@ -122,6 +122,33 @@ describe('destaque inline (*palavra*)', () => {
     expect(parseDestaque('preço \\*promo\\*')).toEqual([{ texto: 'preço *promo*', destaque: false }]);
     expect(semDestaque('Todo dia *uma IA* nova')).toBe('Todo dia uma IA nova');
   });
+  it('não destaca asterisco colado em letra ou número nem atravessa quebra de linha', () => {
+    const nada = (t: string) => expect(parseDestaque(t)).toEqual([{ texto: t, destaque: false }]);
+    nada('R$ 9,99* nas lojas participantes. *Válido até 20/10');
+    nada('De R$ 12,99 por R$ 9,99*\n*Válido até 20/10');
+    nada('5*5*5');
+    nada('Rua das Flores, 12*');
+    // espaço logo depois do * de abertura ou logo antes do de fechamento, e fechamento colado em letra
+    nada('2 * 3 * 4');
+    nada('Frete grátis * consulte regras *');
+    nada('Leve 3 * pague 2 * só hoje');
+    nada('*promo*ção');
+    nada('* a*');
+    nada('*a *');
+    // o destaque normal continua valendo no começo, depois de espaço, pontuação ou quebra de linha
+    expect(parseDestaque('Oferta: *imperdível*\n*Só hoje*')).toEqual([
+      { texto: 'Oferta: ', destaque: false },
+      { texto: 'imperdível', destaque: true },
+      { texto: '\n', destaque: false },
+      { texto: 'Só hoje', destaque: true },
+    ]);
+    expect(parseDestaque('(*grátis*) e Ação*x* *válido*')).toEqual([
+      { texto: '(', destaque: false },
+      { texto: 'grátis', destaque: true },
+      { texto: ') e Ação*x* ', destaque: false },
+      { texto: 'válido', destaque: true },
+    ]);
+  });
 });
 
 describe('auto-ajuste do texto', () => {

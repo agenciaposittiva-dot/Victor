@@ -12,6 +12,7 @@ const PASTAS = [
   'supabase',
   'dist',
   'docs',
+  'referencias',
   'index.html',
   'netlify.toml',
   '.env.example',

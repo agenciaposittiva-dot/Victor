@@ -11,3 +11,11 @@ describe('Destaque (interface)', () => {
     expect(container).toHaveTextContent('Prompt bonito não paga boleto.');
   });
 });
+
+describe('Destaque (interface) com as regras dos slides', () => {
+  it('não destaca preço com asterisco de observação', () => {
+    const { container } = render(<Destaque texto="R$ 9,99* nas lojas. *Válido até 20/10" />);
+    expect(container.querySelectorAll('em')).toHaveLength(0);
+    expect(container).toHaveTextContent('R$ 9,99* nas lojas. *Válido até 20/10');
+  });
+});
