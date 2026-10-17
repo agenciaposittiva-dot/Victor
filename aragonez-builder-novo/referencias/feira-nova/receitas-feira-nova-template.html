@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receitas Feira Nova — Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<style>
+/* =========================================================
+   TOKENS DA MARCA — ajuste aqui para reaproveitar em outro cliente
+   ========================================================= */
+:root{
+  --verde-fundo:#7cc04a;
+  --verde-escuro:#2c6e27;
+  --laranja:#f68b1f;
+  --verde-callout:#8df23b;
+  --texto:#151515;
+  --divisao:840px;          /* altura do bloco verde nos slides de card */
+}
+
+/* ---------------- UI do editor ---------------- */
+*{box-sizing:border-box}
+body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:#16181d;color:#e9ebef;display:flex;flex-direction:column;height:100vh}
+header{display:flex;align-items:center;gap:10px;padding:12px 18px;background:#0f1115;border-bottom:1px solid #262a33;flex-wrap:wrap}
+header h1{font-size:15px;margin:0 auto 0 0;font-weight:700}
+header h1 span{color:var(--laranja)}
+button,.btn{font:600 13px 'Montserrat',sans-serif;background:#262a33;color:#e9ebef;border:1px solid #333845;border-radius:8px;padding:8px 12px;cursor:pointer}
+button:hover,.btn:hover{background:#30353f}
+button.primary{background:var(--verde-fundo);border-color:var(--verde-fundo);color:#0d2a08}
+button.primary:hover{filter:brightness(1.08)}
+button.danger{color:#ff8a80}
+.app{display:flex;flex:1;min-height:0}
+aside{width:390px;flex-shrink:0;overflow:auto;background:#1b1e24;border-right:1px solid #262a33;padding:18px}
+aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8b93a3;margin:22px 0 10px}
+aside h2:first-child{margin-top:0}
+label{display:block;font-size:12px;color:#aab1bf;margin:12px 0 5px}
+input[type=text],textarea{width:100%;background:#12141a;color:#fff;border:1px solid #2e333d;border-radius:8px;padding:9px 10px;font:500 14px 'Montserrat',sans-serif;resize:vertical}
+textarea{min-height:90px}
+input[type=range]{width:100%}
+input[type=file]{font-size:12px;color:#aab1bf}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.hint{font-size:11px;color:#6f7787;margin-top:4px}
+main{flex:1;overflow:auto;padding:24px}
+.grid{display:flex;flex-wrap:wrap;gap:22px}
+.thumb{position:relative;width:346px;height:432px;border-radius:6px;overflow:hidden;cursor:pointer;outline:3px solid transparent;outline-offset:3px;flex-shrink:0}
+.thumb.sel{outline-color:var(--laranja)}
+.thumb .scaler{transform:scale(.32037);transform-origin:0 0}
+.thumb .tag{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);font-size:11px;font-weight:700;padding:4px 8px;border-radius:5px;z-index:5}
+
+/* =========================================================
+   SLIDES 1080 × 1350
+   ========================================================= */
+.slide{position:relative;width:1080px;height:1350px;overflow:hidden;font-family:'Montserrat',sans-serif;background:var(--verde-fundo);color:var(--texto)}
+.s-photo{position:absolute;inset:0;overflow:hidden;background:linear-gradient(135deg,#6b4a2c,#2c1c0f)}
+.s-photo img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center}
+.s-photo .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:38px;font-weight:600}
+
+/* título da marca (2 camadas: contorno + preenchimento) */
+.brand-title{position:absolute;left:0;right:0;text-align:center;font-weight:800;line-height:.86;letter-spacing:-.025em;z-index:4}
+.brand-title .l1,.brand-title .l2{display:block;white-space:nowrap}
+.bt-fill{position:relative}
+.bt-fill .l1{color:var(--verde-escuro)}
+.bt-fill .l2{color:var(--laranja)}
+.bt-stroke{position:absolute;inset:0}
+.bt-stroke span{color:#fff;-webkit-text-stroke:var(--stroke) #fff}
+
+/* ---- Slides de card (ingredientes / passo) ---- */
+.card-slide .s-top{position:absolute;left:0;top:0;width:100%;height:var(--divisao);background-color:var(--verde-fundo);background-size:175px auto}
+.card-slide .s-photo{top:var(--divisao)}
+.card-slide .brand-title{top:206px;--stroke:30px}
+.card-slide .bt-stroke{filter:drop-shadow(7px 9px 0 rgba(0,0,0,.22))}
+.card-slide .l1{font-size:88px}
+.card-slide .l2{font-size:100px}
+.s-card{position:absolute;left:178px;width:724px;top:287px;background:#fff;border:3px solid #111;border-radius:72px;z-index:3}
+.ing .s-card{padding:168px 70px 78px 72px;min-height:766px}
+.ing h3{margin:0 0 46px;text-align:center;font-size:40px;font-weight:600;letter-spacing:-.01em}
+.ing ul{list-style:none;margin:0;padding:0}
+.ing li{font-size:34px;font-weight:500;line-height:55.5px;letter-spacing:-.01em}
+.step .s-card{padding:185px 58px 90px;min-height:658px;text-align:center}
+.step .lead{font-size:40px;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:0}
+.step .body{font-size:41px;font-weight:500;line-height:1.3;letter-spacing:-.01em;margin:26px 0 0}
+
+/* ---- Capa ---- */
+.cover .s-logo{position:absolute;top:66px;left:50%;transform:translateX(-50%);height:96px;z-index:4}
+.cover .brand-title{top:268px;--stroke:46px}
+.cover .l1{font-size:128px}
+.cover .l2{font-size:136px}
+.s-callout{position:absolute;left:147px;right:147px;bottom:142px;background:var(--verde-callout);border:7px solid #fff;border-radius:42px;padding:36px 40px 40px;text-align:center;z-index:4}
+.s-callout h4{margin:0;font-size:44px;font-weight:700;letter-spacing:-.025em;color:#17400f;line-height:1.15}
+.s-callout p{margin:6px 0 0;font-size:40px;font-weight:500;line-height:1.15;color:#1a1a1a}
+</style>
+</head>
+<body>
+<header>
+  <h1>Receitas <span>Feira Nova</span> · template de carrossel</h1>
+  <button onclick="addSlide('cover')">+ Capa</button>
+  <button onclick="addSlide('ing')">+ Ingredientes</button>
+  <button onclick="addSlide('step')">+ Passo</button>
+  <button onclick="saveJSON()">Salvar projeto</button>
+  <label class="btn" style="margin:0">Abrir projeto<input type="file" accept=".json" hidden onchange="loadJSON(this)"></label>
+  <button class="primary" onclick="exportAll()">Exportar todos (PNG)</button>
+</header>
+<div class="app">
+  <aside id="editor"></aside>
+  <main><div class="grid" id="grid"></div></main>
+</div>
+
+<script>
+/* ---------- Assets padrão (substitua pelos arquivos reais da marca) ---------- */
+const svgURI = s => 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+const PARROT_PATH = 'M14 78 C12 40 40 12 74 16 C86 18 95 26 99 36 L84 44 C80 36 72 33 64 36 C56 40 54 50 58 60 L50 78 Z';
+const DEFAULT_PATTERN = svgURI(`<svg xmlns="http://www.w3.org/2000/svg" width="180" height="160" viewBox="0 0 180 160">
+  <g fill="#6db23d"><path d="${PARROT_PATH}"/><path transform="translate(90 80)" d="${PARROT_PATH}"/></g>
+  <g fill="#7cc04a"><circle cx="68" cy="34" r="6"/><circle cx="158" cy="114" r="6"/></g></svg>`);
+const DEFAULT_LOGO = svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 96">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#1c8a3c"/><stop offset="1" stop-color="#7bd04a"/></linearGradient></defs>
+  <path d="M4 92 C6 42 42 6 88 8 C104 9 116 18 120 30 L102 92 Z" fill="url(#g)"/>
+  <path d="M26 30 L40 6 L50 26 L62 4 L68 24 Z" fill="#1c8a3c"/>
+  <circle cx="86" cy="40" r="14" fill="#fff"/><circle cx="88" cy="40" r="7" fill="#111"/>
+  <path d="M110 34 C134 32 148 50 140 74 C132 64 120 62 108 66 Z" fill="#f2552c"/></svg>`);
+
+/* ---------- Estado ---------- */
+const photo = () => ({src:'', x:50, y:50, zoom:100});
+let state = {
+  brand:{line1:'Receitas', line2:'Feira Nova', logo:DEFAULT_LOGO, pattern:DEFAULT_PATTERN},
+  selected:0,
+  slides:[
+    {type:'cover', photo:photo(), heading:'Acém na panela de pressão:', sub:'macio, suculento e pronto\nsem complicação!'},
+    {type:'ing', photo:photo(), title:'Ingredientes:', items:'1 kg de acém em cubos\n2 cebolas médias fatiadas\n4 dentes de alho picados\n2 tomates picados\n2 colheres (sopa) de óleo ou azeite\nCheio-verde a gosto\nSal e pimenta-do-reino a gosto\n1 xícara de água'},
+    {type:'step', photo:photo(), lead:'Aquece o óleo, doure o alho\ne a cebola.', body:'Depois coloque o acém e deixe a carne ganhar cor de todos os lados. Esse passo deixa o sabor ainda melhor!'}
+  ]
+};
+const TYPE_NAME = {cover:'Capa', ing:'Ingredientes', step:'Passo a passo'};
+
+/* ---------- Render dos slides ---------- */
+const esc = t => (t||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const br = t => esc(t).replace(/\n/g,'<br>');
+
+function titleHTML(){
+  const b = state.brand;
+  const inner = `<span class="l1">${esc(b.line1)}</span><span class="l2">${esc(b.line2)}</span>`;
+  return `<div class="brand-title"><div class="bt-stroke">${inner}</div><div class="bt-fill">${inner}</div></div>`;
+}
+function photoHTML(p){
+  if(!p.src) return `<div class="s-photo"><div class="ph">+ foto</div></div>`;
+  return `<div class="s-photo"><img src="${p.src}" style="object-position:${p.x}% ${p.y}%;transform:scale(${p.zoom/100})"></div>`;
+}
+function slideHTML(s){
+  if(s.type==='cover') return `<div class="slide cover">${photoHTML(s.photo)}
+      <img class="s-logo" src="${state.brand.logo}">${titleHTML()}
+      <div class="s-callout"><h4>${br(s.heading)}</h4><p>${br(s.sub)}</p></div></div>`;
+  const top = `<div class="s-top" style="background-image:url('${state.brand.pattern}')"></div>`;
+  if(s.type==='ing') return `<div class="slide card-slide ing">${top}${photoHTML(s.photo)}
+      <div class="s-card"><h3>${esc(s.title)}</h3><ul>${s.items.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>${titleHTML()}</div>`;
+  return `<div class="slide card-slide step">${top}${photoHTML(s.photo)}
+      <div class="s-card"><p class="lead">${br(s.lead)}</p><p class="body">${br(s.body)}</p></div>${titleHTML()}</div>`;
+}
+
+function renderGrid(){
+  document.getElementById('grid').innerHTML = state.slides.map((s,i)=>
+    `<div class="thumb ${i===state.selected?'sel':''}" onclick="select(${i})">
+       <div class="tag">${i+1} · ${TYPE_NAME[s.type]}</div>
+       <div class="scaler" id="slide-${i}">${slideHTML(s)}</div></div>`).join('');
+}
+function renderOne(i){
+  const el = document.getElementById('slide-'+i);
+  if(el) el.innerHTML = slideHTML(state.slides[i]);
+}
+
+/* ---------- Editor ---------- */
+function field(label, key, multiline){
+  const v = esc(state.slides[state.selected][key]);
+  return `<label>${label}</label>` + (multiline
+    ? `<textarea data-k="${key}">${v}</textarea>`
+    : `<input type="text" data-k="${key}" value="${v}">`);
+}
+function renderEditor(){
+  const i = state.selected, s = state.slides[i], b = state.brand;
+  let h = `<h2>Marca (todos os slides)</h2>
+    <label>Título linha 1</label><input type="text" data-b="line1" value="${esc(b.line1)}">
+    <label>Título linha 2</label><input type="text" data-b="line2" value="${esc(b.line2)}">
+    <label>Logo (PNG/SVG)</label><input type="file" accept="image/*" data-asset="logo">
+    <label>Pattern do fundo verde</label><input type="file" accept="image/*" data-asset="pattern">`;
+  if(!s){ document.getElementById('editor').innerHTML = h; return; }
+  h += `<h2>Slide ${i+1} · ${TYPE_NAME[s.type]}</h2>`;
+  if(s.type==='cover') h += field('Destaque','heading') + field('Texto de apoio','sub',true);
+  if(s.type==='ing')   h += field('Subtítulo','title') + field('Ingredientes (um por linha)','items',true);
+  if(s.type==='step')  h += field('Frase em destaque','lead',true) + field('Texto','body',true);
+  h += `<label>Foto</label><input type="file" accept="image/*" data-photo>
+    <label>Posição horizontal</label><input type="range" min="0" max="100" value="${s.photo.x}" data-p="x">
+    <label>Posição vertical</label><input type="range" min="0" max="100" value="${s.photo.y}" data-p="y">
+    <label>Zoom</label><input type="range" min="100" max="250" value="${s.photo.zoom}" data-p="zoom">
+    <div class="hint">Use Enter para quebrar linha nos campos de texto longo.</div>
+    <h2>Ações</h2><div class="row">
+      <button onclick="move(-1)">← Mover</button><button onclick="move(1)">Mover →</button>
+      <button onclick="dup()">Duplicar</button><button class="danger" onclick="del()">Excluir</button>
+      <button class="primary" onclick="exportOne(${i})">Exportar PNG</button></div>`;
+  document.getElementById('editor').innerHTML = h;
+}
+
+const readFile = f => new Promise(r=>{ const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(f); });
+document.getElementById('editor').addEventListener('input', async e=>{
+  const t = e.target, s = state.slides[state.selected];
+  if(t.dataset.k){ s[t.dataset.k] = t.value; renderOne(state.selected); }
+  else if(t.dataset.p){ s.photo[t.dataset.p] = +t.value; renderOne(state.selected); }
+  else if(t.dataset.b){ state.brand[t.dataset.b] = t.value; renderGrid(); }
+});
+document.getElementById('editor').addEventListener('change', async e=>{
+  const t = e.target; if(!t.files || !t.files[0]) return;
+  const data = await readFile(t.files[0]);
+  if('photo' in t.dataset){ Object.assign(state.slides[state.selected].photo, photo(), {src:data}); renderEditor(); renderOne(state.selected); }
+  if(t.dataset.asset){ state.brand[t.dataset.asset] = data; renderGrid(); }
+});
+
+/* ---------- Ações ---------- */
+function select(i){ state.selected=i; renderGrid(); renderEditor(); }
+function addSlide(type){
+  const base = {cover:{heading:'Nome do prato:', sub:'chamada curta\nda receita'},
+                ing:{title:'Ingredientes:', items:'Ingrediente 1\nIngrediente 2'},
+                step:{lead:'Frase do passo.', body:'Explicação do passo.'}}[type];
+  state.slides.push({type, photo:photo(), ...base});
+  select(state.slides.length-1);
+}
+function move(d){ const i=state.selected, j=i+d; if(j<0||j>=state.slides.length) return;
+  [state.slides[i],state.slides[j]]=[state.slides[j],state.slides[i]]; select(j); }
+function dup(){ const c=JSON.parse(JSON.stringify(state.slides[state.selected])); state.slides.splice(state.selected+1,0,c); select(state.selected+1); }
+function del(){ if(!confirm('Excluir este slide?')) return; state.slides.splice(state.selected,1); select(Math.max(0,state.selected-1)); }
+
+/* ---------- Exportação ---------- */
+async function pngOf(i){
+  const node = document.querySelector('#slide-'+i+' .slide');
+  return htmlToImage.toPng(node, {width:1080, height:1350, pixelRatio:1, cacheBust:true});
+}
+function download(url, name){ const a=document.createElement('a'); a.href=url; a.download=name; a.click(); }
+const fname = i => `receita-${String(i+1).padStart(2,'0')}-${state.slides[i].type}.png`;
+async function exportOne(i){ await document.fonts.ready; download(await pngOf(i), fname(i)); }
+async function exportAll(){ await document.fonts.ready;
+  for(let i=0;i<state.slides.length;i++){ download(await pngOf(i), fname(i)); await new Promise(r=>setTimeout(r,350)); } }
+
+function saveJSON(){ download(URL.createObjectURL(new Blob([JSON.stringify(state)],{type:'application/json'})), 'receita-feira-nova.json'); }
+async function loadJSON(inp){ const f=inp.files[0]; if(!f) return; state = JSON.parse(await f.text()); select(0); }
+
+renderGrid(); renderEditor();
+</script>
+</body>
+</html>
